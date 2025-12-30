@@ -1,0 +1,2240 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sanika Tribhuvan - Portfolio</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.49/Tone.min.js"></script>
+    <script type="importmap">
+        { "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js" } }
+    </script>
+    <style>
+        /* =========================================
+           CSS RESET & VARIABLES
+           ========================================= */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #8B0000;
+            /* Dark Red / Maroon */
+            --secondary: #B22222;
+            /* Firebrick */
+            --accent: #DC143C;
+            /* Crimson */
+            --bg-light: #FFF5F5;
+            /* Very Light Pink/Red tint */
+            --background: #FFFFFF;
+            --text: #2D3748;
+            --maroon-dark: #5C0000;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', sans-serif;
+            background: linear-gradient(180deg, #FFFFFF 0%, #FAFCFF 100%);
+            color: var(--text);
+            cursor: none;
+            /* We use a custom cursor */
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        /* =========================================
+           CUSTOM CURSOR
+           ========================================= */
+        #custom-cursor {
+            width: 20px;
+            height: 20px;
+            border: 2px solid var(--primary);
+            background: rgba(139, 0, 0, 0.05);
+            border-radius: 50%;
+            position: fixed;
+            pointer-events: none;
+            z-index: 20000;
+            transition: transform 0.1s ease, background 0.1s ease;
+        }
+
+        #custom-cursor.hover {
+            transform: scale(2.5);
+            background: rgba(220, 20, 60, 0.2);
+            border-color: transparent;
+        }
+
+        /* =========================================
+           SOUND TOGGLE BUTTON
+           ========================================= */
+        #sound-toggle {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: white;
+            border: none;
+            padding: 1rem 1.5rem;
+            border-radius: 50px;
+            box-shadow: 0 10px 30px rgba(139, 0, 0, 0.2);
+            cursor: pointer;
+            font-weight: 700;
+            color: var(--secondary);
+            z-index: 1000;
+            transition: all 0.3s;
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        #sound-toggle.visible {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        #sound-toggle:hover {
+            background: var(--bg-light);
+            transform: scale(1.05);
+        }
+
+        /* =========================================
+           NAVIGATION BAR
+           ========================================= */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            padding: 0.8rem 3rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(15px);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            height: 70px;
+        }
+
+        .logo {
+            font-size: 1.6rem;
+            font-weight: 900;
+            color: var(--primary);
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: var(--text);
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.3s;
+            padding: 0.5rem 0;
+            border-bottom: 2px solid transparent;
+        }
+
+        .nav-links a:hover,
+        .nav-links a:active {
+            color: var(--primary);
+            border-bottom-color: var(--primary);
+        }
+
+        .cta-button {
+            background: var(--primary);
+            color: white;
+            padding: 0.6rem 1.5rem;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 700;
+            transition: transform 0.3s, box-shadow 0.3s, background 0.3s;
+        }
+
+        .cta-button:hover {
+            transform: scale(1.05);
+            background: var(--secondary);
+            box-shadow: 0 10px 20px rgba(139, 0, 0, 0.3);
+        }
+
+        /* =========================================
+           HERO SECTION
+           ========================================= */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            padding: 6rem 2rem 2rem;
+            position: relative;
+            background: radial-gradient(circle at 50% 50%, #fff0f5 0%, #ffffff 70%);
+            overflow: hidden;
+        }
+
+        .curved-text {
+            position: absolute;
+            top: 10%;
+            font-size: clamp(1.2rem, 3vw, 2.5rem);
+            font-weight: 900;
+            color: var(--primary);
+            opacity: 0.08;
+            text-transform: uppercase;
+            animation: rotateText 20s linear infinite;
+            white-space: nowrap;
+            pointer-events: none;
+        }
+
+        @keyframes rotateText {
+
+            0%,
+            100% {
+                transform: rotate(-5deg) translateX(-20px);
+            }
+
+            50% {
+                transform: rotate(5deg) translateX(20px);
+            }
+        }
+
+        .hero-title {
+            font-size: clamp(4rem, 14vw, 11rem);
+            font-weight: 900;
+            color: var(--primary);
+            letter-spacing: -0.06em;
+            transform: skew(-5deg);
+            line-height: 1;
+            /* MOVED UP ON DESKTOP */
+            margin-top: -3rem;
+            margin-bottom: 0.5rem;
+            position: relative;
+            z-index: 2;
+        }
+
+        .hero-subtitle {
+            font-size: clamp(1.1rem, 2.5vw, 1.8rem);
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            text-align: center;
+        }
+
+        .hero-description {
+            font-size: clamp(0.9rem, 1.8vw, 1.1rem);
+            text-align: center;
+            max-width: 650px;
+            opacity: 0.8;
+            margin-bottom: 1.5rem;
+        }
+
+        .hero-image-container {
+            /* UPDATED SIZE: 320px */
+            width: 320px;
+            height: 320px;
+            /* Safety for small screens */
+            max-width: 80%;
+            max-height: 80vw;
+            background: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 1rem 0 2rem;
+            box-shadow: 0 30px 80px rgba(139, 0, 0, 0.15);
+            animation: float 6s ease-in-out infinite;
+            z-index: 5;
+        }
+
+        @keyframes float {
+
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-15px);
+            }
+        }
+
+        /* Hero Stats Bubbles */
+        .stat-bubble {
+            position: absolute;
+            background: white;
+            padding: 1rem 1.5rem;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(139, 0, 0, 0.15);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            cursor: pointer;
+            /* INCREASED SIZE BY 5% */
+            transform: scale(1.05);
+            transition: transform 0.3s, box-shadow 0.3s;
+            z-index: 6;
+        }
+
+        .stat-bubble:hover {
+            /* ADJUSTED HOVER TO 1.15 */
+            transform: scale(1.15) rotate(-5deg);
+            box-shadow: 0 15px 40px rgba(139, 0, 0, 0.3);
+        }
+
+        .stat-number {
+            font-size: 1.5rem;
+            font-weight: 900;
+            color: var(--primary);
+        }
+
+        .stat-label {
+            font-size: 0.7rem;
+            font-weight: 600;
+            opacity: 0.7;
+            text-align: center;
+        }
+
+        .bubble-1 {
+            top: 45%;
+            left: 10%;
+        }
+
+        .bubble-2 {
+            top: 50%;
+            right: 12%;
+        }
+
+        .bubble-3 {
+            bottom: 15%;
+            left: 15%;
+        }
+
+        .bubble-4 {
+            bottom: 18%;
+            right: 15%;
+        }
+
+        /* =========================================
+           STATS BANNER
+           ========================================= */
+        .stats-banner {
+            background: linear-gradient(180deg, #FFFFFF 0%, #FFE8F0 20%, #FFE8F0 100%);
+            padding: 6rem 2rem;
+            position: relative;
+            z-index: 3;
+        }
+
+        .stats-banner-title {
+            text-align: center;
+            font-size: clamp(2rem, 5vw, 3.5rem);
+            font-weight: 900;
+            color: var(--primary);
+            margin-bottom: 1rem;
+        }
+
+        .stats-banner-subtitle {
+            text-align: center;
+            font-size: clamp(1rem, 2vw, 1.3rem);
+            color: var(--text);
+            margin: 0 auto 4rem;
+            max-width: 800px;
+            opacity: 0.85;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            max-width: 1200px;
+            margin: 0 auto 4rem;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 2.5rem 2rem;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(139, 0, 0, 0.1);
+            text-align: center;
+            transition: transform 0.3s, box-shadow 0.3s;
+            border: 2px solid transparent;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(139, 0, 0, 0.2);
+            border-color: var(--accent);
+        }
+
+        .stat-card-number {
+            font-size: clamp(3rem, 6vw, 4.5rem);
+            font-weight: 900;
+            line-height: 1;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .stat-card-label {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text);
+        }
+
+        .stat-card-description {
+            font-size: 0.9rem;
+            color: var(--text);
+            opacity: 0.7;
+            margin-top: 0.5rem;
+        }
+
+        .stats-footer {
+            text-align: center;
+            font-size: 1rem;
+            color: var(--text);
+            opacity: 0.7;
+            font-style: italic;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* =========================================
+           PROJECTS: 3D SCROLL SECTION
+           ========================================= */
+        #projects-scroll-wrapper {
+            height: 600vh;
+            /* Long scroll area to accommodate 15 cards */
+            position: relative;
+            background: transparent;
+        }
+
+        #projects-sticky-view {
+            position: sticky;
+            top: 0;
+            height: 100vh;
+            width: 100%;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            perspective: 1000px;
+            background: radial-gradient(circle at 50% 50%, #FFFFFF 0%, #F0F2F5 100%);
+        }
+
+        .projects-instruction {
+            position: absolute;
+            top: 15%;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 50;
+            text-align: center;
+            pointer-events: none;
+            width: 100%;
+        }
+
+        .projects-instruction h2 {
+            font-size: clamp(1.5rem, 3vw, 2.5rem);
+            color: var(--primary);
+            font-weight: 800;
+            text-transform: lowercase;
+            opacity: 0.8;
+            margin-bottom: 0.5rem;
+            text-shadow: 0 2px 10px rgba(255, 255, 255, 0.8);
+        }
+
+        .projects-instruction p {
+            font-size: 1rem;
+            opacity: 0.6;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                opacity: 0.6;
+            }
+
+            50% {
+                opacity: 1;
+            }
+        }
+
+        /* 3D CANVAS CONTAINER */
+        #canvas-container {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 450px;
+            height: 450px;
+            z-index: 5;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.5s;
+        }
+
+        #canvas-container.visible {
+            opacity: 1;
+        }
+
+        #orb-canvas {
+            width: 100%;
+            height: 100%;
+        }
+
+        /* Card Positioning System */
+        .cards-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 10;
+            pointer-events: none;
+        }
+
+        .project-card {
+            position: absolute;
+            background: white;
+            padding: 2rem;
+            border-radius: 24px;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.08);
+            max-width: 320px;
+            width: 85%;
+            pointer-events: auto;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            opacity: 0;
+            transform: scale(0.6) translateY(100px);
+            transition: all 0.7s cubic-bezier(0.34, 1.56, 0.64, 1);
+            will-change: transform, opacity;
+        }
+
+        .project-card.visible {
+            opacity: 1;
+            transform: scale(1) translateY(0);
+        }
+
+        .project-card:hover {
+            transform: scale(1.05) rotate(-2deg);
+            box-shadow: 0 20px 50px rgba(139, 0, 0, 0.2);
+        }
+
+        .project-card h3 {
+            color: var(--primary);
+            font-size: 1.4rem;
+            font-weight: 800;
+        }
+
+        .project-card p {
+            color: var(--text);
+            font-size: 0.95rem;
+            opacity: 0.8;
+        }
+
+        .card-badge {
+            background: var(--bg-light);
+            color: var(--primary);
+            font-size: 0.75rem;
+            font-weight: 700;
+            padding: 0.3rem 0.8rem;
+            border-radius: 12px;
+            text-transform: uppercase;
+            align-self: flex-start;
+        }
+
+        /* CARD POSITIONS (DESKTOP) */
+        .card-1 {
+            top: 15%;
+            left: 10%;
+        }
+
+        .card-2 {
+            bottom: 15%;
+            right: 10%;
+        }
+
+        .card-3 {
+            bottom: 20%;
+            left: 5%;
+        }
+
+        .card-4 {
+            top: 18%;
+            right: 12%;
+        }
+
+        .card-5 {
+            bottom: 10%;
+            right: 25%;
+        }
+
+        .card-6 {
+            bottom: 35%;
+            right: 5%;
+        }
+
+        .card-7 {
+            top: 40%;
+            left: 5%;
+        }
+
+        .card-8 {
+            top: 15%;
+            left: 35%;
+        }
+
+        .card-9 {
+            bottom: 15%;
+            left: 10%;
+        }
+
+        .card-10 {
+            top: 10%;
+            right: 30%;
+        }
+
+        .card-11 {
+            top: 35%;
+            right: 10%;
+        }
+
+        .card-12 {
+            bottom: 5%;
+            left: 30%;
+        }
+
+        .card-13 {
+            top: 20%;
+            right: 5%;
+        }
+
+        .card-14 {
+            bottom: 40%;
+            left: 5%;
+        }
+
+        .card-15 {
+            bottom: 10%;
+            right: 5%;
+        }
+
+        /* =========================================
+           PROJECT MODAL
+           ========================================= */
+        .project-modal {
+            position: fixed;
+            inset: 0;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(15px);
+            z-index: 10000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.4s ease;
+        }
+
+        .project-modal.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .modal-content {
+            background: white;
+            width: 90%;
+            max-width: 600px;
+            padding: 3rem;
+            border-radius: 30px;
+            box-shadow: 0 25px 80px rgba(139, 0, 0, 0.25);
+            transform: translateY(50px) scale(0.9);
+            transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            position: relative;
+            border: 1px solid rgba(139, 0, 0, 0.1);
+        }
+
+        .project-modal.active .modal-content {
+            transform: translateY(0) scale(1);
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 20px;
+            right: 25px;
+            background: none;
+            border: none;
+            font-size: 2rem;
+            cursor: pointer;
+            color: var(--text);
+            transition: color 0.3s;
+        }
+
+        .modal-close:hover {
+            color: var(--primary);
+        }
+
+        .modal-title {
+            font-size: 2.5rem;
+            font-weight: 900;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+            line-height: 1.1;
+        }
+
+        .modal-badge {
+            display: inline-block;
+            background: var(--bg-light);
+            color: var(--secondary);
+            padding: 0.5rem 1rem;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 0.9rem;
+            margin-bottom: 2rem;
+        }
+
+        .modal-desc {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            color: var(--text);
+            margin-bottom: 2.5rem;
+            opacity: 0.9;
+        }
+
+        .modal-links {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .modal-btn {
+            padding: 0.8rem 1.8rem;
+            border-radius: 50px;
+            font-weight: 700;
+            text-decoration: none;
+            transition: transform 0.2s, box-shadow 0.2s;
+            cursor: pointer;
+            border: none;
+            display: inline-block;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+            box-shadow: 0 10px 20px rgba(139, 0, 0, 0.2);
+        }
+
+        .btn-outline {
+            border: 2px solid var(--text);
+            background: transparent;
+            color: var(--text);
+        }
+
+        .modal-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+        }
+
+        /* =========================================
+           PIANO INTRO & WAVE
+           ========================================= */
+        .projects-intro {
+            position: relative;
+            background: transparent;
+            padding: 0;
+            margin-top: -10rem;
+            overflow: visible;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 20;
+            pointer-events: none;
+        }
+
+        .piano-wave-container {
+            width: 100%;
+            max-width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            position: relative;
+        }
+
+        .piano-wave-image {
+            width: 101%;
+            max-width: none;
+            height: auto;
+            display: block;
+            margin: 0;
+            filter: drop-shadow(0 15px 30px rgba(139, 0, 0, 0.2));
+            position: relative;
+            z-index: 1;
+        }
+
+        /* =========================================
+           IMPACT & TESTIMONIALS
+           ========================================= */
+        .big-impact-section {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            padding: 10rem 4rem;
+            text-align: center;
+            color: white;
+            z-index: 10;
+        }
+
+        .big-impact-title {
+            font-size: clamp(4rem, 12vw, 10rem);
+            font-weight: 900;
+            line-height: 0.85;
+            margin-bottom: 2rem;
+        }
+
+        .big-impact-subtitle {
+            font-family: 'Brush Script MT', cursive;
+            font-size: clamp(2rem, 5vw, 4rem);
+            color: #FFE8F0;
+            transform: rotate(-5deg);
+        }
+
+        .testimonials {
+            padding: 6rem 4rem;
+            background: #1a1a1a;
+            color: white;
+            z-index: 10;
+        }
+
+        .testimonials-header {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        .testimonials-header h2 {
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            font-weight: 900;
+            text-transform: uppercase;
+        }
+
+        .testimonials-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .testimonial-card {
+            background: #2d2d2d;
+            padding: 2.5rem;
+            border-radius: 16px;
+            transition: transform 0.3s;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+        }
+
+        .testimonial-card:hover {
+            transform: translateY(-10px);
+            background: #333;
+        }
+
+        .stars {
+            color: #DC143C;
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+        }
+
+        .testimonial-text {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+            opacity: 0.9;
+        }
+
+        .testimonial-author {
+            font-weight: 700;
+            font-size: 0.9rem;
+            color: #aaa;
+            text-transform: uppercase;
+        }
+
+        .verified-badge {
+            color: #4ade80;
+            font-size: 0.8rem;
+            margin-left: 0.5rem;
+        }
+
+        /* =========================================
+           CONTENT SECTIONS
+           ========================================= */
+        .content-section {
+            padding: 6rem 4rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .section-title {
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            font-weight: 900;
+            margin-bottom: 3rem;
+            color: var(--primary);
+            text-transform: lowercase;
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 3rem;
+        }
+
+        .text-lg {
+            font-size: 1.3rem;
+            line-height: 1.8;
+            margin-bottom: 1.5rem;
+        }
+
+        .journey-tag {
+            background: var(--accent);
+            color: white;
+            padding: 0.5rem 1.5rem;
+            border-radius: 50px;
+            font-weight: 700;
+            display: inline-block;
+        }
+
+        .skill-card {
+            background: white;
+            padding: 2.5rem;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(139, 0, 0, 0.1);
+            transition: transform 0.3s;
+        }
+
+        .skill-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(139, 0, 0, 0.15);
+        }
+
+        .skill-card h3 {
+            color: var(--primary);
+            margin-bottom: 1.5rem;
+            font-size: 1.5rem;
+            font-weight: 800;
+        }
+
+        .skill-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .skill-list li {
+            padding: 0.6rem 0;
+            border-bottom: 1px solid #f0f0f0;
+            font-weight: 600;
+        }
+
+        .beyond {
+            background: linear-gradient(135deg, var(--secondary) 0%, var(--primary) 100%);
+            padding: 8rem 4rem;
+            color: white;
+        }
+
+        .beyond-container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .section-title-huge {
+            font-size: clamp(3rem, 8vw, 6rem);
+            font-weight: 900;
+            margin-bottom: 2rem;
+            text-transform: lowercase;
+        }
+
+        .beyond-subtitle {
+            font-size: 1.5rem;
+            margin-bottom: 4rem;
+            opacity: 0.9;
+            max-width: 800px;
+        }
+
+        .beyond-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+        }
+
+        .beyond-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            padding: 2.5rem;
+            border-radius: 20px;
+            transition: transform 0.3s;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .beyond-card:hover {
+            transform: translateY(-10px);
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .beyond-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            font-weight: 800;
+        }
+
+        #contact {
+            position: relative;
+            background: linear-gradient(to bottom, rgba(139, 0, 0, 0.5) 0%, rgba(139, 0, 0, 0.4) 100%), url('hands-connect.png') center center / cover no-repeat;
+            padding: 8rem 4rem;
+            color: white;
+            min-height: 90vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .contact-container {
+            max-width: 1400px;
+            width: 100%;
+            margin: 0 auto;
+            text-align: center;
+            position: relative;
+            z-index: 10;
+        }
+
+        .contact-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1.5rem;
+            margin: 4rem auto;
+            width: 100%;
+        }
+
+        .contact-box {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            padding: 2rem;
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: transform 0.3s, background 0.3s;
+        }
+
+        .contact-box:hover {
+            transform: translateY(-5px);
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        footer {
+            padding: 4rem;
+            background: var(--primary);
+            color: white;
+            text-align: center;
+            font-weight: 600;
+            font-size: 1.2rem;
+        }
+
+        /* =========================================
+           RESPONSIVE DESIGN (MEDIA QUERIES)
+           ========================================= */
+        @media (max-width: 1024px) {
+            .contact-grid {
+                grid-template-columns: repeat(2, 1fr);
+                max-width: 800px;
+            }
+
+            .stat-bubble {
+                display: none !important;
+            }
+
+            /* Hide bubbles on tablet */
+        }
+
+        /* MOBILE FIXES - THE IMPORTANT PART */
+        @media (max-width: 768px) {
+
+            /* General */
+            nav {
+                padding: 1.5rem;
+            }
+
+            .nav-links {
+                display: none;
+            }
+
+            /* HERO FIX: Remove full height constraint so space collapses */
+            .hero {
+                min-height: auto !important;
+                height: auto !important;
+                padding-top: 8rem;
+                padding-bottom: 4rem;
+                justify-content: center;
+            }
+
+            .hero-title {
+                margin-top: 0;
+            }
+
+            /* Reset desktop negative margin */
+
+            /* Hide Cursor */
+            #custom-cursor {
+                display: none;
+            }
+
+            /* Flatten Grids to 1 Column */
+            .grid-2,
+            .split-feature-section,
+            .contact-grid,
+            .stats-grid,
+            .beyond-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .contact-grid {
+                max-width: 100%;
+            }
+
+            .split-feature-left,
+            .split-feature-right {
+                padding: 4rem 2rem;
+            }
+
+            .content-section,
+            .beyond,
+            #contact {
+                padding: 4rem 2rem;
+            }
+
+            /* Fix Projects Section (Disable 3D on Mobile) */
+            #projects-scroll-wrapper {
+                height: auto;
+            }
+
+            #projects-sticky-view {
+                position: relative;
+                height: auto;
+                top: auto;
+                display: block;
+            }
+
+            .cards-container {
+                position: relative;
+                height: auto;
+                padding: 0 1rem 4rem 1rem;
+                width: 100%;
+                display: flex;
+                flex-direction: column;
+                gap: 2rem;
+            }
+
+            /* Reset Card Positioning for Vertical List */
+            .project-card {
+                position: relative !important;
+                margin: 0 auto !important;
+                left: auto !important;
+                right: auto !important;
+                top: auto !important;
+                bottom: auto !important;
+                transform: none !important;
+                opacity: 1 !important;
+                width: 100% !important;
+                max-width: 100% !important;
+            }
+
+            /* Hide Heavy 3D Elements */
+            #canvas-container {
+                display: none;
+            }
+
+            /* Fix Piano Wave Position */
+            .projects-intro {
+                position: relative;
+                margin-top: 0;
+                margin-bottom: 2rem;
+                top: 0;
+                left: 0;
+                transform: none;
+            }
+
+            .piano-wave-image {
+                width: 150%;
+                left: -25%;
+            }
+
+            /* Hide Bubbles on Mobile */
+            .stat-bubble {
+                display: none !important;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="project-modal">
+        <div class="modal-content">
+            <button class="modal-close" data-interactive="true">×</button>
+            <h2 class="modal-title" id="modal-title">Project Title</h2>
+            <span class="modal-badge" id="modal-badge">Tech Stack</span>
+            <p class="modal-desc" id="modal-desc">
+                Description goes here. This will be populated by JavaScript.
+            </p>
+            <div class="modal-links" id="modal-links-container">
+            </div>
+        </div>
+    </div>
+
+    <div id="custom-cursor"></div>
+    <button id="sound-toggle" data-interactive="true">Sound On</button>
+
+    <nav>
+        <a href="#" class="logo" data-interactive="true">ST.</a>
+        <ul class="nav-links">
+            <li><a href="#about" data-interactive="true">About</a></li>
+            <li><a href="#projects" data-interactive="true">Work</a></li>
+            <li><a href="#skills" data-interactive="true">Skills</a></li>
+            <li><a href="#contact" data-interactive="true">Contact</a></li>
+        </ul>
+        <a href="#contact" class="cta-button" data-interactive="true">Let's Talk</a>
+    </nav>
+
+    <section class="hero">
+        <div class="curved-text">AWARD-WINNING - DATA SCIENCE - CREATIVE TECH -</div>
+        <h1 class="hero-title">sanika</h1>
+        <p class="hero-subtitle">Building systems with a soul</p>
+        <p class="hero-description">Award-winning data scientist and full-stack developer crafting AI solutions that
+            combine technical excellence with human impact.</p>
+
+        <div class="hero-image-container">
+            <img src="meeee.jpeg" alt="Sanika"
+                style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
+        </div>
+
+        <div class="stat-bubble bubble-1" data-interactive="true">
+            <span class="stat-number">9.3+</span>
+            <span class="stat-label">Academic Excellence</span>
+        </div>
+        <div class="stat-bubble bubble-2" data-interactive="true">
+            <span class="stat-number">1st</span>
+            <span class="stat-label">Prize Winner ICADMA 2025</span>
+        </div>
+        <div class="stat-bubble bubble-3" data-interactive="true">
+            <span class="stat-number">99%+</span>
+            <span class="stat-label">AI Accuracy</span>
+        </div>
+        <div class="stat-bubble bubble-4" data-interactive="true">
+            <span class="stat-number">1,500+</span>
+            <span class="stat-label">Students Served Daily</span>
+        </div>
+    </section>
+
+    <section class="stats-banner">
+        <h2 class="stats-banner-title">Research meets Real Impact</h2>
+        <p class="stats-banner-subtitle">Making data-driven decisions simple and accessible — so you can optimize
+            performance, predict outcomes better, and innovate every single day.</p>
+
+        <div class="stats-grid">
+            <div class="stat-card" data-interactive="true">
+                <div class="stat-card-number" data-target="99">0</div>
+                <div class="stat-card-label">AI Accuracy</div>
+                <div class="stat-card-description">Production-grade systems</div>
+            </div>
+            <div class="stat-card" data-interactive="true">
+                <div class="stat-card-number" data-target="1500">0</div>
+                <div class="stat-card-label">Students Served</div>
+                <div class="stat-card-description">Daily via Face ID</div>
+            </div>
+            <div class="stat-card" data-interactive="true">
+                <div class="stat-card-number" data-target="40">0</div>
+                <div class="stat-card-label">Performance Boost</div>
+                <div class="stat-card-description">Algorithm optimization</div>
+            </div>
+            <div class="stat-card" data-interactive="true">
+                <div class="stat-card-number" data-target="1">0</div>
+                <div class="stat-card-label">First Prize</div>
+                <div class="stat-card-description">ICADMA 2025</div>
+            </div>
+        </div>
+        <p class="stats-footer">Loved by professors and community members — combining rigorous academic research,
+            premium code quality, and human-centric design.</p>
+    </section>
+
+    <div id="projects-scroll-wrapper">
+        <div id="projects-sticky-view">
+
+            <div class="projects-instruction">
+                <h4><I>Scroll & Tap any card for more details</I></h4>
+            </div>
+
+            <div id="canvas-container">
+                <canvas id="orb-canvas"></canvas>
+            </div>
+
+            <div class="cards-container">
+
+                <div class="project-card card-1" data-start="0.0" data-end="0.15" data-interactive="true"
+                    data-type="project"
+                    data-description="Comprehensive interactive dashboards transforming complex datasets into actionable business intelligence through advanced visualizations and custom DAX measures."
+                    data-github="" data-live=""
+                    data-linkedin="https://www.linkedin.com/posts/sanika-tribhuvan-b3a392348_datascience-streamlit-ai-activity-7390015491328782336-t1jc">
+                    <h3>Dashboards & Data Storytelling</h3>
+                    <span class="card-badge">Power BI, SQL, DAX</span>
+                    <p>Insight-driven visual dashboards</p>
+                </div>
+
+                <div class="project-card card-2" data-start="0.06" data-end="0.21" data-interactive="true"
+                    data-type="project"
+                    data-description="Full-stack anime web application featuring 26+ character profiles, AI-powered chatbot with personality-driven responses, interactive quiz system, XP progression mechanics, and achievement tracking."
+                    data-github="https://github.com/SanikaTribhuvan/demon-slayer-app"
+                    data-live="https://kimetsu-no-yoiba.netlify.app/"
+                    data-linkedin="https://www.linkedin.com/posts/sanika-tribhuvan-b3a392348_reactjs-webdevelopment-frontenddevelopment-activity-7402760751276498944-2xrq">
+                    <h3>Demon Slayer App</h3>
+                    <span class="card-badge">React.js, Tailwind, Claude API</span>
+                    <p>Gamified anime web platform</p>
+                </div>
+
+                <div class="project-card card-3" data-start="0.12" data-end="0.27" data-interactive="true"
+                    data-type="project"
+                    data-description="1st Prize Winner at ICADMA 2025. Real-world visualization demonstrating A* algorithm achieving 99.1% computational efficiency over Dijkstra on Ahmednagar city map."
+                    data-github="https://github.com/SanikaTribhuvan/Pathfinding-Algorithm-Visualizer"
+                    data-live="https://pathfinding-algorithm-visualizer-m6rkahkr3n22nlz2gj4e6m.streamlit.app/"
+                    data-linkedin="https://www.linkedin.com/posts/sanika-tribhuvan-b3a392348_1st-prize-winner-at-icadma-2025-visualizing-activity-7401975788792631296-v25h">
+                    <h3>Pathfinding Visualizer</h3>
+                    <span class="card-badge">Python, Streamlit, A* Algo</span>
+                    <p>Algorithm efficiency research</p>
+                </div>
+
+                <div class="project-card card-4" data-start="0.18" data-end="0.33" data-interactive="true"
+                    data-type="project"
+                    data-description="Healthcare intelligence platform achieving 94.6% prediction accuracy. Features real-time risk assessment, district-level analytics dashboard, and accessibility-focused audio guidance."
+                    data-github="https://github.com/SanikaTribhuvan/stroke-risk-monitor-app-"
+                    data-live="https://sanikatribhuvan-stroke-risk-monitor-app--app-33cixd.streamlit.app/"
+                    data-linkedin="https://www.linkedin.com/posts/sanika-tribhuvan-b3a392348_ai-healthcare-machinelearning-activity-7390012316928593920-WAou">
+                    <h3>Stroke Risk Monitor</h3>
+                    <span class="card-badge">ML, Python, Decision Tree</span>
+                    <p>AI Healthcare Prediction</p>
+                </div>
+
+                <div class="project-card card-5" data-start="0.24" data-end="0.39" data-interactive="true"
+                    data-type="project"
+                    data-description="Unified monitoring interface consolidating GitHub, Netlify, and UptimeRobot metrics. Centralized oversight for code health and deployment pipelines. (Private Repo)"
+                    data-github="" data-live=""
+                    data-linkedin="https://www.linkedin.com/posts/sanika-tribhuvan-b3a392348_devops-fullstack-api-activity-7389038548022099968-E2_X">
+                    <h3>DevOps Dashboard</h3>
+                    <span class="card-badge">DevOps Tools, API Integration</span>
+                    <p>System metrics monitoring</p>
+                </div>
+
+                <div class="project-card card-6" data-start="0.30" data-end="0.45" data-interactive="true"
+                    data-type="project"
+                    data-description="Enterprise HR system with employee records management, attendance tracking, role-based access control, and analytics dashboard."
+                    data-github="https://github.com/SanikaTribhuvan/EMA-Employee-Management-Application-" data-live=""
+                    data-linkedin="https://www.linkedin.com/posts/sanika-tribhuvan-b3a392348_webdevelopment-codeigniter-php-activity-7376933379340042242-2n7f">
+                    <h3>Employee Management</h3>
+                    <span class="card-badge">CodeIgniter (PHP), MySQL</span>
+                    <p>HR Enterprise System</p>
+                </div>
+
+                <div class="project-card card-7" data-start="0.36" data-end="0.51" data-interactive="true"
+                    data-type="project"
+                    data-description="Interactive space exploration experience with dynamic animations and planetary data visualization. Pure JavaScript implementation showcasing modern web capabilities."
+                    data-github="https://github.com/SanikaTribhuvan/SPACE-EXPP"
+                    data-live="https://space-exp.netlify.app/" data-linkedin="">
+                    <h3>THE SPACE-EXP</h3>
+                    <span class="card-badge">HTML5, CSS3, JS</span>
+                    <p>Interactive Space Design</p>
+                </div>
+
+                <div class="project-card card-8" data-start="0.42" data-end="0.57" data-interactive="true"
+                    data-type="project"
+                    data-description="Gesture-controlled drawing application leveraging real-time hand tracking. Webcam-based interface enabling contactless artistic creation with save functionality."
+                    data-github="https://github.com/SanikaTribhuvan/AIR-PAINTER"
+                    data-live="http://air-painter.netlify.app"
+                    data-linkedin="https://www.linkedin.com/posts/sanika-tribhuvan-b3a392348_creativecoding-javascript-mediapipe-activity-7346685319318024192-LScb">
+                    <h3>Air Painter</h3>
+                    <span class="card-badge">JS, MediaPipe, CV</span>
+                    <p>Gesture-controlled Canvas</p>
+                </div>
+
+                <div class="project-card card-9" data-start="0.48" data-end="0.63" data-interactive="true"
+                    data-type="project"
+                    data-description="AI companion application with voice-driven interaction. Features real-time speech recognition, synthesized audio responses, and immersive dual-camera interface."
+                    data-github="https://github.com/SanikaTribhuvan/Sakha-Saarthi" data-live=""
+                    data-linkedin="https://www.linkedin.com/posts/sanika-tribhuvan-b3a392348_aiproject-codeigniter-voiceapp-activity-7355156634840481792-ZHTh">
+                    <h3>Sakha Saarthi</h3>
+                    <span class="card-badge">CodeIgniter, Web Speech API</span>
+                    <p>Voice-driven AI Companion</p>
+                </div>
+
+                <div class="project-card card-10" data-start="0.54" data-end="0.69" data-interactive="true"
+                    data-type="project"
+                    data-description="Smart waste management platform with real-time monitoring, driver/household coordination, and collection analytics. Enterprise-grade dashboard with waste categorization."
+                    data-github="https://github.com/SanikaTribhuvan/CleanTrack"
+                    data-live="https://cleanlinesstrack.netlify.app/"
+                    data-linkedin="https://www.linkedin.com/posts/sanika-tribhuvan-b3a392348_codeigniter-php-webdevelopment-activity-7381522907052814336-y33L">
+                    <h3>CleanTrack</h3>
+                    <span class="card-badge">CodeIgniter, MySQL</span>
+                    <p>Smart Waste Management</p>
+                </div>
+
+                <div class="project-card card-11" data-start="0.60" data-end="0.75" data-interactive="true"
+                    data-type="cert"
+                    data-description="Hands-on training in containerization and orchestration fundamentals. Core competencies in modern DevOps infrastructure and deployment strategies."
+                    data-github="" data-live=""
+                    data-linkedin="https://www.linkedin.com/posts/sanika-tribhuvan-b3a392348_docker-kubernetes-devopsbasics-activity-7411685165917265920-Wf_J">
+                    <h3>Docker & Kubernetes</h3>
+                    <span class="card-badge">Scaler Certification</span>
+                    <p>DevOps Fundamentals</p>
+                </div>
+
+                <div class="project-card card-12" data-start="0.66" data-end="0.81" data-interactive="true"
+                    data-type="cert"
+                    data-description="Advanced training in generative AI technologies, large language models, and practical implementation strategies for AI-powered solutions."
+                    data-github="" data-live=""
+                    data-linkedin="https://www.linkedin.com/posts/sanika-tribhuvan-b3a392348_generativeai-artificialintelligence-ailearning-activity-7391192971540578304-JITS">
+                    <h3>Gen AI Mastermind</h3>
+                    <span class="card-badge">Outskill × CRED</span>
+                    <p>LLM & GenAI Strategy</p>
+                </div>
+
+                <div class="project-card card-13" data-start="0.72" data-end="0.87" data-interactive="true"
+                    data-type="cert"
+                    data-description="Core AI principles, data-driven systems, business applications, and ethical frameworks in artificial intelligence implementation."
+                    data-github="" data-live=""
+                    data-linkedin="https://www.linkedin.com/posts/sanika-tribhuvan-b3a392348_artificialintelligence-ai-professionaldevelopment-activity-7407894444483600384-PaDb">
+                    <h3>AI for Beginners</h3>
+                    <span class="card-badge">HP LIFE Certification</span>
+                    <p>AI Foundations</p>
+                </div>
+
+                <div class="project-card card-14" data-start="0.78" data-end="0.93" data-interactive="true"
+                    data-type="cert"
+                    data-description="End-to-end application development covering Python backend architecture, database management, and modern frontend frameworks."
+                    data-github="" data-live=""
+                    data-linkedin="https://www.linkedin.com/posts/sanika-tribhuvan-b3a392348_python-fullstackdevelopment-eduskills-activity-7368240090701086720-ttrk">
+                    <h3>Python Full Stack</h3>
+                    <span class="card-badge">EduSkills Academy</span>
+                    <p>Full Stack Development</p>
+                </div>
+
+                <div class="project-card card-15" data-start="0.84" data-end="1.0" data-interactive="true"
+                    data-type="cert"
+                    data-description="Intensive training in enterprise business intelligence. Advanced data visualization, dashboard architecture, and analytics using Microsoft Power BI."
+                    data-github="" data-live=""
+                    data-linkedin="https://www.linkedin.com/posts/sanika-tribhuvan-b3a392348_powerbi-datavisualization-businessintelligence-activity-7328099608335663104-aTvM">
+                    <h3>Power BI Training</h3>
+                    <span class="card-badge">CASAS & AIS Solutions</span>
+                    <p>Industrial BI Training</p>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <section class="big-impact-section">
+        <span class="big-impact-subtitle">Premium Code Quality</span>
+        <h2 class="big-impact-title">Clean. Smart.<br>Innovation.</h2>
+    </section>
+
+    <section class="testimonials">
+        <div class="testimonials-header">
+            <h2>DON'T TAKE MY WORD FOR IT</h2>
+            <p style="opacity: 0.7; margin-top: 1rem;">(Take theirs instead)</p>
+        </div>
+        <div class="testimonials-grid">
+            <div class="testimonial-card" data-interactive="true">
+                <div class="stars">★★★★★</div>
+                <p class="testimonial-text">"The most efficient algorithm implementation I've seen. Truly optimized for
+                    performance."</p>
+                <div class="testimonial-author">ICADMA Judge <span class="verified-badge">✔ Verified</span></div>
+            </div>
+            <div class="testimonial-card" data-interactive="true">
+                <div class="stars">★★★★★</div>
+                <p class="testimonial-text">"Transformative for our daily operations. The face recognition system just
+                    works."</p>
+                <div class="testimonial-author">College Admin <span class="verified-badge">✔ Verified</span></div>
+            </div>
+            <div class="testimonial-card" data-interactive="true">
+                <div class="stars">★★★★★</div>
+                <p class="testimonial-text">"Risk of addiction to her code quality. The logic is so clean."</p>
+                <div class="testimonial-author">GitHub Peer <span class="verified-badge">✔ Verified</span></div>
+            </div>
+        </div>
+    </section>
+
+    <section class="content-section" id="about" style="padding-top: 1rem; padding-bottom: 8rem;">
+        <h2 class="section-title" style="margin-bottom: 1rem;">hey there</h2>
+        <div class="grid-2" style="align-items: start; gap: 2rem;">
+            <div>
+                <p class="text-lg" style="margin-bottom: 0.8rem; margin-top: 0;">
+                    I'm <strong>Sanika</strong> — a final-year BCA student (9.3+ CGPA) blending logic with creativity.
+                </p>
+                <span class="journey-tag" style="margin-bottom: 1rem; display: inline-block;">Data Science & AI</span>
+                <p style="font-size: 1.05rem; line-height: 1.5; margin-bottom: 0.8rem;">
+                    My journey began with biology textbooks, not code. But somewhere between DNA strands and physics
+                    numericals, I stumbled into logic gates and got hooked.
+                </p>
+                <p style="font-size: 1.05rem; line-height: 1.5; margin: 0;">
+                    Today, I build award-winning research, enterprise systems, and creative tech that matters.
+                </p>
+            </div>
+            <div style="margin-top: -0.5rem;">
+                <div class="skill-card" data-interactive="true" style="padding: 1.5rem; transition: transform 0.3s;">
+                    <h3 style="margin-bottom: 0.8rem; font-size: 1.2rem; margin-top: 0;">Highlights</h3>
+                    <ul class="skill-list" style="margin-bottom: 0; font-size: 0.9rem;">
+                        <li style="padding: 0.4rem 0;">1st Prize @ ICADMA 2025</li>
+                        <li style="padding: 0.4rem 0;">9.3+ CGPA Final Year BCA</li>
+                        <li style="padding: 0.4rem 0;">Pianist & Academy Founder</li>
+                        <li style="padding: 0.4rem 0;">Generative AI Certified</li>
+                        <li style="padding: 0.4rem 0; border-bottom: none;">Full Stack Developer</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="projects-intro" id="projects">
+        <div class="piano-wave-container">
+            <img src="piano-wave.png" alt="Wavy Piano Keyboard" class="piano-wave-image" loading="lazy">
+        </div>
+    </section>
+
+    <section class="content-section" id="skills" style="
+        max-width: none !important;
+        margin: 0 !important;
+        width: 100% !important;
+        background-image: url('catbg.png');        
+        background-size: cover;
+        background-position: center;
+        padding: 5rem 2rem; 
+        overflow: hidden;">
+
+        <h2 class="section-title"
+            style="text-align: center; font-size: clamp(2.5rem, 5vw, 4rem); margin-bottom: 3rem; margin-top: 0;">
+            tech stack</h2>
+
+        <div style="
+            display: grid; 
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); 
+            gap: 1.5rem; 
+            max-width: 1400px; 
+            margin: 0 auto;
+            width: 100%;
+            padding: 0;">
+
+            <div class="skill-card" data-interactive="true" style="padding: 1.5rem;">
+                <h3 style="margin-bottom: 1rem; font-size: 1.3rem;">Programming</h3>
+                <ul class="skill-list" style="font-size: 0.9rem;">
+                    <li>Python</li>
+                    <li>JavaScript</li>
+                    <li>Java</li>
+                    <li>PHP</li>
+                    <li>C / C++</li>
+                    <li>SQL</li>
+                </ul>
+            </div>
+
+            <div class="skill-card" data-interactive="true" style="padding: 1.5rem;">
+                <h3 style="margin-bottom: 1rem; font-size: 1.3rem;">Web Dev</h3>
+                <ul class="skill-list" style="font-size: 0.9rem;">
+                    <li>React + Tailwind</li>
+                    <li>HTML5 / CSS3</li>
+                    <li>CodeIgniter</li>
+                    <li>Bootstrap</li>
+                    <li>GSAP Animations</li>
+                </ul>
+            </div>
+
+            <div class="skill-card" data-interactive="true" style="padding: 1.5rem;">
+                <h3 style="margin-bottom: 1rem; font-size: 1.3rem;">Data & AI</h3>
+                <ul class="skill-list" style="font-size: 0.9rem;">
+                    <li>Machine Learning</li>
+                    <li>Power BI / DAX</li>
+                    <li>MediaPipe AI</li>
+                    <li>Computer Vision</li>
+                    <li>Predictive Modeling</li>
+                </ul>
+            </div>
+
+            <div class="skill-card" data-interactive="true" style="padding: 1.5rem;">
+                <h3 style="margin-bottom: 1rem; font-size: 1.3rem;">Tools</h3>
+                <ul class="skill-list" style="font-size: 0.9rem;">
+                    <li>Git / GitHub</li>
+                    <li>MySQL / DBMS</li>
+                    <li>Streamlit</li>
+                    <li>Canvas API</li>
+                    <li>API Integration</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <section class="beyond" id="beyond">
+        <div class="beyond-container">
+            <h2 class="section-title-huge">beyond code</h2>
+            <p class="beyond-subtitle">I'm not just a developer — I'm an artist, educator, and builder who believes
+                technology should feel human.</p>
+            <div class="beyond-grid">
+                <div class="beyond-card" data-interactive="true">
+                    <h3>Music Educator</h3>
+                    <p>Founder of a Piano Academy. Applying musical patience and pattern recognition to debugging code.
+                    </p>
+                </div>
+                <div class="beyond-card" data-interactive="true">
+                    <h3>A Poet</h3>
+                    <p>Treating code as language. I bring poetic elegance and a writer's perspective to User Experience.
+                    </p>
+                </div>
+                <div class="beyond-card" data-interactive="true">
+                    <h3>Animal Lover</h3>
+                    <p>Compassion first. Staying grounded, patient, and empathetic through a deep love for animals.</p>
+                </div>
+                <div class="beyond-card" data-interactive="true">
+                    <h3>Creative Spirit</h3>
+                    <p>High energy, visionary mindset. Thriving in collaboration to spark ideas through human
+                        connection.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="contact">
+        <div class="contact-container">
+            <h2 style="font-size: clamp(3rem, 8vw, 5rem); margin-bottom: 1rem;">Let's Create Together</h2>
+            <p style="font-size: 1.2rem; margin-bottom: 3rem; opacity: 0.9;">Have a project in mind? Let's talk about
+                your vision.</p>
+
+            <div class="contact-grid">
+                <div class="contact-box" data-interactive="true">
+                    <h3 style="font-size: 1.3rem; margin-bottom: 0.5rem;">Email</h3>
+                    <p style="opacity: 0.9;">
+                        <a href="mailto:tribhuvansanika@gmail.com"
+                            style="color: #ffffff; text-decoration: underline;">Send me an email</a>
+                    </p>
+                </div>
+                <div class="contact-box" data-interactive="true">
+                    <h3 style="font-size: 1.3rem; margin-bottom: 0.5rem;">LinkedIn</h3>
+                    <p style="opacity: 0.9;">
+                        <a href="https://www.linkedin.com/in/sanika-tribhuvan-b3a392348/" target="_blank"
+                            style="color: #ffffff; text-decoration: underline;">Connect on LinkedIn</a>
+                    </p>
+                </div>
+                <div class="contact-box" data-interactive="true">
+                    <h3 style="font-size: 1.3rem; margin-bottom: 0.5rem;">GitHub</h3>
+                    <p style="opacity: 0.9;">
+                        <a href="https://github.com/SanikaTribhuvan" target="_blank"
+                            style="color: #ffffff; text-decoration: underline;">View GitHub Profile</a>
+                    </p>
+                </div>
+                <div class="contact-box" data-interactive="true">
+                    <h3 style="font-size: 1.3rem; margin-bottom: 0.5rem;">Portfolio</h3>
+                    <p style="opacity: 0.9;">
+                        <a href="https://dev.to/sanikatribhuvan" target="_blank"
+                            style="color: #ffffff; text-decoration: underline;">Read my Articles</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <p>© 2025 Sanika Tribhuvan. Building the future, one line at a time.</p>
+    </footer>
+
+    <script>
+        // 1. SCROLL OPTIMIZATION
+        let ticking = false;
+        let scrollProgress = 0;
+
+        function throttleScroll(callback, delay = 16) {
+            return function () {
+                if (!ticking) {
+                    ticking = true;
+                    requestAnimationFrame(() => {
+                        callback();
+                        ticking = false;
+                    });
+                }
+            };
+        }
+
+        // 2. AUDIO (Tone.js)
+        let audioContext = null;
+        let synth = null;
+        let soundEnabled = false;
+
+        function initAudio() {
+            if (audioContext) return;
+            audioContext = Tone.default;
+            synth = new Tone.PolySynth(Tone.Synth, {
+                oscillator: { type: 'triangle' },
+                envelope: { attack: 0.002, decay: 0.1, sustain: 0, release: 0.1 }
+            }).toDestination();
+        }
+
+        // 3. CURSOR LOGIC
+        const customCursor = document.getElementById('custom-cursor');
+        let cursorX = 0, cursorY = 0;
+
+        document.addEventListener('mousemove', (e) => {
+            cursorX = e.clientX;
+            cursorY = e.clientY;
+            customCursor.style.left = (cursorX - 10) + 'px';
+            customCursor.style.top = (cursorY - 10) + 'px';
+        });
+
+        document.addEventListener('mouseover', (e) => {
+            if (e.target.hasAttribute('data-interactive')) {
+                customCursor.classList.add('hover');
+            }
+        });
+
+        document.addEventListener('mouseout', (e) => {
+            if (e.target.hasAttribute('data-interactive')) {
+                customCursor.classList.remove('hover');
+            }
+        });
+
+        // 4. SOUND TOGGLE
+        const soundToggle = document.getElementById('sound-toggle');
+        soundToggle.addEventListener('click', () => {
+            if (!audioContext) initAudio();
+            soundEnabled = !soundEnabled;
+            soundToggle.textContent = soundEnabled ? '🔊 Sound On' : '🔇 Sound Off';
+        });
+
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 500) {
+                soundToggle.classList.add('visible');
+            } else {
+                soundToggle.classList.remove('visible');
+            }
+        });
+
+        document.querySelectorAll('[data-interactive="true"]').forEach((el) => {
+            el.addEventListener('click', () => {
+                if (soundEnabled && synth) {
+                    synth.triggerAttackRelease('C4', '8n');
+                }
+            });
+        });
+
+        // 5. SMART MODAL LOGIC (Handle Live, GitHub, LinkedIn links dynamically)
+        const modal = document.querySelector('.project-modal');
+        const modalClose = document.querySelector('.modal-close');
+
+        const mTitle = document.getElementById('modal-title');
+        const mBadge = document.getElementById('modal-badge');
+        const mDesc = document.getElementById('modal-desc');
+        const mLinksContainer = document.getElementById('modal-links-container');
+
+        document.querySelectorAll('.project-card').forEach(card => {
+            card.addEventListener('click', (e) => {
+                e.stopPropagation();
+
+                const title = card.querySelector('h3').innerText;
+                const badge = card.querySelector('.card-badge').innerText;
+                const desc = card.dataset.description || "Project details.";
+
+                const type = card.dataset.type || "project";
+                const github = card.dataset.github;
+                const live = card.dataset.live;
+                const linkedin = card.dataset.linkedin;
+
+                mTitle.innerText = title;
+                mBadge.innerText = badge;
+                mDesc.innerText = desc;
+
+                // Clear previous buttons
+                mLinksContainer.innerHTML = '';
+
+                // Add Live Demo Button
+                if (live && live !== '#' && live !== '') {
+                    mLinksContainer.innerHTML += `<a href="${live}" class="modal-btn btn-primary" target="_blank" data-interactive="true">Live Demo</a>`;
+                }
+
+                // Add GitHub Button
+                if (github && github !== '#' && github !== '') {
+                    mLinksContainer.innerHTML += `<a href="${github}" class="modal-btn btn-outline" target="_blank" data-interactive="true">GitHub Repo</a>`;
+                }
+
+                // Add LinkedIn / Credential Button
+                if (linkedin && linkedin !== '#' && linkedin !== '') {
+                    const label = (type === 'cert') ? "View Credential" : "View on LinkedIn";
+                    mLinksContainer.innerHTML += `<a href="${linkedin}" class="modal-btn btn-primary" target="_blank" data-interactive="true">${label}</a>`;
+                }
+
+                modal.classList.add('active');
+            });
+        });
+
+        modalClose.addEventListener('click', () => modal.classList.remove('active'));
+        modal.addEventListener('click', (e) => { if (e.target === modal) modal.classList.remove('active'); });
+        document.addEventListener('keydown', (e) => { if (e.key === 'Escape') modal.classList.remove('active'); });
+
+    </script>
+
+    <script type="module">
+        import * as THREE from 'three';
+
+        // Constants
+        const WHITE_KEY_COLOR = new THREE.Color(0xDC143C);
+        const BLACK_KEY_COLOR = new THREE.Color(0x2D3748);
+        const NEURON_COLOR = new THREE.Color(0x8B0000);
+        const CONNECTION_COLOR = new THREE.Color(0xB22222);
+
+        const NUM_KEYS = 13;
+        const NUM_NEURONS = 25;
+        const NEURON_RADIUS = 0.15;
+        const PIANO_ARC_RADIUS = 3;
+        const KEY_WIDTH = 0.5;
+        const KEY_HEIGHT = 0.15;
+        const KEY_DEPTH = 3.5;
+        const BASE_KEY_Y = 0.5;
+        const PRESS_AMOUNT = 0.3;
+
+        // Variables
+        let scene, camera, renderer;
+        let keys = [];
+        let neurons = [];
+        let connections = [];
+        let particles = new THREE.Group();
+        let currentActiveKeys = [];
+        let lastScrollProgress = 0;
+        let cardStates = {};
+
+        // DOM Elements
+        const canvas = document.getElementById('orb-canvas');
+        const container = document.getElementById('canvas-container');
+        const wrapper = document.getElementById('projects-scroll-wrapper');
+        const cards = document.querySelectorAll('.project-card');
+
+        let targetRotY = 0;
+        let targetRotX = 0;
+        let baseRotationY = 0;
+        let baseRotationX = 0;
+
+        let soundOn = true;
+        let audioContextInitialized = false;
+
+        // Tone.js Synths
+        const arpeggioSynth = new Tone.PolySynth(Tone.Synth, {
+            oscillator: { type: "sine" },
+            envelope: { attack: 0.01, decay: 0.3, sustain: 0.01, release: 0.8 },
+            volume: -10
+        }).toDestination();
+
+        const clickSynth = new Tone.PolySynth(Tone.DuoSynth, {
+            oscillator: { type: "sawtooth" },
+            envelope: { attack: 0.005, decay: 0.05, sustain: 0.0, release: 0.1 },
+            volume: -15
+        }).toDestination();
+
+        const hoverSynth = new Tone.MembraneSynth({
+            pitchDecay: 0.01,
+            octaves: 2,
+            envelope: { attack: 0.001, decay: 0.1, sustain: 0.001, release: 0.05 },
+            volume: -20
+        }).toDestination();
+
+        const C_MAJOR_CHORD = ["C4", "E4", "G4"];
+
+        function initializeAudioContext() {
+            if (!audioContextInitialized) {
+                Tone.start();
+                audioContextInitialized = true;
+            }
+        }
+
+        function playSound(type) {
+            if (!soundOn) return;
+            initializeAudioContext();
+
+            if (type === 'click') {
+                clickSynth.triggerAttackRelease("C4", "8n");
+            } else if (type === 'hover') {
+                hoverSynth.triggerAttackRelease("A3", "16n");
+            }
+        }
+
+        function playArpeggio() {
+            if (!soundOn) return;
+            initializeAudioContext();
+            C_MAJOR_CHORD.forEach((note, index) => {
+                const delay = index * 0.05;
+                arpeggioSynth.triggerAttackRelease(note, "4n", Tone.now() + delay);
+            });
+        }
+
+        // Create Piano
+        function createPianoKeys() {
+            const whiteKeys = [0, 2, 4, 5, 7, 9, 11, 12];
+            const blackKeys = [1, 3, 6, 8, 10];
+            const totalKeys = 13;
+            const keyArc = 1.2;
+            const startAngle = -keyArc / 2;
+
+            const glassMaterial = new THREE.MeshPhysicalMaterial({
+                color: 0xffffff,
+                metalness: 0.0,
+                roughness: 0.1,
+                clearcoat: 1.0,
+                clearcoatRoughness: 0.1,
+                transmission: 0.9,
+                transparent: true,
+                opacity: 0.7,
+                emissive: 0x000000,
+                emissiveIntensity: 0.0
+            });
+
+            for (let i = 0; i < totalKeys; i++) {
+                let isBlack = blackKeys.includes(i);
+                const keyWidth = isBlack ? KEY_WIDTH * 0.6 : KEY_WIDTH;
+                const keyDepth = isBlack ? KEY_DEPTH * 0.5 : KEY_DEPTH;
+                const keyColor = isBlack ? BLACK_KEY_COLOR : WHITE_KEY_COLOR;
+                const keyZ = isBlack ? -KEY_DEPTH * 0.3 : 0;
+                const keyY = BASE_KEY_Y + (isBlack ? 0.3 : 0);
+
+                const geometry = new THREE.BoxGeometry(keyWidth, KEY_HEIGHT, keyDepth);
+                const material = glassMaterial.clone();
+                material.color.copy(keyColor);
+                material.emissive.copy(keyColor).multiplyScalar(0.01);
+
+                const keyMesh = new THREE.Mesh(geometry, material);
+                keyMesh.position.y = keyY;
+                keyMesh.baseY = keyY;
+                keyMesh.keyIndex = i;
+
+                const angle = startAngle + (keyArc / (whiteKeys.length - 1)) * (i / 1.1);
+                if (!isBlack) {
+                    keyMesh.position.x = PIANO_ARC_RADIUS * Math.sin(angle);
+                    keyMesh.position.z = PIANO_ARC_RADIUS * Math.cos(angle) - PIANO_ARC_RADIUS;
+                    keyMesh.rotation.y = -angle;
+                } else {
+                    const whiteIndex = whiteKeys.indexOf(i - 1);
+                    const angle1 = startAngle + (keyArc / (whiteKeys.length - 1)) * (whiteIndex / 1.1);
+                    const angle2 = startAngle + (keyArc / (whiteKeys.length - 1)) * ((whiteIndex + 1) / 1.1);
+                    const midAngle = (angle1 + angle2) / 2;
+
+                    keyMesh.position.x = PIANO_ARC_RADIUS * Math.sin(midAngle) * 0.9;
+                    keyMesh.position.z = PIANO_ARC_RADIUS * Math.cos(midAngle) - PIANO_ARC_RADIUS + keyZ;
+                    keyMesh.rotation.y = -midAngle;
+                }
+                keys.push(keyMesh);
+                scene.add(keyMesh);
+            }
+        }
+
+        // Create Neural Network
+        function createNeuralNetwork() {
+            const neuronGeometry = new THREE.SphereGeometry(NEURON_RADIUS, 16, 16);
+            const neuronMaterial = new THREE.MeshBasicMaterial({
+                color: NEURON_COLOR,
+                transparent: true,
+                opacity: 0.6,
+                blending: THREE.NormalBlending
+            });
+
+            for (let i = 0; i < NUM_NEURONS; i++) {
+                const phi = Math.acos(-1 + (2 * i) / NUM_NEURONS);
+                const theta = Math.sqrt(NUM_NEURONS * Math.PI) * phi;
+                const r = PIANO_ARC_RADIUS + 1.5 + (Math.random() * 0.5);
+
+                const neuron = new THREE.Mesh(neuronGeometry, neuronMaterial.clone());
+                neuron.position.setFromSphericalCoords(r, phi, theta);
+                neuron.position.y = (Math.random() - 0.5) * 2;
+                neuron.originalScale = neuron.scale.x;
+                neuron.material.opacity = 0.4 + Math.random() * 0.4;
+
+                neurons.push(neuron);
+                scene.add(neuron);
+            }
+
+            const lineMaterial = new THREE.LineBasicMaterial({
+                color: CONNECTION_COLOR,
+                transparent: true,
+                opacity: 0.2,
+                linewidth: 1,
+                blending: THREE.NormalBlending
+            });
+
+            const inputNeurons = neurons.slice(0, 5);
+            keys.forEach(key => {
+                inputNeurons.forEach(neuron => {
+                    const points = [key.position.clone(), neuron.position.clone()];
+                    const geometry = new THREE.BufferGeometry().setFromPoints(points);
+                    const line = new THREE.Line(geometry, lineMaterial.clone());
+                    line.targetOpacity = 0.2;
+                    connections.push(line);
+                    scene.add(line);
+                });
+            });
+
+            for (let i = 0; i < NUM_NEURONS; i++) {
+                for (let j = i + 1; j < NUM_NEURONS; j++) {
+                    if (Math.random() < 0.15) {
+                        const points = [neurons[i].position.clone(), neurons[j].position.clone()];
+                        const geometry = new THREE.BufferGeometry().setFromPoints(points);
+                        const line = new THREE.Line(geometry, lineMaterial.clone());
+                        line.targetOpacity = 0.2;
+                        connections.push(line);
+                        scene.add(line);
+                    }
+                }
+            }
+        }
+
+        // Create Floating Particles
+        function createFloatingParticles() {
+            const symbols = ['♪', '♫', '♬', '♩', '𝄞', '{', '}', '<>', 'AI', '∞', 'π'];
+            for (let i = 0; i < 60; i++) {
+                const el = document.createElement('canvas');
+                const ctx = el.getContext('2d');
+                el.width = 64; el.height = 64;
+                ctx.font = 'bold 32px Inter, sans-serif';
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                const symbol = symbols[Math.floor(Math.random() * symbols.length)];
+                const isCode = symbol.length > 1 || !['♪', '♫', '♬', '♩', '𝄞'].includes(symbol);
+                ctx.fillStyle = isCode ? '#8B0000' : '#DC143C';
+                ctx.fillText(symbol, 32, 32);
+                const tex = new THREE.CanvasTexture(el);
+                const mat = new THREE.SpriteMaterial({ map: tex, transparent: true, opacity: 0.8, color: 0xffffff });
+                const sprite = new THREE.Sprite(mat);
+                const r = 7 + Math.random() * 5;
+                const phi = Math.acos(-1 + (2 * i) / 60);
+                const theta = Math.sqrt(60 * Math.PI) * phi;
+                sprite.position.setFromSphericalCoords(r, phi, theta);
+                sprite.scale.set(0.6, 0.6, 1);
+                sprite.animationOffset = Math.random() * Math.PI * 2;
+                particles.add(sprite);
+            }
+            scene.add(particles);
+        }
+
+        function initThreeJS() {
+            scene = new THREE.Scene();
+            const containerSize = window.innerWidth < 768 ? 300 : 500;
+            camera = new THREE.PerspectiveCamera(50, 1, 0.1, 1000);
+            camera.position.set(0, 3, 8);
+            camera.lookAt(0, 0, 0);
+
+            renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
+            renderer.setSize(containerSize, containerSize);
+            renderer.setPixelRatio(window.devicePixelRatio);
+            renderer.shadowMap.enabled = true;
+
+            scene.add(new THREE.AmbientLight(0xffffff, 0.4));
+            const light1 = new THREE.SpotLight(0xF093FB, 2, 50, Math.PI * 0.2, 0.5, 2);
+            light1.position.set(5, 5, 5);
+            scene.add(light1);
+            const light2 = new THREE.SpotLight(0x764BA2, 2, 50, Math.PI * 0.2, 0.5, 2);
+            light2.position.set(-5, -5, 5);
+            scene.add(light2);
+            const light3 = new THREE.PointLight(0xffffff, 1.5, 10);
+            light3.position.set(0, 0, 5);
+            scene.add(light3);
+
+            createPianoKeys();
+            createNeuralNetwork();
+            createFloatingParticles();
+        }
+
+        // Animation Effect when scroll changes
+        function playChordEffect() {
+            playArpeggio();
+            currentActiveKeys.forEach(key => {
+                key.targetY = key.baseY;
+                key.material.emissiveIntensity = 0.01;
+            });
+            currentActiveKeys = [];
+            const numToSelect = Math.floor(Math.random() * 3) + 3;
+            const keysToPlay = [...keys].sort(() => 0.5 - Math.random()).slice(0, numToSelect);
+            keysToPlay.forEach(key => {
+                key.targetY = key.baseY - PRESS_AMOUNT;
+                key.material.emissiveIntensity = 1.2;
+                currentActiveKeys.push(key);
+            });
+            connections.forEach(line => line.targetOpacity = 0.1);
+            const activeNeuronIndices = [];
+            while (activeNeuronIndices.length < 5) {
+                const randomIndex = Math.floor(Math.random() * NUM_NEURONS);
+                if (!activeNeuronIndices.includes(randomIndex)) {
+                    activeNeuronIndices.push(randomIndex);
+                }
+            }
+            connections.forEach(line => {
+                const p1 = line.geometry.attributes.position.array.slice(0, 3);
+                const p2 = line.geometry.attributes.position.array.slice(3, 6);
+                keysToPlay.forEach(key => {
+                    activeNeuronIndices.forEach(idx => {
+                        const neuron = neurons[idx];
+                        const keyPos = key.position;
+                        const neuronPos = neuron.position;
+                        const dist1 = new THREE.Vector3(p1[0], p1[1], p1[2]).distanceTo(keyPos);
+                        const dist2 = new THREE.Vector3(p2[0], p2[1], p2[2]).distanceTo(neuronPos);
+                        if ((dist1 < 0.1 && dist2 < 0.1) || (new THREE.Vector3(p1[0], p1[1], p1[2]).distanceTo(neuronPos) < 0.1 && new THREE.Vector3(p2[0], p2[1], p2[2]).distanceTo(keyPos) < 0.1)) {
+                            line.targetOpacity = 0.8;
+                        }
+                    });
+                });
+            });
+        }
+
+        function animate(time) {
+            requestAnimationFrame(animate);
+            const deltaTime = time * 0.001;
+            baseRotationY = Math.sin(deltaTime * 0.1) * 0.1;
+            baseRotationX = Math.cos(deltaTime * 0.05) * 0.05;
+            scene.rotation.y += (targetRotY + baseRotationY - scene.rotation.y) * 0.08;
+            scene.rotation.x += (targetRotX + baseRotationX - scene.rotation.x) * 0.08;
+
+            keys.forEach(key => {
+                key.position.y += (key.targetY - key.position.y) * 0.1;
+                key.position.y += Math.sin(deltaTime * 2 + key.keyIndex) * 0.005;
+                if (!currentActiveKeys.includes(key)) {
+                    key.material.emissiveIntensity += (0.01 - key.material.emissiveIntensity) * 0.1;
+                }
+            });
+
+            neurons.forEach((neuron, index) => {
+                const scale = 1.0 + Math.sin(deltaTime * 5 + index) * 0.1;
+                neuron.scale.set(scale, scale, scale);
+                neuron.material.opacity = 0.4 + Math.sin(deltaTime * 2 + index) * 0.2;
+            });
+
+            connections.forEach(line => {
+                line.material.opacity += (line.targetOpacity - line.material.opacity) * 0.1;
+                if (line.targetOpacity < 0.5) line.material.opacity = Math.max(0.05, line.material.opacity);
+            });
+
+            particles.children.forEach(sprite => {
+                sprite.rotation.z += 0.005;
+                sprite.position.y += Math.sin(deltaTime * 0.5 + sprite.animationOffset) * 0.001;
+                sprite.position.x += Math.cos(deltaTime * 0.3 + sprite.animationOffset) * 0.001;
+            });
+
+            renderer.render(scene, camera);
+        }
+
+        // FIXED: Scroll Logic to keep Canvas Visible
+        window.addEventListener('scroll', () => {
+            if (window.innerWidth < 768) return;
+            const rect = wrapper.getBoundingClientRect();
+            const viewH = window.innerHeight;
+
+            // Check if we are inside the scroll wrapper
+            if (rect.top <= viewH && rect.bottom >= 0) {
+                container.classList.add('visible'); // Show Canvas
+                soundToggle.classList.add('visible');
+
+                const total = rect.height - viewH;
+                const current = -rect.top;
+                let progress = current / total;
+                progress = Math.max(0, Math.min(1, progress));
+
+                targetRotY = progress * Math.PI * 4;
+                targetRotX = progress * Math.PI * 0.5;
+
+                cards.forEach(card => {
+                    const start = parseFloat(card.dataset.start);
+                    const end = parseFloat(card.dataset.end);
+                    const cardId = card.className;
+                    const isVisible = progress >= start && progress <= end;
+                    if (isVisible) {
+                        card.classList.add('visible');
+                        if (cardStates[cardId] !== true) {
+                            playChordEffect();
+                            cardStates[cardId] = true;
+                        }
+                    } else {
+                        card.classList.remove('visible');
+                        cardStates[cardId] = false;
+                    }
+                });
+                lastScrollProgress = progress;
+            } else {
+                container.classList.remove('visible'); // Hide only when outside
+                soundToggle.classList.remove('visible');
+            }
+        });
+
+        soundToggle.onclick = () => {
+            soundOn = !soundOn;
+            soundToggle.textContent = soundOn ? 'Sound On' : 'Muted';
+            playSound('click');
+        }
+
+        // Stats Counter
+        const statCards = document.querySelectorAll('.stat-card-number');
+        let hasAnimated = false;
+        const animateCounter = (el) => {
+            const target = parseInt(el.dataset.target);
+            const duration = 2000;
+            const increment = target / (duration / 16);
+            let current = 0;
+            const updateCounter = () => {
+                current += increment;
+                if (current < target) {
+                    el.textContent = Math.floor(current) + (el.dataset.target === '99' || el.dataset.target === '40' ? '%' : el.dataset.target === '1500' ? '+' : '');
+                    requestAnimationFrame(updateCounter);
+                } else {
+                    el.textContent = target + (el.dataset.target === '99' || el.dataset.target === '40' ? '%' : el.dataset.target === '1500' ? '+' : el.dataset.target === '1' ? 'st' : '');
+                }
+            };
+            updateCounter();
+        };
+
+        const statsObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting && !hasAnimated) {
+                    hasAnimated = true;
+                    statCards.forEach(card => animateCounter(card));
+                }
+            });
+        }, { threshold: 0.5 });
+        const statsSection = document.querySelector('.stats-banner');
+        if (statsSection) statsObserver.observe(statsSection);
+
+        // Interaction Listeners
+        const cursor = document.getElementById('custom-cursor');
+        document.addEventListener('mousemove', e => {
+            cursor.style.left = e.clientX + 'px';
+            cursor.style.top = e.clientY + 'px';
+        });
+        document.querySelectorAll('[data-interactive="true"], a, button, .project-card, .skill-card, .stat-bubble, .testimonial-card, .beyond-card').forEach(el => {
+            el.onmouseenter = () => { cursor.classList.add('hover'); playSound('hover'); };
+            el.onmouseleave = () => cursor.classList.remove('hover');
+            el.onclick = () => playSound('click');
+        });
+
+        // Resize & Load
+        window.addEventListener('resize', () => {
+            const isMobile = window.innerWidth < 768;
+            if (isMobile) {
+                if (renderer) renderer.dispose();
+                renderer = null;
+            } else {
+                if (!renderer) { initThreeJS(); animate(0); }
+                const w = 500;
+                renderer.setSize(w, w);
+                camera.aspect = w / w;
+                camera.updateProjectionMatrix();
+            }
+        });
+
+        window.onload = function () {
+            if (window.innerWidth >= 768) {
+                initThreeJS();
+                animate(0);
+            }
+        }
+    </script>
+</body>
+
+</html>

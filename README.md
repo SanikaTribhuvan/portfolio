@@ -1,6 +1,6 @@
-# 🎹 Sanika Tribhuvan | Interactive 3D Portfolio
+# Sanika Tribhuvan | Interactive 3D Portfolio
 
-[![Live Demo](https://img.shields.io/badge/Demo-Live%20Site-8B0000?style=for-the-badge&logo=github)](https://sanikatribhuvan.github.io/portfolio/)
+[![Live Demo](https://img.shields.io/badge/Demo-Live%20Site-8B0000?style=for-the-badge&logo=github)]([https://sanikatribhuvan.github.io/portfolio/](https://sanikatribhuvan.github.io/portfolio/))
 ![Tech Stack](https://img.shields.io/badge/Three.js-3D%20Graphics-black?style=for-the-badge)
 ![Tech Stack](https://img.shields.io/badge/Tone.js-Audio%20Synthesis-DC143C?style=for-the-badge)
 

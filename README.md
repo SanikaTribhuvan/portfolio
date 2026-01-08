@@ -8,6 +8,7 @@
 
 An award-winning Data Scientist and Full-Stack Developer's portfolio, merging rigorous logic with artistic expression. This site features a **3D Neural Network Piano** visualization, generative audio, and a responsive scroll-based navigation system.
 
+https://sanikatribhuvan.github.io/portfolio/
 ---
 
 ## 🚀 Key Features

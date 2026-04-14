@@ -1,0 +1,3520 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sanika Tribhuvan - Portfolio</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.49/Tone.min.js"></script>
+    <script type="importmap">
+        { "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js" } }
+    </script>
+    <style>
+        /* =========================================
+           CSS RESET & VARIABLES
+           ========================================= */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #8B0000;
+            --secondary: #B22222;
+            --accent: #DC143C;
+            --bg-light: #FFF5F5;
+            --background: #FFFFFF;
+            --text: #2D3748;
+            --maroon-dark: #5C0000;
+            --font-display: 'Playfair Display', serif;
+            --font-body: 'Inter', sans-serif;
+        }
+
+        body {
+            font-family: var(--font-body);
+            background:
+                radial-gradient(circle at 50% 50%, #fff0f5 0%, #ffffff 70%),
+                linear-gradient(180deg, #FFFFFF 0%, #FAFCFF 100%);
+            background-attachment: fixed;
+            color: var(--text);
+            cursor: none;
+            /* Hide default cursor */
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        /* =========================================
+           CUSTOM CURSOR (Fixed: No Cyan, No Big Circle)
+           ========================================= */
+        #custom-cursor {
+            width: 20px;
+            height: 20px;
+            background: #000;
+            /* Solid black core */
+            border: 2px solid #fff;
+            /* White border for visibility on dark/red */
+            border-radius: 50%;
+            position: fixed;
+            pointer-events: none;
+            z-index: 20000;
+            /* mix-blend-mode: difference; <--- REMOVED to fix Cyan issue */
+            transform: translate(-50%, -50%);
+            transition: transform 0.1s ease, background-color 0.2s;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+        }
+
+        /* When hovering interactive elements */
+        #custom-cursor.hover {
+            /* Removed width: 80px to stop the "big grey circle" effect */
+            transform: translate(-50%, -50%) scale(1.2);
+            /* Just a tiny subtle pop */
+            background: var(--primary);
+            /* Optional: turns maroon on hover */
+            border-color: white;
+        }
+
+        /* =========================================
+           PROJECT PARTICLE NETWORK
+           ========================================= */
+        #project-particle-network {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 600px;
+            height: 600px;
+            z-index: 0;
+            pointer-events: none;
+            mix-blend-mode: multiply;
+        }
+
+        #projects-sticky-view {
+            position: sticky;
+            top: 0;
+            height: 100vh;
+            width: 100%;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            perspective: 1000px;
+            background: radial-gradient(circle at 50% 50%, #FFFFFF 0%, #F0F2F5 100%);
+            isolation: isolate;
+        }
+
+        /* =========================================
+           SOUND TOGGLE BUTTON
+           ========================================= */
+        #sound-toggle {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: white;
+            border: none;
+            padding: 1rem 1.5rem;
+            border-radius: 50px;
+            box-shadow: 0 10px 30px rgba(139, 0, 0, 0.2);
+            cursor: pointer;
+            font-weight: 700;
+            color: var(--secondary);
+            z-index: 1000;
+            transition: all 0.3s;
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        #sound-toggle.visible {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        #sound-toggle:hover {
+            background: var(--bg-light);
+            transform: scale(1.05);
+        }
+
+        /* =========================================
+           NAVIGATION BAR
+           ========================================= */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            padding: 0.8rem 3rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(15px);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            height: 70px;
+        }
+
+        .logo {
+            font-size: 1.6rem;
+            font-weight: 900;
+            color: var(--primary);
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: var(--text);
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.3s;
+            padding: 0.5rem 0;
+            border-bottom: 2px solid transparent;
+        }
+
+        .nav-links a:hover,
+        .nav-links a:active {
+            color: var(--primary);
+            border-bottom-color: var(--primary);
+        }
+
+        .cta-button {
+            background: var(--primary);
+            color: white;
+            padding: 0.6rem 1.5rem;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 700;
+            transition: transform 0.3s, box-shadow 0.3s, background 0.3s;
+        }
+
+        .cta-button:hover {
+            transform: scale(1.05);
+            background: var(--secondary);
+            box-shadow: 0 10px 20px rgba(139, 0, 0, 0.3);
+        }
+
+        /* =========================================
+           HERO SECTION — CINEMATIC REDESIGN
+           ========================================= */
+        .hero {
+            min-height: 100vh;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            align-items: center;
+            padding: 0;
+            position: relative;
+            background: transparent;
+            overflow: hidden;
+            z-index: 2;
+        }
+
+        /* Hero Left Side */
+        .hero-left {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            justify-content: center;
+            padding: 8rem 4rem 6rem 6rem;
+            position: relative;
+            z-index: 2;
+        }
+
+        /* Hero Right Side */
+        .hero-right {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 8rem 6rem 6rem 2rem;
+            position: relative;
+        }
+
+        .hero-eyebrow {
+            font-size: 0.8rem;
+            font-weight: 700;
+            letter-spacing: 0.25em;
+            text-transform: uppercase;
+            color: var(--primary);
+            margin-bottom: 1.2rem;
+            opacity: 0.8;
+            display: flex;
+            align-items: center;
+            gap: 0.7rem;
+        }
+
+        .hero-eyebrow::before {
+            content: '';
+            display: inline-block;
+            width: 30px;
+            height: 2px;
+            background: var(--primary);
+        }
+
+        .hero-title {
+            font-size: clamp(3.5rem, 7vw, 6.5rem);
+            font-weight: 900;
+            color: var(--primary);
+            letter-spacing: -0.04em;
+            line-height: 0.95;
+            margin-bottom: 1.5rem;
+            position: relative;
+            z-index: 2;
+            text-align: right;
+        }
+
+        .hero-title .name-line {
+            display: block;
+        }
+
+        .hero-title .name-accent {
+            -webkit-text-stroke: 2px var(--primary);
+            color: transparent;
+            display: block;
+        }
+
+        .hero-subtitle {
+            font-size: clamp(0.95rem, 1.5vw, 1.15rem);
+            margin-bottom: 1rem;
+            font-weight: 500;
+            color: var(--text);
+            opacity: 0.75;
+            text-align: right;
+            max-width: 420px;
+            line-height: 1.7;
+        }
+
+        .hero-badges {
+            display: flex;
+            gap: 0.6rem;
+            flex-wrap: wrap;
+            margin-bottom: 2rem;
+            justify-content: flex-end;
+        }
+
+        .hero-badge {
+            background: var(--bg-light);
+            color: var(--primary);
+            font-size: 0.72rem;
+            font-weight: 700;
+            padding: 0.35rem 0.9rem;
+            border-radius: 30px;
+            letter-spacing: 0.04em;
+            border: 1.5px solid rgba(139, 0, 0, 0.15);
+        }
+
+        .hero-ctas {
+            display: flex;
+            gap: 1rem;
+            margin-top: 0.5rem;
+            justify-content: flex-end;
+            flex-wrap: wrap;
+        }
+
+        .hero-btn-primary {
+            background: var(--primary);
+            color: white;
+            padding: 0.85rem 2rem;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 0.9rem;
+            transition: all 0.3s;
+            box-shadow: 0 8px 25px rgba(139, 0, 0, 0.3);
+            letter-spacing: 0.02em;
+        }
+
+        .hero-btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 14px 35px rgba(139, 0, 0, 0.4);
+        }
+
+        .hero-btn-outline {
+            color: var(--primary);
+            padding: 0.85rem 2rem;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 0.9rem;
+            border: 2px solid var(--primary);
+            transition: all 0.3s;
+            letter-spacing: 0.02em;
+        }
+
+        .hero-btn-outline:hover {
+            background: var(--primary);
+            color: white;
+            transform: translateY(-3px);
+        }
+
+        /* Profile image styling */
+        .hero-image-container {
+            width: 380px;
+            height: 460px;
+            max-width: 90%;
+            background: white;
+            border-radius: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0;
+            box-shadow: 0 40px 100px rgba(139, 0, 0, 0.18), 0 10px 30px rgba(0, 0, 0, 0.08);
+            animation: float 6s ease-in-out infinite;
+            z-index: 5;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-image-container::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(160deg, rgba(255, 255, 255, 0.15) 0%, transparent 60%);
+            z-index: 3;
+            pointer-events: none;
+            border-radius: 30px;
+        }
+
+        .hero-image-ornament {
+            position: absolute;
+            top: -20px;
+            right: -20px;
+            width: 120px;
+            height: 120px;
+            border: 3px solid rgba(139, 0, 0, 0.15);
+            border-radius: 50%;
+            z-index: 0;
+        }
+
+        .hero-image-ornament-2 {
+            position: absolute;
+            bottom: -30px;
+            left: -30px;
+            width: 160px;
+            height: 160px;
+            border: 2px solid rgba(139, 0, 0, 0.1);
+            border-radius: 50%;
+            z-index: 0;
+        }
+
+        .hero-stat-bubble {
+            position: absolute;
+            background: white;
+            border-radius: 16px;
+            padding: 0.8rem 1.2rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
+            z-index: 10;
+            text-align: center;
+            animation: float 5s ease-in-out infinite;
+        }
+
+        .hero-stat-bubble:nth-child(1) {
+            bottom: 30px;
+            left: -60px;
+            animation-delay: -1s;
+        }
+
+        .hero-stat-bubble:nth-child(2) {
+            top: 40px;
+            right: -55px;
+            animation-delay: -3s;
+        }
+
+        .hero-stat-bubble .bubble-num {
+            font-size: 1.5rem;
+            font-weight: 900;
+            color: var(--primary);
+            line-height: 1;
+        }
+
+        .hero-stat-bubble .bubble-label {
+            font-size: 0.65rem;
+            font-weight: 600;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-top: 2px;
+        }
+
+        /* Decorative background blobs */
+        .hero-blob {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(60px);
+            opacity: 0.06;
+            pointer-events: none;
+        }
+
+        .hero-blob-1 {
+            width: 500px;
+            height: 500px;
+            background: var(--primary);
+            top: -100px;
+            right: -100px;
+        }
+
+        .hero-blob-2 {
+            width: 300px;
+            height: 300px;
+            background: var(--accent);
+            bottom: 50px;
+            left: 50px;
+        }
+
+        .hero-scroll-hint {
+            position: absolute;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.4rem;
+            opacity: 0.4;
+            font-size: 0.75rem;
+            font-weight: 600;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            animation: bounce 2s ease-in-out infinite;
+        }
+
+        @keyframes bounce {
+
+            0%,
+            100% {
+                transform: translateX(-50%) translateY(0);
+            }
+
+            50% {
+                transform: translateX(-50%) translateY(8px);
+            }
+        }
+
+        .hero-scroll-hint::after {
+            content: '↓';
+            font-size: 1.2rem;
+        }
+
+        @keyframes float {
+
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-12px);
+            }
+        }
+
+        /* Mobile hero */
+        @media (max-width: 900px) {
+            .hero {
+                grid-template-columns: 1fr;
+                min-height: auto;
+                padding-top: 6rem;
+            }
+
+            .hero-left {
+                align-items: center;
+                text-align: center;
+                padding: 2rem 1.5rem 1rem;
+                order: 2;
+            }
+
+            .hero-title {
+                text-align: center;
+            }
+
+            .hero-subtitle {
+                text-align: center;
+            }
+
+            .hero-badges {
+                justify-content: center;
+            }
+
+            .hero-ctas {
+                justify-content: center;
+            }
+
+            .hero-right {
+                padding: 3rem 1.5rem 1rem;
+                order: 1;
+            }
+
+            .hero-image-container {
+                width: 260px;
+                height: 320px;
+            }
+
+            .hero-stat-bubble:nth-child(1) {
+                left: -20px;
+                bottom: 10px;
+            }
+
+            .hero-stat-bubble:nth-child(2) {
+                right: -20px;
+                top: 20px;
+            }
+        }
+
+
+        /* =========================================
+           STATS BANNER
+           ========================================= */
+        .stats-banner {
+            background: transparent;
+            padding: 6rem 2rem;
+            position: relative;
+            z-index: 3;
+        }
+
+        .stats-banner-title {
+            text-align: center;
+            font-size: clamp(2rem, 5vw, 3.5rem);
+            font-weight: 900;
+            color: var(--primary);
+            margin-bottom: 1rem;
+        }
+
+        .stats-banner-subtitle {
+            text-align: center;
+            font-size: clamp(1rem, 2vw, 1.3rem);
+            color: var(--text);
+            margin: 0 auto 4rem;
+            max-width: 800px;
+            opacity: 0.85;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            max-width: 1200px;
+            margin: 0 auto 4rem;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 2.5rem 2rem;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(139, 0, 0, 0.1);
+            text-align: center;
+            transition: transform 0.3s, box-shadow 0.3s;
+            border: 2px solid transparent;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(139, 0, 0, 0.2);
+            border-color: var(--accent);
+        }
+
+        .stat-card-number {
+            font-size: clamp(3rem, 6vw, 4.5rem);
+            font-weight: 900;
+            line-height: 1;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .stat-card-label {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text);
+        }
+
+        .stat-card-description {
+            font-size: 0.9rem;
+            color: var(--text);
+            opacity: 0.7;
+            margin-top: 0.5rem;
+        }
+
+        .stats-footer {
+            text-align: center;
+            font-size: 1rem;
+            color: var(--text);
+            opacity: 0.7;
+            font-style: italic;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* =========================================
+           PROJECTS: 3D SCROLL SECTION
+           ========================================= */
+        #projects-scroll-wrapper {
+            height: 600vh;
+            position: relative;
+            background: transparent;
+        }
+
+        .projects-instruction {
+            position: absolute;
+            top: 15%;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 50;
+            text-align: center;
+            pointer-events: none;
+            width: 100%;
+        }
+
+        .projects-instruction h2 {
+            font-size: clamp(1.5rem, 3vw, 2.5rem);
+            color: var(--primary);
+            font-weight: 800;
+            text-transform: lowercase;
+            opacity: 0.8;
+            margin-bottom: 0.5rem;
+            text-shadow: 0 2px 10px rgba(255, 255, 255, 0.8);
+        }
+
+        .projects-instruction p {
+            font-size: 1rem;
+            opacity: 0.6;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                opacity: 0.6;
+            }
+
+            50% {
+                opacity: 1;
+            }
+        }
+
+        #canvas-container {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 450px;
+            height: 450px;
+            z-index: 5;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.5s;
+        }
+
+        #canvas-container.visible {
+            opacity: 1;
+        }
+
+        #orb-canvas {
+            width: 100%;
+            height: 100%;
+        }
+
+        .cards-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 10;
+            pointer-events: none;
+        }
+
+        .project-card {
+            position: absolute;
+            background: white;
+            padding: 2rem;
+            border-radius: 24px;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.08);
+            max-width: 320px;
+            width: 85%;
+            pointer-events: auto;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            opacity: 0;
+            transform: scale(0.6) translateY(100px);
+            transition: all 0.7s cubic-bezier(0.34, 1.56, 0.64, 1);
+            will-change: transform, opacity;
+        }
+
+        .project-card.visible {
+            opacity: 1;
+            transform: scale(1) translateY(0);
+        }
+
+        .project-card:hover {
+            transform: scale(1.05) rotate(-2deg);
+            box-shadow: 0 20px 50px rgba(139, 0, 0, 0.2);
+        }
+
+        .project-card h3 {
+            color: var(--primary);
+            font-size: 1.4rem;
+            font-weight: 800;
+        }
+
+        .project-card p {
+            color: var(--text);
+            font-size: 0.95rem;
+            opacity: 0.8;
+        }
+
+        .card-badge {
+            background: var(--bg-light);
+            color: var(--primary);
+            font-size: 0.75rem;
+            font-weight: 700;
+            padding: 0.3rem 0.8rem;
+            border-radius: 12px;
+            text-transform: uppercase;
+            align-self: flex-start;
+        }
+
+        /* Card Positioning */
+        .card-1 {
+            top: 15%;
+            left: 10%;
+        }
+
+        .card-2 {
+            bottom: 15%;
+            right: 10%;
+        }
+
+        .card-3 {
+            bottom: 20%;
+            left: 5%;
+        }
+
+        .card-4 {
+            top: 18%;
+            right: 12%;
+        }
+
+        .card-5 {
+            bottom: 10%;
+            right: 25%;
+        }
+
+        .card-6 {
+            bottom: 35%;
+            right: 5%;
+        }
+
+        .card-7 {
+            top: 40%;
+            left: 5%;
+        }
+
+        .card-8 {
+            top: 15%;
+            left: 35%;
+        }
+
+        .card-9 {
+            bottom: 15%;
+            left: 10%;
+        }
+
+        .card-10 {
+            top: 10%;
+            right: 30%;
+        }
+
+        .card-11 {
+            top: 35%;
+            right: 10%;
+        }
+
+        .card-12 {
+            bottom: 5%;
+            left: 30%;
+        }
+
+        .card-13 {
+            top: 20%;
+            right: 5%;
+        }
+
+        .card-14 {
+            bottom: 40%;
+            left: 5%;
+        }
+
+        .card-15 {
+            bottom: 10%;
+            right: 5%;
+        }
+
+        /* =========================================
+           PROJECT MODAL
+           ========================================= */
+        .project-modal {
+            position: fixed;
+            inset: 0;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(15px);
+            z-index: 10000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.4s ease;
+        }
+
+        .project-modal.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .modal-content {
+            background: white;
+            width: 90%;
+            max-width: 600px;
+            padding: 3rem;
+            border-radius: 30px;
+            box-shadow: 0 25px 80px rgba(139, 0, 0, 0.25);
+            transform: translateY(50px) scale(0.9);
+            transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            position: relative;
+            border: 1px solid rgba(139, 0, 0, 0.1);
+        }
+
+        .project-modal.active .modal-content {
+            transform: translateY(0) scale(1);
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 20px;
+            right: 25px;
+            background: none;
+            border: none;
+            font-size: 2rem;
+            cursor: pointer;
+            color: var(--text);
+            transition: color 0.3s;
+        }
+
+        .modal-close:hover {
+            color: var(--primary);
+        }
+
+        .modal-title {
+            font-size: 2.5rem;
+            font-weight: 900;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+            line-height: 1.1;
+        }
+
+        .modal-badge {
+            display: inline-block;
+            background: var(--bg-light);
+            color: var(--secondary);
+            padding: 0.5rem 1rem;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 0.9rem;
+            margin-bottom: 2rem;
+        }
+
+        .modal-desc {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            color: var(--text);
+            margin-bottom: 2.5rem;
+            opacity: 0.9;
+        }
+
+        .modal-links {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .modal-btn {
+            padding: 0.8rem 1.8rem;
+            border-radius: 50px;
+            font-weight: 700;
+            text-decoration: none;
+            transition: transform 0.2s, box-shadow 0.2s;
+            cursor: pointer;
+            border: none;
+            display: inline-block;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+            box-shadow: 0 10px 20px rgba(139, 0, 0, 0.2);
+        }
+
+        .btn-outline {
+            border: 2px solid var(--text);
+            background: transparent;
+            color: var(--text);
+        }
+
+        .modal-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+        }
+
+        /* =========================================
+           PIANO INTRO
+           ========================================= */
+        .projects-intro {
+            position: relative;
+            background: transparent;
+            padding: 0;
+            margin-top: -10rem;
+            overflow: visible;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 20;
+            pointer-events: none;
+        }
+
+        .piano-wave-container {
+            width: 100%;
+            max-width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            position: relative;
+        }
+
+        .piano-wave-image {
+            width: 101%;
+            max-width: none;
+            height: auto;
+            display: block;
+            margin: 0;
+            filter: drop-shadow(0 15px 30px rgba(139, 0, 0, 0.2));
+            position: relative;
+            z-index: 1;
+        }
+
+        /* =========================================
+           IMPACT & TESTIMONIALS
+           ========================================= */
+        .big-impact-section {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            padding: 10rem 4rem;
+            text-align: center;
+            color: white;
+            z-index: 10;
+        }
+
+        .big-impact-title {
+            font-size: clamp(4rem, 12vw, 10rem);
+            font-weight: 900;
+            line-height: 0.85;
+            margin-bottom: 2rem;
+        }
+
+        .big-impact-subtitle {
+            font-family: 'Brush Script MT', cursive;
+            font-size: clamp(2rem, 5vw, 4rem);
+            color: #FFE8F0;
+            transform: rotate(-5deg);
+        }
+
+        .testimonials {
+            padding: 6rem 4rem;
+            background: #1a1a1a;
+            color: white;
+            z-index: 10;
+        }
+
+        .testimonials-header {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        .testimonials-header h2 {
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            font-weight: 900;
+            text-transform: uppercase;
+        }
+
+        .testimonials-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .testimonial-card {
+            background: #2d2d2d;
+            padding: 2.5rem;
+            border-radius: 16px;
+            transition: transform 0.3s;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+        }
+
+        .testimonial-card:hover {
+            transform: translateY(-10px);
+            background: #333;
+        }
+
+        .stars {
+            color: #DC143C;
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+        }
+
+        .testimonial-text {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+            opacity: 0.9;
+        }
+
+        .testimonial-author {
+            font-weight: 700;
+            font-size: 0.9rem;
+            color: #aaa;
+            text-transform: uppercase;
+        }
+
+        .verified-badge {
+            color: #4ade80;
+            font-size: 0.8rem;
+            margin-left: 0.5rem;
+        }
+
+        /* =========================================
+           CONTENT SECTIONS
+           ========================================= */
+        .content-section {
+            padding: 6rem 4rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .section-title {
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            font-weight: 900;
+            margin-bottom: 3rem;
+            color: var(--primary);
+            text-transform: lowercase;
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 3rem;
+        }
+
+        .text-lg {
+            font-size: 1.3rem;
+            line-height: 1.8;
+            margin-bottom: 1.5rem;
+        }
+
+        .journey-tag {
+            background: var(--accent);
+            color: white;
+            padding: 0.5rem 1.5rem;
+            border-radius: 50px;
+            font-weight: 700;
+            display: inline-block;
+        }
+
+        .skill-card {
+            background: white;
+            padding: 2.5rem;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(139, 0, 0, 0.1);
+            transition: transform 0.3s;
+        }
+
+        .skill-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(139, 0, 0, 0.15);
+        }
+
+        .skill-card h3 {
+            color: var(--primary);
+            margin-bottom: 1.5rem;
+            font-size: 1.5rem;
+            font-weight: 800;
+        }
+
+        .skill-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .skill-list li {
+            padding: 0.6rem 0;
+            border-bottom: 1px solid #f0f0f0;
+            font-weight: 600;
+        }
+
+        .beyond {
+            background: linear-gradient(135deg, var(--secondary) 0%, var(--primary) 100%);
+            padding: 8rem 4rem;
+            color: white;
+        }
+
+        .beyond-container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .section-title-huge {
+            font-size: clamp(3rem, 8vw, 6rem);
+            font-weight: 900;
+            margin-bottom: 2rem;
+            text-transform: lowercase;
+        }
+
+        .beyond-subtitle {
+            font-size: 1.5rem;
+            margin-bottom: 4rem;
+            opacity: 0.9;
+            max-width: 800px;
+        }
+
+        .beyond-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+        }
+
+        .beyond-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            padding: 2.5rem;
+            border-radius: 20px;
+            transition: transform 0.3s;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .beyond-card:hover {
+            transform: translateY(-10px);
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .beyond-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            font-weight: 800;
+        }
+
+        /* =========================================
+           CONTACT SECTION
+           ========================================= */
+        .contact {
+            padding: 100px 20px;
+            background: #0a0a0a;
+            color: #fff;
+            position: relative;
+            z-index: 10;
+        }
+
+        .contact-grid {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 80px;
+        }
+
+        /* Contact Headline Styles */
+        .contact-headline {
+            font-size: 6rem;
+            font-weight: 800;
+            line-height: 1.1;
+            margin-bottom: 30px;
+            margin-left: -50px;
+            /* Pull towards edge */
+        }
+
+        .contact-highlight {
+            display: block;
+            /* Forces new line */
+            color: var(--primary);
+            font-family: 'Brush Script MT', cursive;
+            font-style: italic;
+        }
+
+        .contact-form {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 40px;
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #ccc;
+            font-size: 0.95rem;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            color: #fff;
+            font-family: var(--font-body);
+            font-size: 1rem;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        .btn-submit {
+            width: 100%;
+            padding: 15px;
+            background: #8B0000;
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.3s;
+            font-size: 1rem;
+        }
+
+        .btn-submit:hover {
+            background: #B22222;
+        }
+
+        /* Social Logo Buttons */
+        .social-buttons {
+            display: flex;
+            gap: 20px;
+            padding-left: 5px;
+            margin-bottom: 20px;
+        }
+
+        .social-btn {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 60px;
+            height: 60px;
+            background-color: #fff;
+            color: #333;
+            border-radius: 50%;
+            text-decoration: none;
+            font-size: 1.8rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s, background-color 0.2s, color 0.2s;
+        }
+
+        .social-btn:hover {
+            transform: translateY(-3px);
+            color: #fff;
+        }
+
+        .social-btn.mail:hover {
+            background-color: #ea4335;
+        }
+
+        .social-btn.linkedin:hover {
+            background-color: #0077b5;
+        }
+
+        .social-btn.github:hover {
+            background-color: #333;
+        }
+
+        .social-btn.dev:hover {
+            background-color: #0a0a0a;
+            border: 1px solid #fff;
+        }
+
+        /* FOOTER */
+        footer {
+            padding: 40px;
+            text-align: center;
+            background: #000;
+            color: rgba(255, 255, 255, 0.4);
+            font-size: 0.9rem;
+        }
+
+        /* =========================================
+           RESPONSIVE DESIGN (MEDIA QUERIES)
+           ========================================= */
+        @media (max-width: 1024px) {
+            .contact-headline {
+                font-size: 4rem;
+                margin-left: 0;
+            }
+
+            .text-ring {
+                display: none !important;
+                /* Hide ring on small screens for performance */
+            }
+        }
+
+        /* =========================================
+           GALLERY SECTION
+           ========================================= */
+        .gallery-section {
+            padding: 5rem 4rem;
+            background: #f9f4f4;
+        }
+
+        .gallery-tabs {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2.5rem;
+            flex-wrap: wrap;
+        }
+
+        .gallery-tab {
+            padding: 0.6rem 1.5rem;
+            border-radius: 50px;
+            border: 2px solid var(--primary);
+            background: transparent;
+            color: var(--primary);
+            font-weight: 700;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-family: var(--font-body);
+        }
+
+        .gallery-tab.active,
+        .gallery-tab:hover {
+            background: var(--primary);
+            color: white;
+        }
+
+        .gallery-grid {
+            display: none;
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 1.2rem;
+        }
+
+        .gallery-grid.active {
+            display: grid;
+        }
+
+        .gallery-item {
+            border-radius: 16px;
+            overflow: hidden;
+            position: relative;
+            aspect-ratio: 1;
+            cursor: pointer;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+            background: #eee;
+        }
+
+        .gallery-item:hover {
+            transform: scale(1.03);
+            box-shadow: 0 15px 35px rgba(139, 0, 0, 0.2);
+        }
+
+        .gallery-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .gallery-item .gallery-caption {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(to top, rgba(139, 0, 0, 0.85), transparent);
+            color: white;
+            padding: 1.2rem 1rem 0.8rem;
+            font-size: 0.82rem;
+            font-weight: 600;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .gallery-item:hover .gallery-caption {
+            opacity: 1;
+        }
+
+        /* cert items taller */
+        .gallery-item.cert {
+            aspect-ratio: 4/3;
+        }
+
+        @media (max-width: 768px) {
+            .gallery-section {
+                padding: 3rem 1.5rem;
+            }
+
+            .gallery-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 0.8rem;
+            }
+        }
+
+        /* MOBILE FIXES */
+        @media (max-width: 768px) {
+            #custom-cursor {
+                display: none;
+            }
+
+            .grid-2,
+            .stats-grid,
+            .beyond-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .contact-grid {
+                grid-template-columns: 1fr;
+                gap: 40px;
+            }
+
+            .contact-form {
+                padding: 25px;
+            }
+
+            .contact-headline {
+                font-size: 3rem;
+                text-align: center;
+                margin-left: 0;
+            }
+
+            .social-buttons {
+                justify-content: center;
+            }
+
+            #projects-scroll-wrapper {
+                height: auto;
+            }
+
+            #projects-sticky-view {
+                position: relative;
+                height: auto;
+                top: auto;
+                display: block;
+            }
+
+            .cards-container {
+                position: relative;
+                height: auto;
+                padding: 0 1rem 4rem 1rem;
+                width: 100%;
+                display: flex;
+                flex-direction: column;
+                gap: 2rem;
+            }
+
+            .project-card {
+                position: relative !important;
+                margin: 0 auto !important;
+                left: auto !important;
+                right: auto !important;
+                top: auto !important;
+                bottom: auto !important;
+                transform: none !important;
+                opacity: 1 !important;
+                width: 100% !important;
+                max-width: 100% !important;
+            }
+
+            #canvas-container,
+            #project-particle-network {
+                display: none !important;
+            }
+
+            .projects-intro {
+                position: relative;
+                margin-top: 0;
+                margin-bottom: 2rem;
+                top: 0;
+                left: 0;
+                transform: none;
+            }
+
+            .piano-wave-image {
+                width: 150%;
+                left: -25%;
+            }
+
+            /* Research & Awards responsive */
+            #research {
+                padding: 3rem 1.5rem !important;
+            }
+
+            #awards {
+                padding: 3rem 1.5rem !important;
+            }
+
+            #awards h2 {
+                font-size: 2.5rem !important;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="project-modal">
+        <div class="modal-content">
+            <button class="modal-close" data-interactive="true">×</button>
+            <h2 class="modal-title" id="modal-title">Project Title</h2>
+            <span class="modal-badge" id="modal-badge">Tech Stack</span>
+            <p class="modal-desc" id="modal-desc">
+                Description goes here. This will be populated by JavaScript.
+            </p>
+            <div class="modal-links" id="modal-links-container">
+            </div>
+        </div>
+    </div>
+
+    <div id="custom-cursor"></div>
+
+    <button id="sound-toggle" data-interactive="true">Sound On</button>
+
+    <nav>
+        <a href="#" class="logo" data-interactive="true">ST.</a>
+        <ul class="nav-links">
+            <li><a href="#about" data-interactive="true">About</a></li>
+            <li><a href="#research" data-interactive="true">Research</a></li>
+            <li><a href="#awards" data-interactive="true">Awards</a></li>
+            <li><a href="#gallery" data-interactive="true">Gallery</a></li>
+            <li><a href="#projects" data-interactive="true">Work</a></li>
+            <li><a href="#skills" data-interactive="true">Skills</a></li>
+            <li><a href="#contact" data-interactive="true">Contact</a></li>
+        </ul>
+        <a href="#contact" class="cta-button" data-interactive="true">Let's Talk</a>
+    </nav>
+
+    <section class="hero">
+        <!-- Background blobs -->
+        <div class="hero-blob hero-blob-1"></div>
+        <div class="hero-blob hero-blob-2"></div>
+
+        <!-- LEFT: Text Content -->
+        <div class="hero-left">
+            <div class="hero-eyebrow">AI Researcher · Patent Holder · Scopus Author</div>
+            <h1 class="hero-title">
+                <span class="name-line">Sanika</span>
+                <span class="name-accent">Tribhuvan</span>
+            </h1>
+            <p class="hero-subtitle">Solo researcher building forensic AI systems, filing patents &amp; winning
+                international awards — entirely independently, from Ahilyanagar.</p>
+            <div class="hero-badges">
+                <span class="hero-badge">🏆 7+ Awards Won</span>
+                <span class="hero-badge">📄 Scopus Published</span>
+                <span class="hero-badge">🇮🇳 Patent Filed</span>
+                <span class="hero-badge">🎓 CGPA 9.50/10</span>
+            </div>
+            <div class="hero-ctas">
+                <a href="#research" class="hero-btn-primary" data-interactive="true">View Research</a>
+                <a href="#contact" class="hero-btn-outline" data-interactive="true">Get In Touch</a>
+            </div>
+        </div>
+
+        <!-- RIGHT: Profile Image -->
+        <div class="hero-right">
+            <div style="position: relative; display: inline-block;">
+                <div class="hero-image-ornament"></div>
+                <div class="hero-image-ornament-2"></div>
+                <div class="hero-image-container">
+                    <img src="new_landing.jpg" alt="Sanika Tribhuvan"
+                        style="width: 100%; height: 100%; object-fit: cover; object-position: center top; position: relative; z-index: 2;">
+                </div>
+                <!-- Floating stat bubbles -->
+                <div class="hero-stat-bubble">
+                    <div class="bubble-num">7+</div>
+                    <div class="bubble-label">Awards Won</div>
+                </div>
+                <div class="hero-stat-bubble">
+                    <div class="bubble-num">9.50</div>
+                    <div class="bubble-label">CGPA / 10</div>
+                </div>
+            </div>
+        </div>
+        <div class="hero-scroll-hint">Scroll</div>
+    </section>
+
+    <section class="stats-banner">
+        <h2 class="stats-banner-title">Forensic. Trustworthy. AI.</h2>
+        <p class="stats-banner-subtitle">Solo researcher building systems that detect fraud, protect data integrity, and
+            win at international conferences — independently, from Ahilyanagar.</p>
+
+        <div class="stats-grid">
+            <div class="stat-card" data-interactive="true">
+                <div class="stat-card-number"
+                    style="background: linear-gradient(135deg, #8B0000, #DC143C); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">
+                    9.50</div>
+                <div class="stat-card-label">CGPA / 10</div>
+                <div class="stat-card-description">Final Year BCA, SPPU</div>
+            </div>
+            <div class="stat-card" data-interactive="true">
+                <div class="stat-card-number"
+                    style="background: linear-gradient(135deg, #8B0000, #DC143C); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">
+                    7+</div>
+                <div class="stat-card-label">Awards Won</div>
+                <div class="stat-card-description">National &amp; International</div>
+            </div>
+            <div class="stat-card" data-interactive="true">
+                <div class="stat-card-number"
+                    style="background: linear-gradient(135deg, #8B0000, #DC143C); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">
+                    2</div>
+                <div class="stat-card-label">Publications</div>
+                <div class="stat-card-description">Scopus + UGC-listed (IF 8.141)</div>
+            </div>
+            <div class="stat-card" data-interactive="true">
+                <div class="stat-card-number"
+                    style="background: linear-gradient(135deg, #8B0000, #DC143C); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">
+                    1</div>
+                <div class="stat-card-label">Patent Filed</div>
+                <div class="stat-card-description">Indian Provisional Patent, Sole Proprietor</div>
+            </div>
+        </div>
+        <p class="stats-footer">Every project, paper, and prize — built and delivered solo. No team. No mentor. Just
+            research.</p>
+    </section>
+
+    <div id="projects-scroll-wrapper">
+        <div id="projects-sticky-view">
+            <canvas id="project-particle-network"></canvas>
+
+            <div class="projects-instruction">
+                <h4><I>Scroll & Tap any card for more details</I></h4>
+            </div>
+
+            <div id="canvas-container">
+                <canvas id="orb-canvas"></canvas>
+            </div>
+
+            <div class="cards-container">
+
+                <!-- FEATURED FLAGSHIP PROJECTS -->
+                <div class="project-card card-1" data-start="0.0" data-end="0.15" data-interactive="true"
+                    data-type="project"
+                    data-description="🏆 First Prize + Best Paper, ICIISTM 2026 (International, Scopus-indexed). Indian Provisional Patent Filed — Sole Proprietor. A 10-stage forensic AI pipeline detecting hidden manipulation in Indian government budget data. Combines SHA-256 hashing, Merkle trees, Bitcoin blockchain (OpenTimestamps), Temporal Edit Graph analysis, Isolation Forest ML, SHAP-style XAI, union-find campaign detection, WhatsApp alerting under 200ms, and forensic PDF generation. Validated on RBI, OpenBudgetsIndia, data.gov.in. Won ₹2,000 cash prize."
+                    data-github="https://github.com/SanikaTribhuvan/phantom-ledger"
+                    data-live="https://phantom-ledger-2pjd.onrender.com"
+                    data-linkedin="https://www.linkedin.com/in/sanika-tribhuvan-b3a392348/">
+                    <h3>🔍 Phantom Ledger</h3>
+                    <span class="card-badge">🏆 Scopus · Patent · ICIISTM 2026</span>
+                    <p>Forensic AI · Budget Manipulation Detection</p>
+                </div>
+
+                <div class="project-card card-2" data-start="0.06" data-end="0.21" data-interactive="true"
+                    data-type="project"
+                    data-description="Published in IJAAR (UGC-listed, Impact Factor 8.141). Won Second Prize Poster at NCRT-AIML 2026 (SPPU). AI-native middleware for real-time institutional database integrity detection. Uses hybrid Isolation Forest anomaly detection, SHAP-style Explainable AI, Merkle Tree blockchain anchoring on Polygon, and an Agentic Mitigation Engine. Metrics: F1 0.93, Precision 0.94, Recall 0.92, avg latency 3.4ms."
+                    data-github="https://github.com/SanikaTribhuvan/glitchzero"
+                    data-live="https://glitchzero.onrender.com"
+                    data-linkedin="https://www.linkedin.com/in/sanika-tribhuvan-b3a392348/">
+                    <h3>⚡ GlitchZero v6</h3>
+                    <span class="card-badge">📄 IJAAR Published · NCRT-AIML 2026</span>
+                    <p>AI Middleware · Database Integrity · XAI</p>
+                </div>
+
+                <div class="project-card card-3" data-start="0.12" data-end="0.27" data-interactive="true"
+                    data-type="project"
+                    data-description="First Prize at National Science Day Model Competition 2025-26. Real-time environmental hazard detection system using YOLOv8 and OpenCV. Detects e-waste and environmental hazards from live video feeds. Fully automated proximity alerts fire when hazard enters the human zone. Built with Python, Streamlit, YOLOv8, OpenCV &amp; Flask."
+                    data-github="" data-live="" data-linkedin="https://www.linkedin.com/in/sanika-tribhuvan-b3a392348/">
+                    <h3>🌿 EcoVision AI</h3>
+                    <span class="card-badge">🥇 National Science Day 2026</span>
+                    <p>YOLOv8 · Real-time Hazard Detection</p>
+                </div>
+
+                <div class="project-card card-4" data-start="0.15" data-end="0.30" data-interactive="true"
+                    data-type="project"
+                    data-description="Smart Stroke Risk Monitoring System (Research Interest / In-Progress). Analyses 5,000+ patient records across 12+ clinical metrics. Decision Tree model achieves 94.6% accuracy. Maps the Wealth-Health Gap across Maharashtra's districts. Built with Python, Streamlit &amp; MySQL. Aims to surface early stroke risk signals in underserved populations."
+                    data-github="" data-live="" data-linkedin="https://www.linkedin.com/in/sanika-tribhuvan-b3a392348/">
+                    <h3>🫀 Smart Stroke Monitor</h3>
+                    <span class="card-badge">Research · 2025 · 94.6% Accuracy</span>
+                    <p>Decision Tree · 5,000+ Patient Records · Health AI</p>
+                </div>
+
+                <div class="project-card card-4" data-start="0.18" data-end="0.33" data-interactive="true"
+                    data-type="project"
+                    data-description="Comprehensive interactive dashboards transforming complex datasets into actionable business intelligence through advanced visualizations and custom DAX measures."
+                    data-github="" data-live=""
+                    data-linkedin="https://www.linkedin.com/posts/sanika-tribhuvan-b3a392348_datascience-streamlit-ai-activity-7390015491328782336-t1jc">
+                    <h3>Dashboards & Data Storytelling</h3>
+                    <span class="card-badge">Power BI, SQL, DAX</span>
+                    <p>Insight-driven visual dashboards</p>
+                </div>
+
+                <div class="project-card card-5" data-start="0.24" data-end="0.39" data-interactive="true"
+                    data-type="project"
+                    data-description="Unified monitoring interface consolidating GitHub, Netlify, and UptimeRobot metrics. Centralized oversight for code health and deployment pipelines. (Private Repo)"
+                    data-github="" data-live=""
+                    data-linkedin="https://www.linkedin.com/posts/sanika-tribhuvan-b3a392348_devops-fullstack-api-activity-7389038548022099968-E2_X">
+                    <h3>DevOps Dashboard</h3>
+                    <span class="card-badge">DevOps Tools, API Integration</span>
+                    <p>System metrics monitoring</p>
+                </div>
+
+                <div class="project-card card-6" data-start="0.30" data-end="0.45" data-interactive="true"
+                    data-type="project"
+                    data-description="Enterprise HR system with employee records management, attendance tracking, role-based access control, and analytics dashboard."
+                    data-github="https://github.com/SanikaTribhuvan/EMA-Employee-Management-Application-" data-live=""
+                    data-linkedin="https://www.linkedin.com/posts/sanika-tribhuvan-b3a392348_webdevelopment-codeigniter-php-activity-7376933379340042242-2n7f">
+                    <h3>Employee Management</h3>
+                    <span class="card-badge">CodeIgniter (PHP), MySQL</span>
+                    <p>HR Enterprise System</p>
+                </div>
+
+                <div class="project-card card-7" data-start="0.36" data-end="0.51" data-interactive="true"
+                    data-type="project"
+                    data-description="Interactive space exploration experience with dynamic animations and planetary data visualization. Pure JavaScript implementation showcasing modern web capabilities."
+                    data-github="https://github.com/SanikaTribhuvan/SPACE-EXPP"
+                    data-live="https://space-exp.netlify.app/" data-linkedin="">
+                    <h3>THE SPACE-EXP</h3>
+                    <span class="card-badge">HTML5, CSS3, JS</span>
+                    <p>Interactive Space Design</p>
+                </div>
+
+                <div class="project-card card-8" data-start="0.42" data-end="0.57" data-interactive="true"
+                    data-type="project"
+                    data-description="Gesture-controlled drawing application leveraging real-time hand tracking. Webcam-based interface enabling contactless artistic creation with save functionality."
+                    data-github="https://github.com/SanikaTribhuvan/AIR-PAINTER"
+                    data-live="http://air-painter.netlify.app"
+                    data-linkedin="https://www.linkedin.com/posts/sanika-tribhuvan-b3a392348_creativecoding-javascript-mediapipe-activity-7346685319318024192-LScb">
+                    <h3>Air Painter</h3>
+                    <span class="card-badge">JS, MediaPipe, CV</span>
+                    <p>Gesture-controlled Canvas</p>
+                </div>
+
+                <div class="project-card card-9" data-start="0.48" data-end="0.63" data-interactive="true"
+                    data-type="project"
+                    data-description="AI companion application with voice-driven interaction. Features real-time speech recognition, synthesized audio responses, and immersive dual-camera interface."
+                    data-github="https://github.com/SanikaTribhuvan/Sakha-Saarthi" data-live=""
+                    data-linkedin="https://www.linkedin.com/posts/sanika-tribhuvan-b3a392348_aiproject-codeigniter-voiceapp-activity-7355156634840481792-ZHTh">
+                    <h3>Sakha Saarthi</h3>
+                    <span class="card-badge">CodeIgniter, Web Speech API</span>
+                    <p>Voice-driven AI Companion</p>
+                </div>
+
+                <div class="project-card card-10" data-start="0.54" data-end="0.69" data-interactive="true"
+                    data-type="project"
+                    data-description="Smart waste management platform with real-time monitoring, driver/household coordination, and collection analytics. Enterprise-grade dashboard with waste categorization."
+                    data-github="https://github.com/SanikaTribhuvan/CleanTrack"
+                    data-live="https://cleanlinesstrack.netlify.app/"
+                    data-linkedin="https://www.linkedin.com/posts/sanika-tribhuvan-b3a392348_codeigniter-php-webdevelopment-activity-7381522907052814336-y33L">
+                    <h3>CleanTrack</h3>
+                    <span class="card-badge">CodeIgniter, MySQL</span>
+                    <p>Smart Waste Management</p>
+                </div>
+
+                <div class="project-card card-11" data-start="0.60" data-end="0.75" data-interactive="true"
+                    data-type="cert"
+                    data-description="Hands-on training in containerization and orchestration fundamentals. Core competencies in modern DevOps infrastructure and deployment strategies."
+                    data-github="" data-live=""
+                    data-linkedin="https://www.linkedin.com/posts/sanika-tribhuvan-b3a392348_docker-kubernetes-devopsbasics-activity-7411685165917265920-Wf_J">
+                    <h3>Docker & Kubernetes</h3>
+                    <span class="card-badge">Scaler Certification</span>
+                    <p>DevOps Fundamentals</p>
+                </div>
+
+                <div class="project-card card-12" data-start="0.66" data-end="0.81" data-interactive="true"
+                    data-type="cert"
+                    data-description="Advanced training in generative AI technologies, large language models, and practical implementation strategies for AI-powered solutions."
+                    data-github="" data-live=""
+                    data-linkedin="https://www.linkedin.com/posts/sanika-tribhuvan-b3a392348_generativeai-artificialintelligence-ailearning-activity-7391192971540578304-JITS">
+                    <h3>Gen AI Mastermind</h3>
+                    <span class="card-badge">Outskill × CRED</span>
+                    <p>LLM & GenAI Strategy</p>
+                </div>
+
+                <div class="project-card card-13" data-start="0.72" data-end="0.87" data-interactive="true"
+                    data-type="cert"
+                    data-description="Core AI principles, data-driven systems, business applications, and ethical frameworks in artificial intelligence implementation."
+                    data-github="" data-live=""
+                    data-linkedin="https://www.linkedin.com/posts/sanika-tribhuvan-b3a392348_artificialintelligence-ai-professionaldevelopment-activity-7407894444483600384-PaDb">
+                    <h3>AI for Beginners</h3>
+                    <span class="card-badge">HP LIFE Certification</span>
+                    <p>AI Foundations</p>
+                </div>
+
+                <div class="project-card card-14" data-start="0.78" data-end="0.93" data-interactive="true"
+                    data-type="cert"
+                    data-description="End-to-end application development covering Python backend architecture, database management, and modern frontend frameworks."
+                    data-github="" data-live=""
+                    data-linkedin="https://www.linkedin.com/posts/sanika-tribhuvan-b3a392348_python-fullstackdevelopment-eduskills-activity-7368240090701086720-ttrk">
+                    <h3>Python Full Stack</h3>
+                    <span class="card-badge">EduSkills Academy</span>
+                    <p>Full Stack Development</p>
+                </div>
+
+                <div class="project-card card-15" data-start="0.84" data-end="1.0" data-interactive="true"
+                    data-type="cert"
+                    data-description="Intensive training in enterprise business intelligence. Advanced data visualization, dashboard architecture, and analytics using Microsoft Power BI."
+                    data-github="" data-live=""
+                    data-linkedin="https://www.linkedin.com/posts/sanika-tribhuvan-b3a392348_powerbi-datavisualization-businessintelligence-activity-7328099608335663104-aTvM">
+                    <h3>Power BI Training</h3>
+                    <span class="card-badge">CASAS &amp; AIS Solutions</span>
+                    <p>Industrial BI Training</p>
+                </div>
+
+                <div class="project-card card-1" data-start="0.90" data-end="1.0" data-interactive="true"
+                    data-type="cert"
+                    data-description="End-to-end enterprise-grade Java application development. Covers Java EE architecture, Spring Boot, REST APIs, microservices, and full stack deployment pipelines in collaboration with Capgemini and Symbiosis."
+                    data-github="" data-live="" data-linkedin="https://www.linkedin.com/in/sanika-tribhuvan-b3a392348/">
+                    <h3>Full Stack Java Dev</h3>
+                    <span class="card-badge">Capgemini × Symbiosis · Oct 2025</span>
+                    <p>Enterprise Java · Spring Boot · REST APIs</p>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <section class="big-impact-section">
+        <span class="big-impact-subtitle">Indian Provisional Patent Filed</span>
+        <h2 class="big-impact-title">Forensic.<br>Trustworthy.<br>AI.</h2>
+    </section>
+
+    <section class="testimonials">
+        <div class="testimonials-header">
+            <h2>DON'T TAKE MY WORD FOR IT</h2>
+            <p style="opacity: 0.7; margin-top: 1rem;">(Take theirs instead)</p>
+        </div>
+        <div class="testimonials-grid">
+            <div class="testimonial-card" data-interactive="true">
+                <div class="stars">★★★★★</div>
+                <p class="testimonial-text">"The most efficient algorithm implementation I've seen. Truly optimized for
+                    performance."</p>
+                <div class="testimonial-author">ICADMA 2025 Judge <span class="verified-badge">✔ Verified</span></div>
+            </div>
+            <div class="testimonial-card" data-interactive="true">
+                <div class="stars">★★★★★</div>
+                <p class="testimonial-text">"Transformative for our daily operations. The face recognition system just
+                    works."</p>
+                <div class="testimonial-author">College Admin, CASAS <span class="verified-badge">✔ Verified</span>
+                </div>
+            </div>
+            <div class="testimonial-card" data-interactive="true">
+                <div class="stars">★★★★★</div>
+                <p class="testimonial-text">"Phantom Ledger is the kind of forensic AI work that belongs in production
+                    government systems. Outstanding research depth."</p>
+                <div class="testimonial-author">ICIISTM 2026 Review Panel <span class="verified-badge">✔ Best
+                        Paper</span></div>
+            </div>
+        </div>
+    </section>
+
+    <section class="content-section" id="about" style="padding-top: 1rem; padding-bottom: 6rem;">
+        <h2 class="section-title" style="margin-bottom: 1rem;">hey there</h2>
+        <div class="grid-2" style="align-items: start; gap: 2rem;">
+            <div>
+                <p class="text-lg" style="margin-bottom: 0.8rem; margin-top: 0;">
+                    I'm <strong>Sanika Tribhuvan</strong> — a final-year BCA student and
+                    solo AI researcher.
+                </p>
+                <span class="journey-tag" style="margin-bottom: 1rem; display: inline-block;">AI Researcher · Patent
+                    Holder · Scopus Author</span>
+                <p style="font-size: 1.05rem; line-height: 1.7; margin-bottom: 0.8rem;">
+                    Passionate about building trustworthy AI &amp; forensic systems, delivering all my projects
+                    independently. Creator of Phantom Ledger (<strong>1st Prize + Scopus-indexed</strong>).
+                </p>
+                <p style="font-size: 1.05rem; line-height: 1.7; margin-bottom: 1.5rem;">
+                    Beyond research, I co-founded <strong>CASAS Connect</strong> to teach modern web tools to 150+
+                    juniors.
+                </p>
+
+                <!-- Education Timeline -->
+                <h3 style="font-size: 1.15rem; font-weight: 800; color: var(--primary); margin-bottom: 1rem;">🎓
+                    Education</h3>
+                <div style="display: flex; flex-direction: column; gap: 0.8rem;">
+                    <div
+                        style="background: #fff8f8; border-left: 4px solid var(--primary); border-radius: 0 12px 12px 0; padding: 0.9rem 1.2rem;">
+                        <div style="font-weight: 800; font-size: 0.95rem; color: var(--primary);">Bachelor of Computer
+                            Applications (BCA)</div>
+                        <div style="font-size: 0.88rem; color: #555; margin-top: 0.2rem;">New Arts, Commerce &amp;
+                            Science College, Ahilyanagar · SPPU</div>
+                        <div style="font-size: 0.82rem; color: #888; margin-top: 0.15rem;">Oct 2023 – June 2026 · CGPA:
+                            9.50/10 · Expected First Class</div>
+                    </div>
+                    <div
+                        style="background: #fff8f8; border-left: 4px solid var(--secondary); border-radius: 0 12px 12px 0; padding: 0.9rem 1.2rem;">
+                        <div style="font-weight: 800; font-size: 0.95rem; color: var(--secondary);">HSC – Science</div>
+                        <div style="font-size: 0.88rem; color: #555; margin-top: 0.2rem;">Residential College,
+                            Savitribai Phule Pune University</div>
+                        <div style="font-size: 0.82rem; color: #888; margin-top: 0.15rem;">March 2022 · 80%</div>
+                    </div>
+                    <div
+                        style="background: #fff8f8; border-left: 4px solid #e67e22; border-radius: 0 12px 12px 0; padding: 0.9rem 1.2rem;">
+                        <div style="font-weight: 800; font-size: 0.95rem; color: #e67e22;">SSC</div>
+                        <div style="font-size: 0.88rem; color: #555; margin-top: 0.2rem;">Sacred Heart Convent School
+                        </div>
+                        <div style="font-size: 0.82rem; color: #888; margin-top: 0.15rem;">March 2020 · 90%</div>
+                    </div>
+                </div>
+            </div>
+            <div style="margin-top: -0.5rem; display: flex; flex-direction: column; gap: 1.2rem;">
+                <div class="skill-card" data-interactive="true" style="padding: 1.5rem; transition: transform 0.3s;">
+                    <h3 style="margin-bottom: 0.8rem; font-size: 1.2rem; margin-top: 0;">Highlights</h3>
+                    <ul class="skill-list" style="margin-bottom: 0; font-size: 0.9rem;">
+                        <li style="padding: 0.4rem 0;">🏆 1st Prize + Best Paper — ICIISTM 2026 (Scopus)</li>
+                        <li style="padding: 0.4rem 0;">🏅 Indian Provisional Patent — Phantom Ledger</li>
+                        <li style="padding: 0.4rem 0;">📄 Published IJAAR (Impact Factor 8.141)</li>
+                        <li style="padding: 0.4rem 0;">🎓 CGPA 9.50/10 — Final Year BCA, SPPU</li>
+                        <li style="padding: 0.4rem 0;">🥇 7 Awards — National &amp; International</li>
+                        <li style="padding: 0.4rem 0;">🗞️ Lokmat Newspaper Coverage — April 2026</li>
+                        <li style="padding: 0.4rem 0; border-bottom: none;">👩‍💻 Solo Researcher — No Team, No Mentor
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Languages Card -->
+                <div class="skill-card" data-interactive="true" style="padding: 1.5rem; transition: transform 0.3s;">
+                    <h3 style="margin-bottom: 1rem; font-size: 1.2rem; margin-top: 0;">🌐 Languages</h3>
+                    <div style="display: flex; flex-direction: column; gap: 0.6rem;">
+                        <div
+                            style="display: flex; justify-content: space-between; align-items: center; padding: 0.4rem 0; border-bottom: 1px solid #f0f0f0;">
+                            <span style="font-weight: 700; font-size: 0.9rem;">🇮🇳 English</span>
+                            <span
+                                style="font-size: 0.78rem; background: #d4edda; color: #155724; padding: 0.2rem 0.7rem; border-radius: 20px; font-weight: 700;">Fluent</span>
+                        </div>
+                        <div
+                            style="display: flex; justify-content: space-between; align-items: center; padding: 0.4rem 0; border-bottom: 1px solid #f0f0f0;">
+                            <span style="font-weight: 700; font-size: 0.9rem;">🇮🇳 Hindi</span>
+                            <span
+                                style="font-size: 0.78rem; background: #d4edda; color: #155724; padding: 0.2rem 0.7rem; border-radius: 20px; font-weight: 700;">Native</span>
+                        </div>
+                        <div
+                            style="display: flex; justify-content: space-between; align-items: center; padding: 0.4rem 0; border-bottom: 1px solid #f0f0f0;">
+                            <span style="font-weight: 700; font-size: 0.9rem;">🇮🇳 Marathi</span>
+                            <span
+                                style="font-size: 0.78rem; background: #d4edda; color: #155724; padding: 0.2rem 0.7rem; border-radius: 20px; font-weight: 700;">Native</span>
+                        </div>
+                        <div
+                            style="display: flex; justify-content: space-between; align-items: center; padding: 0.4rem 0;">
+                            <span style="font-weight: 700; font-size: 0.9rem;">🇩🇪 German</span>
+                            <span
+                                style="font-size: 0.78rem; background: #fff3cd; color: #856404; padding: 0.2rem 0.7rem; border-radius: 20px; font-weight: 700;">Beginner
+                                (A1)</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Research Interests -->
+                <div class="skill-card" data-interactive="true"
+                    style="padding: 1.5rem; transition: transform 0.3s; border-left: 4px solid var(--primary);">
+                    <h3 style="margin-bottom: 0.8rem; font-size: 1.2rem; margin-top: 0;">🔭 Research Interests</h3>
+                    <div style="display: flex; flex-wrap: wrap; gap: 0.5rem;">
+                        <span
+                            style="background: var(--bg-light); color: var(--primary); font-size: 0.78rem; font-weight: 700; padding: 0.3rem 0.8rem; border-radius: 20px;">Trustworthy
+                            AI</span>
+                        <span
+                            style="background: var(--bg-light); color: var(--primary); font-size: 0.78rem; font-weight: 700; padding: 0.3rem 0.8rem; border-radius: 20px;">Anomaly
+                            Detection</span>
+                        <span
+                            style="background: var(--bg-light); color: var(--primary); font-size: 0.78rem; font-weight: 700; padding: 0.3rem 0.8rem; border-radius: 20px;">Data
+                            Integrity</span>
+                        <span
+                            style="background: var(--bg-light); color: var(--primary); font-size: 0.78rem; font-weight: 700; padding: 0.3rem 0.8rem; border-radius: 20px;">XAI</span>
+                        <span
+                            style="background: var(--bg-light); color: var(--primary); font-size: 0.78rem; font-weight: 700; padding: 0.3rem 0.8rem; border-radius: 20px;">Vision-Language
+                            Models</span>
+                        <span
+                            style="background: var(--bg-light); color: var(--primary); font-size: 0.78rem; font-weight: 700; padding: 0.3rem 0.8rem; border-radius: 20px;">Forensic
+                            AI</span>
+                        <span
+                            style="background: var(--bg-light); color: var(--primary); font-size: 0.78rem; font-weight: 700; padding: 0.3rem 0.8rem; border-radius: 20px;">AI
+                            Systems</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="projects-intro" id="projects">
+        <div class="piano-wave-container">
+            <img src="piano-wave.png" alt="Wavy Piano Keyboard" class="piano-wave-image" loading="lazy">
+        </div>
+    </section>
+
+    <section class="content-section" id="skills" style="
+        max-width: none !important;
+        margin: 0 !important;
+        width: 100% !important;
+        background-image: url('catbg.png');         
+        background-size: cover;
+        background-position: center;
+        padding: 5rem 2rem; 
+        overflow: hidden;">
+
+        <h2 class="section-title"
+            style="text-align: center; font-size: clamp(2.5rem, 5vw, 4rem); margin-bottom: 3rem; margin-top: 0;">
+            tech stack</h2>
+
+        <div style="
+            display: grid; 
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); 
+            gap: 1.5rem; 
+            max-width: 1400px; 
+            margin: 0 auto;
+            width: 100%;
+            padding: 0;">
+
+            <div class="skill-card" data-interactive="true" style="padding: 1.5rem;">
+                <h3 style="margin-bottom: 1rem; font-size: 1.3rem;">Programming</h3>
+                <ul class="skill-list" style="font-size: 0.9rem;">
+                    <li>Python</li>
+                    <li>JavaScript</li>
+                    <li>Java</li>
+                    <li>PHP</li>
+                    <li>C / C++</li>
+                    <li>SQL</li>
+                </ul>
+            </div>
+
+            <div class="skill-card" data-interactive="true" style="padding: 1.5rem;">
+                <h3 style="margin-bottom: 1rem; font-size: 1.3rem;">AI & ML</h3>
+                <ul class="skill-list" style="font-size: 0.9rem;">
+                    <li>YOLOv8 · OpenCV</li>
+                    <li>Scikit-learn · Isolation Forest</li>
+                    <li>MediaPipe AI</li>
+                    <li>XAI / SHAP</li>
+                    <li>Predictive Modeling</li>
+                    <li>Power BI / DAX</li>
+                </ul>
+            </div>
+
+            <div class="skill-card" data-interactive="true" style="padding: 1.5rem;">
+                <h3 style="margin-bottom: 1rem; font-size: 1.3rem;">Web Dev</h3>
+                <ul class="skill-list" style="font-size: 0.9rem;">
+                    <li>React + Tailwind</li>
+                    <li>HTML5 / CSS3</li>
+                    <li>Flask · Streamlit</li>
+                    <li>CodeIgniter (PHP)</li>
+                    <li>Bootstrap</li>
+                </ul>
+            </div>
+
+            <div class="skill-card" data-interactive="true" style="padding: 1.5rem;">
+                <h3 style="margin-bottom: 1rem; font-size: 1.3rem;">Infra & Tools</h3>
+                <ul class="skill-list" style="font-size: 0.9rem;">
+                    <li>Git / GitHub</li>
+                    <li>Docker · Render · Netlify</li>
+                    <li>MySQL · PostgreSQL</li>
+                    <li>Blockchain (Polygon, Bitcoin)</li>
+                    <li>Merkle Trees · SHA-256</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== RESEARCH PUBLICATIONS SECTION ===== -->
+    <section class="content-section" id="research"
+        style="padding-top: 5rem; padding-bottom: 5rem; background: #fff8f8;">
+        <h2 class="section-title">research</h2>
+        <p style="font-size: 1.15rem; max-width: 800px; margin-bottom: 3rem; opacity: 0.8; line-height: 1.7;">
+            Solo-authored research published in international and UGC-listed journals — built, written, and presented
+            entirely independently.
+        </p>
+        <div style="display: flex; flex-direction: column; gap: 2.5rem;">
+
+            <!-- Phantom Ledger Paper -->
+            <div class="skill-card" data-interactive="true"
+                style="padding: 2.5rem; border-left: 6px solid var(--primary); position: relative;">
+                <div style="display: flex; gap: 0.6rem; flex-wrap: wrap; margin-bottom: 1rem;">
+                    <span
+                        style="background: var(--primary); color: white; padding: 0.3rem 0.9rem; border-radius: 20px; font-size: 0.75rem; font-weight: 700;">🏆
+                        FIRST PRIZE + BEST PAPER</span>
+                    <span
+                        style="background: #1a1a2e; color: white; padding: 0.3rem 0.9rem; border-radius: 20px; font-size: 0.75rem; font-weight: 700;">SCOPUS-INDEXED</span>
+                    <span
+                        style="background: #c0392b; color: white; padding: 0.3rem 0.9rem; border-radius: 20px; font-size: 0.75rem; font-weight: 700;">🇮🇳
+                        PATENT FILED</span>
+                    <span
+                        style="background: #27ae60; color: white; padding: 0.3rem 0.9rem; border-radius: 20px; font-size: 0.75rem; font-weight: 700;">SOLO</span>
+                </div>
+                <h3
+                    style="color: var(--primary); font-size: 1.4rem; font-weight: 800; margin-bottom: 0.8rem; line-height: 1.4;">
+                    Phantom Ledgers: Detecting Hidden Manipulation in Public Budget Datasets via Cryptographic
+                    Integrity, Temporal Edit Graph Analysis &amp; Agentic Alerting
+                </h3>
+                <p style="font-size: 0.95rem; color: #555; margin-bottom: 1rem; font-weight: 600;">
+                    ICIISTM 2026 — International Conference on Inventions, Innovations in Science, Technology &amp;
+                    Management · March 2026
+                </p>
+                <div
+                    style="margin-bottom: 1.5rem; border-radius: 12px; overflow: hidden; box-shadow: 0 8px 25px rgba(0,0,0,0.15);">
+                    <img src="gallery/phantom_ledger_ui.png" alt="Phantom Ledger live UI"
+                        style="width:100%; display:block; border-radius: 12px;">
+                </div>
+                <p
+                    style="font-size: 0.85rem; color: #888; text-align: center; margin-bottom: 1.5rem; font-style: italic;">
+                    ↑ Live system UI — phantom-ledger-2pjd.onrender.com</p>
+                <p style="font-size: 1rem; line-height: 1.7; margin-bottom: 1.5rem; opacity: 0.85;">
+                    A 10-stage forensic AI pipeline for detecting hidden manipulation in Indian government budget data.
+                    Combines SHA-256 cryptographic hashing, Merkle trees, Bitcoin blockchain anchoring via
+                    OpenTimestamps, Temporal Edit Graph analysis, Isolation Forest ML triage, SHAP-style XAI with 5
+                    explainability factors summing to 100%, union-find campaign detection, WhatsApp alerting under
+                    200ms, and forensic PDF report generation. Validated on real Indian datasets — RBI,
+                    OpenBudgetsIndia, data.gov.in.
+                </p>
+                <p
+                    style="font-size: 0.9rem; font-style: italic; color: var(--primary); font-weight: 700; margin-bottom: 1.5rem;">
+                    Indian Provisional Patent Filed · Sole Proprietor · ₹2,000 Cash Prize
+                </p>
+                <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+                    <a href="https://phantom-ledger-2pjd.onrender.com" target="_blank" class="modal-btn btn-primary">🔗
+                        Live System</a>
+                    <a href="https://github.com/SanikaTribhuvan/phantom-ledger" target="_blank"
+                        class="modal-btn btn-outline">GitHub</a>
+                </div>
+            </div>
+
+            <!-- GlitchZero Paper -->
+            <div class="skill-card" data-interactive="true"
+                style="padding: 2.5rem; border-left: 6px solid var(--secondary);">
+                <div style="display: flex; gap: 0.6rem; flex-wrap: wrap; margin-bottom: 1rem;">
+                    <span
+                        style="background: var(--secondary); color: white; padding: 0.3rem 0.9rem; border-radius: 20px; font-size: 0.75rem; font-weight: 700;">🥈
+                        SECOND PRIZE POSTER</span>
+                    <span
+                        style="background: #8e44ad; color: white; padding: 0.3rem 0.9rem; border-radius: 20px; font-size: 0.75rem; font-weight: 700;">UGC-LISTED
+                        · IF 8.141</span>
+                    <span
+                        style="background: #27ae60; color: white; padding: 0.3rem 0.9rem; border-radius: 20px; font-size: 0.75rem; font-weight: 700;">PUBLISHED
+                        · IJAAR</span>
+                    <span
+                        style="background: #27ae60; color: white; padding: 0.3rem 0.9rem; border-radius: 20px; font-size: 0.75rem; font-weight: 700;">SOLO</span>
+                </div>
+                <h3
+                    style="color: var(--primary); font-size: 1.4rem; font-weight: 800; margin-bottom: 0.8rem; line-height: 1.4;">
+                    GlitchZero: AI-Native Middleware for Real-Time Institutional Data Integrity via Hybrid Anomaly
+                    Detection, Blockchain Anchoring &amp; XAI
+                </h3>
+                <p style="font-size: 0.95rem; color: #555; margin-bottom: 1rem; font-weight: 600;">
+                    Published in IJAAR (International Journal of Advanced Academic Research) · Impact Factor 8.141 ·
+                    NCRT-AIML 2026, SPPU · March 2026
+                </p>
+                <div
+                    style="margin-bottom: 1.5rem; border-radius: 12px; overflow: hidden; box-shadow: 0 8px 25px rgba(0,0,0,0.15);">
+                    <img src="gallery/glitchzero_ui.png" alt="GlitchZero live UI"
+                        style="width:100%; display:block; border-radius: 12px;">
+                </div>
+                <p
+                    style="font-size: 0.85rem; color: #888; text-align: center; margin-bottom: 1.5rem; font-style: italic;">
+                    ↑ Live system UI — glitchzero.onrender.com</p>
+                <p style="font-size: 1rem; line-height: 1.7; margin-bottom: 1.5rem; opacity: 0.85;">
+                    AI-native middleware system for real-time institutional database integrity detection. Uses hybrid
+                    Isolation Forest anomaly detection, SHAP-style Explainable AI, Merkle Tree blockchain anchoring on
+                    Polygon, and an Agentic Mitigation Engine. Metrics: F1 0.93, Precision 0.94, Recall 0.92, average
+                    latency 3.4ms.
+                </p>
+                <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+                    <a href="https://glitchzero.onrender.com" target="_blank" class="modal-btn btn-primary">🔗 Live
+                        System</a>
+                    <a href="https://github.com/SanikaTribhuvan/glitchzero" target="_blank"
+                        class="modal-btn btn-outline">GitHub</a>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- ===== AWARDS TIMELINE SECTION ===== -->
+    <section style="padding: 5rem 4rem; background: #1a1a1a; color: white;" id="awards">
+        <div style="max-width: 1200px; margin: 0 auto;">
+            <h2
+                style="font-size: clamp(2.5rem, 5vw, 4rem); font-weight: 900; color: white; text-transform: lowercase; margin-bottom: 0.5rem;">
+                awards &amp; honours</h2>
+            <p style="opacity: 0.6; font-size: 1.1rem; margin-bottom: 4rem;">7 wins. Solo. No team. No mentor. Just
+                research.</p>
+
+            <div style="display: flex; flex-direction: column; gap: 1.5rem;">
+
+                <div style="background: #2d2d2d; border-radius: 16px; padding: 2rem; border-left: 5px solid #DC143C; transition: transform 0.3s;"
+                    onmouseover="this.style.transform='translateX(8px)'" onmouseout="this.style.transform='none'">
+                    <div
+                        style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 1rem;">
+                        <div style="flex: 1; min-width: 250px;">
+                            <span
+                                style="background: #DC143C; color: white; padding: 0.2rem 0.7rem; border-radius: 10px; font-size: 0.75rem; font-weight: 700; margin-right: 0.5rem;">🥇
+                                FIRST PRIZE + BEST PAPER</span>
+                            <span
+                                style="background: #333; color: #aaa; padding: 0.2rem 0.7rem; border-radius: 10px; font-size: 0.75rem;">International
+                                · Scopus · April 2026</span>
+                            <h3 style="margin-top: 0.8rem; font-size: 1.2rem; color: white;">COGNOTSAV 2026 —
+                                State-Level Technical Event</h3>
+                            <p style="color: #aaa; margin-top: 0.3rem;">Dr. Vithalrao Vikhe Patil College of
+                                Engineering, Ahilyanagar · Phantom Ledger · ₹1,000 + Gold Medal</p>
+                        </div>
+                        <div
+                            style="width: 200px; flex-shrink: 0; box-shadow: 0 5px 15px rgba(0,0,0,0.3); border-radius: 12px; overflow: hidden; border: 2px solid #333;">
+                            <img src="gallery/award_cognotsav_selfie2.jpg" alt="COGNOTSAV Selfie"
+                                style="width: 100%; display: block; object-fit: cover;">
+                        </div>
+                    </div>
+                </div>
+
+                <div style="background: #2d2d2d; border-radius: 16px; padding: 2rem; border-left: 5px solid #DC143C; transition: transform 0.3s;"
+                    onmouseover="this.style.transform='translateX(8px)'" onmouseout="this.style.transform='none'">
+                    <div>
+                        <span
+                            style="background: #e67e22; color: white; padding: 0.2rem 0.7rem; border-radius: 10px; font-size: 0.75rem; font-weight: 700; margin-right: 0.5rem;">🥈
+                            SECOND PRIZE</span>
+                        <span
+                            style="background: #333; color: #aaa; padding: 0.2rem 0.7rem; border-radius: 10px; font-size: 0.75rem;">National
+                            · April 2026</span>
+                        <h3 style="margin-top: 0.8rem; font-size: 1.2rem; color: white;">TECH-EXPO 2026 — National-Level
+                            Project Presentation</h3>
+                        <p style="color: #aaa; margin-top: 0.3rem;">Pravara Rural Engineering College, Loni · Phantom
+                            Ledger · ₹4,000 cash</p>
+                    </div>
+                </div>
+
+                <div style="background: #2d2d2d; border-radius: 16px; padding: 2rem; border-left: 5px solid #DC143C; transition: transform 0.3s;"
+                    onmouseover="this.style.transform='translateX(8px)'" onmouseout="this.style.transform='none'">
+                    <div>
+                        <span
+                            style="background: #DC143C; color: white; padding: 0.2rem 0.7rem; border-radius: 10px; font-size: 0.75rem; font-weight: 700; margin-right: 0.5rem;">🏆
+                            FIRST PRIZE + BEST PAPER</span>
+                        <span
+                            style="background: #333; color: #aaa; padding: 0.2rem 0.7rem; border-radius: 10px; font-size: 0.75rem;">International
+                            · Scopus · March 2026</span>
+                        <h3 style="margin-top: 0.8rem; font-size: 1.2rem; color: white;">ICIISTM 2026 — International
+                            Conference on Inventions, Innovations in Science, Technology &amp; Management</h3>
+                        <p style="color: #aaa; margin-top: 0.3rem;">Phantom Ledger · Indian Provisional Patent Filed ·
+                            ₹2,000 cash</p>
+                    </div>
+                </div>
+
+                <div style="background: #2d2d2d; border-radius: 16px; padding: 2rem; border-left: 5px solid #e67e22; transition: transform 0.3s;"
+                    onmouseover="this.style.transform='translateX(8px)'" onmouseout="this.style.transform='none'">
+                    <div>
+                        <span
+                            style="background: #e67e22; color: white; padding: 0.2rem 0.7rem; border-radius: 10px; font-size: 0.75rem; font-weight: 700; margin-right: 0.5rem;">🥈
+                            SECOND PRIZE</span>
+                        <span
+                            style="background: #333; color: #aaa; padding: 0.2rem 0.7rem; border-radius: 10px; font-size: 0.75rem;">National
+                            · SPPU · March 2026</span>
+                        <h3 style="margin-top: 0.8rem; font-size: 1.2rem; color: white;">NCRT-AIML 2026 — National
+                            Conference on Recent Trends in AI &amp; ML</h3>
+                        <p style="color: #aaa; margin-top: 0.3rem;">Savitribai Phule Pune University · GlitchZero v6 ·
+                            Poster Presentation</p>
+                    </div>
+                </div>
+
+                <div style="background: #2d2d2d; border-radius: 16px; padding: 2rem; border-left: 5px solid #DC143C; transition: transform 0.3s;"
+                    onmouseover="this.style.transform='translateX(8px)'" onmouseout="this.style.transform='none'">
+                    <div
+                        style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 1rem;">
+                        <div style="flex: 1; min-width: 250px;">
+                            <span
+                                style="background: #DC143C; color: white; padding: 0.2rem 0.7rem; border-radius: 10px; font-size: 0.75rem; font-weight: 700; margin-right: 0.5rem;">🥇
+                                FIRST PRIZE</span>
+                            <span
+                                style="background: #333; color: #aaa; padding: 0.2rem 0.7rem; border-radius: 10px; font-size: 0.75rem;">National
+                                Science Day · March 2026</span>
+                            <h3 style="margin-top: 0.8rem; font-size: 1.2rem; color: white;">National Science Day Model
+                                Competition 2025-26</h3>
+                            <p style="color: #aaa; margin-top: 0.3rem;">New Arts Commerce &amp; Science College ·
+                                EcoVision
+                                AI (YOLOv8)</p>
+                        </div>
+                        <div
+                            style="width: 200px; flex-shrink: 0; box-shadow: 0 5px 15px rgba(0,0,0,0.3); border-radius: 12px; overflow: hidden; border: 2px solid #333;">
+                            <img src="gallery/award_office_cert.jpg" alt="Office Certificate"
+                                style="width: 100%; display: block; object-fit: cover;">
+                        </div>
+                    </div>
+                </div>
+
+                <div style="background: #2d2d2d; border-radius: 16px; padding: 2rem; border-left: 5px solid #DC143C; transition: transform 0.3s;"
+                    onmouseover="this.style.transform='translateX(8px)'" onmouseout="this.style.transform='none'">
+                    <div>
+                        <span
+                            style="background: #DC143C; color: white; padding: 0.2rem 0.7rem; border-radius: 10px; font-size: 0.75rem; font-weight: 700; margin-right: 0.5rem;">🥇
+                            FIRST PRIZE</span>
+                        <span
+                            style="background: #333; color: #aaa; padding: 0.2rem 0.7rem; border-radius: 10px; font-size: 0.75rem;">International
+                            · Nov 2025</span>
+                        <h3 style="margin-top: 0.8rem; font-size: 1.2rem; color: white;">ICADMA 2025 — International
+                            Conference on Analysis, Discrete Mathematics &amp; Applications</h3>
+                        <p style="color: #aaa; margin-top: 0.3rem;">Beat 50+ entries from IIT, IISER, DRDO &amp;
+                            international universities · Pathfinding Visualizer (A*)</p>
+                    </div>
+                </div>
+
+                <div style="background: #2d2d2d; border-radius: 16px; padding: 2rem; border-left: 5px solid #f1c40f; transition: transform 0.3s;"
+                    onmouseover="this.style.transform='translateX(8px)'" onmouseout="this.style.transform='none'">
+                    <div>
+                        <span
+                            style="background: #f1c40f; color: #1a1a1a; padding: 0.2rem 0.7rem; border-radius: 10px; font-size: 0.75rem; font-weight: 700; margin-right: 0.5rem;">🥇
+                            5× GOLD MEDALIST</span>
+                        <span
+                            style="background: #333; color: #aaa; padding: 0.2rem 0.7rem; border-radius: 10px; font-size: 0.75rem;">2016–2020</span>
+                        <h3 style="margin-top: 0.8rem; font-size: 1.2rem; color: white;">International Olympiad of
+                            English Language</h3>
+                        <p style="color: #aaa; margin-top: 0.3rem;">Silverzone Foundation · 5 consecutive gold medals
+                        </p>
+                    </div>
+                </div>
+
+                <div style="background: #2d2d2d; border-radius: 16px; padding: 2rem; border-left: 5px solid #8e44ad; transition: transform 0.3s;"
+                    onmouseover="this.style.transform='translateX(8px)'" onmouseout="this.style.transform='none'">
+                    <div>
+                        <span
+                            style="background: #8e44ad; color: white; padding: 0.2rem 0.7rem; border-radius: 10px; font-size: 0.75rem; font-weight: 700; margin-right: 0.5rem;">🎯
+                            SELECTED</span>
+                        <span
+                            style="background: #333; color: #aaa; padding: 0.2rem 0.7rem; border-radius: 10px; font-size: 0.75rem;">Cohort
+                            8</span>
+                        <h3 style="margin-top: 0.8rem; font-size: 1.2rem; color: white;">Infosys Springboard Pragati:
+                            Path to Future</h3>
+                        <p style="color: #aaa; margin-top: 0.3rem;">Selected for Cohort 8 · National program for
+                            high-achieving women in tech</p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== GALLERY SECTION ===== -->
+    <section class="gallery-section" id="gallery">
+        <div style="max-width: 1400px; margin: 0 auto;">
+            <h2 class="section-title">gallery</h2>
+            <p style="font-size: 1.1rem; opacity: 0.8; margin-bottom: 2rem; max-width: 700px;">
+                The moments that matter — on stage, in the lab, and beyond the screen.
+            </p>
+
+            <div class="gallery-tabs">
+                <button class="gallery-tab active" onclick="switchTab('awards-photos')">🏆 Awards & Conferences</button>
+                <button class="gallery-tab" onclick="switchTab('certs')">📜 Certificates</button>
+                <button class="gallery-tab" onclick="switchTab('research-photos')">🔬 Research Moments</button>
+                <button class="gallery-tab" onclick="switchTab('life')">🌸 Beyond Code</button>
+            </div>
+
+            <!-- TAB 1: Awards & Conferences -->
+            <div class="gallery-grid active" id="tab-awards-photos">
+
+                <div class="gallery-item">
+                    <img src="gallery/award_office_cert.jpg" alt="Receiving excellence certificate" loading="lazy">
+                    <div class="gallery-caption">🏆 Recognition of Excellence · Official Certificate</div>
+                </div>
+
+                <div class="gallery-item">
+                    <img src="gallery/award_stage_meet2026.png" alt="MEET 2026 Award Ceremony" loading="lazy">
+                    <div class="gallery-caption">🥇 Award Ceremony · MEET 2026 · Felicitation</div>
+                </div>
+
+                <div class="gallery-item">
+                    <img src="gallery/award_cognotsav_selfie2.jpg" alt="COGNOTSAV Selfie with medal" loading="lazy">
+                    <div class="gallery-caption">🥇 First Prize + Gold Medal · COGNOTSAV 2026</div>
+                </div>
+
+                <div class="gallery-item">
+                    <img src="gallery/iciistm_stage.png" alt="ICIISTM 2026 award ceremony" loading="lazy">
+                    <div class="gallery-caption">🏆 First Prize + Best Paper · ICIISTM 2026 · Scopus</div>
+                </div>
+
+                <div class="gallery-item">
+                    <img src="gallery/award_ceremony_stage1.png" alt="Award ceremony stage" loading="lazy">
+                    <div class="gallery-caption">Receiving award on stage · ICIISTM 2026</div>
+                </div>
+
+                <div class="gallery-item">
+                    <img src="gallery/new_award_ncrtaiml.jpg" alt="NCRTAIML award ceremony" loading="lazy">
+                    <div class="gallery-caption">🏆 Award Ceremony · NCRT-AIML · Official Felicitation</div>
+                </div>
+
+                <div class="gallery-item">
+                    <img src="gallery/new_award_iciistm.jpg" alt="ICIISTM 2026 Best Paper award" loading="lazy">
+                    <div class="gallery-caption">🥇 Best Paper Award · ICIISTM-2k26 · Outdoor Celebration</div>
+                </div>
+
+                <div class="gallery-item">
+                    <img src="gallery/techexpo_pravara.jpg" alt="TECH-EXPO 2026 Pravara" loading="lazy">
+                    <div class="gallery-caption">🥈 Second Prize · TECH-EXPO 2026 · Pravara Rural Engineering College
+                    </div>
+                </div>
+
+                <div class="gallery-item">
+                    <img src="gallery/national_science_day_stage.png" alt="National Science Day award" loading="lazy">
+                    <div class="gallery-caption">🥇 First Prize · National Science Day 2026 · EcoVision AI</div>
+                </div>
+
+                <div class="gallery-item">
+                    <img src="gallery/blossom2k26_felicitation.jpeg" alt="Blossom 2k26 felicitation" loading="lazy">
+                    <div class="gallery-caption">Blossom 2k26 · Felicitation on stage · CASAS, New Arts College</div>
+                </div>
+
+                <div class="gallery-item">
+                    <img src="gallery/lokmat_newspaper.jpeg" alt="Lokmat newspaper coverage" loading="lazy">
+                    <div class="gallery-caption">📰 Lokmat newspaper coverage · "सानिका त्रिभुवनचे राष्ट्रीय स्पर्धेत
+                        यश" · April 2026</div>
+                </div>
+
+            </div>
+
+            <!-- TAB 2: Certificates -->
+            <div class="gallery-grid" id="tab-certs">
+
+                <div class="gallery-item cert">
+                    <img src="gallery/iciistm_cert.jpeg" alt="ICIISTM 2026 Certificate" loading="lazy">
+                    <div class="gallery-caption">ICIISTM 2026 Certificate · Phantom Ledgers · International</div>
+                </div>
+
+                <div class="gallery-item cert">
+                    <img src="gallery/cognotsav_cert.jpeg" alt="COGNOTSAV 2026 Certificate" loading="lazy">
+                    <div class="gallery-caption">COGNOTSAV 2026 Certificate · 1st Prize · Dr. VVPCE</div>
+                </div>
+
+                <div class="gallery-item cert">
+                    <img src="gallery/ncrtaiml_cert.jpeg" alt="NCRT-AIML 2026 Certificate" loading="lazy">
+                    <div class="gallery-caption">NCRT-AIML 2026 Certificate · 2nd Prize Poster · SPPU</div>
+                </div>
+
+                <div class="gallery-item cert">
+                    <img src="gallery/sciday_cert.jpeg" alt="National Science Day Certificate" loading="lazy">
+                    <div class="gallery-caption">National Science Day 2026 · 1st Rank Model Competition</div>
+                </div>
+
+                <div class="gallery-item cert">
+                    <img src="gallery/icadma_cert.jpeg" alt="ICADMA 2025 Certificate" loading="lazy">
+                    <div class="gallery-caption">ICADMA 2025 Certificate · 1st Rank Poster & Model Competition</div>
+                </div>
+
+            </div>
+
+            <!-- TAB 3: Research Moments -->
+            <div class="gallery-grid" id="tab-research-photos">
+
+                <div class="gallery-item">
+                    <img src="gallery/phantom_presentation.jpeg" alt="Phantom Ledger presentation" loading="lazy">
+                    <div class="gallery-caption">Presenting Phantom Ledger · "One anomaly is noise. A pattern is
+                        corruption."</div>
+                </div>
+
+                <div class="gallery-item">
+                    <img src="gallery/glitchzero_poster_presentation.jpg" alt="GlitchZero poster presentation"
+                        loading="lazy">
+                    <div class="gallery-caption">GlitchZero v6 Poster · F1 0.93 · Precision 0.94 · NCRT-AIML 2026</div>
+                </div>
+
+                <div class="gallery-item">
+                    <img src="gallery/glitchzero_outdoor_cert.png" alt="GlitchZero outdoor with cert" loading="lazy">
+                    <div class="gallery-caption">GlitchZero v6 · Published IJAAR IF 8.141 · Certificate</div>
+                </div>
+
+                <div class="gallery-item">
+                    <img src="gallery/phantom_paper.png" alt="Phantom Ledger paper abstract" loading="lazy">
+                    <div class="gallery-caption">Phantom Ledgers research paper · Scopus-indexed · ICIISTM 2026</div>
+                </div>
+
+                <div class="gallery-item">
+                    <img src="gallery/glitchzero_paper.png" alt="GlitchZero paper" loading="lazy">
+                    <div class="gallery-caption">GlitchZero paper abstract · IJAAR (UGC-listed, Impact Factor 8.141)
+                    </div>
+                </div>
+
+                <div class="gallery-item">
+                    <img src="gallery/speaking_mic.jpg" alt="Speaking at conference" loading="lazy">
+                    <div class="gallery-caption">Presenting research at conference · Solo researcher</div>
+                </div>
+
+                <div class="gallery-item">
+                    <img src="gallery/casas_connect_teaching.jpeg" alt="CASAS Connect teaching session" loading="lazy">
+                    <div class="gallery-caption">CASAS Connect · Session Lead · Teaching Git, GitHub & Streamlit</div>
+                </div>
+
+                <div class="gallery-item">
+                    <img src="gallery/presenting_session.jpg" alt="Session presentation" loading="lazy">
+                    <div class="gallery-caption">Conference session presentation</div>
+                </div>
+
+                <div class="gallery-item">
+                    <img src="gallery/dog_ginger.jpg" alt="With Ginger" loading="lazy">
+                    <div class="gallery-caption">Ginger won 🐕 · Unconditional love</div>
+                </div>
+
+                <div class="gallery-item">
+                    <img src="gallery/yamaha_piano.jpg" alt="Playing Yamaha keyboard" loading="lazy">
+                    <div class="gallery-caption">Playing my Yamaha PSR 🎹 · Music is my reset button</div>
+                </div>
+
+            </div>
+
+            <!-- TAB 4: Life / Beyond Code -->
+            <div class="gallery-grid" id="tab-life">
+
+                <div class="gallery-item">
+                    <img src="gallery/new_dog_puppy.jpg" alt="Sanika with puppy" loading="lazy">
+                    <div class="gallery-caption">My little one 🐾 · Puppy love is real</div>
+                </div>
+
+                <div class="gallery-item">
+                    <img src="gallery/new_dog_grown.jpg" alt="Sanika with dog in kurta" loading="lazy">
+                    <div class="gallery-caption">Best friends 🐕 · Unconditional loyalty</div>
+                </div>
+
+                <div class="gallery-item">
+                    <img src="gallery/cognotsav_ceremony.png" alt="COGNOTSAV 2026 award" loading="lazy">
+                    <div class="gallery-caption">🥇 First Prize + Gold Medal · COGNOTSAV 2026 · State Level</div>
+                </div>
+
+                <div class="gallery-item">
+                    <img src="gallery/ncrtaiml_stage.png" alt="NCRT-AIML 2026 award" loading="lazy">
+                    <div class="gallery-caption">🥈 Second Prize Poster · NCRT-AIML 2026 · SPPU · GlitchZero v6</div>
+                </div>
+
+                <div class="gallery-item">
+                    <img src="gallery/sanika_portrait.jpg" alt="Sanika with dog" loading="lazy">
+                    <div class="gallery-caption">With my dog 🐾 · Animal lover at heart</div>
+                </div>
+
+                <div class="gallery-item">
+                    <img src="gallery/leo_bw.jpeg" alt="Leo black and white" loading="lazy">
+                    <div class="gallery-caption">Leo 🐶 · Pure chaos, pure love</div>
+                </div>
+
+                <div class="gallery-item">
+                    <img src="gallery/liva_dog.jpeg" alt="Liva dog" loading="lazy">
+                    <div class="gallery-caption">Liva 🐾 · My heart in dog form</div>
+                </div>
+
+                <div class="gallery-item">
+                    <img src="gallery/piano_stage_red.jpeg" alt="Piano performance on stage" loading="lazy">
+                    <div class="gallery-caption">🎹 Solo piano performance on stage · Yamaha PSR · Red dress energy
+                    </div>
+                </div>
+
+                <div class="gallery-item">
+                    <img src="gallery/blossom2k26_performance.jpeg" alt="Blossom 2k26 keyboard + guitar" loading="lazy">
+                    <div class="gallery-caption">🎵 Blossom 2k26 · Keyboard + guitar duet · CASAS cultural fest</div>
+                </div>
+
+                <div class="gallery-item">
+                    <img src="gallery/sanika_pond_casual.jpg" alt="Casual day out" loading="lazy">
+                    <div class="gallery-caption">Casual days off 🌿 · Life beyond research</div>
+                </div>
+
+                <div class="gallery-item">
+                    <img src="gallery/birthday_candles.jpg" alt="Birthday celebration" loading="lazy">
+                    <div class="gallery-caption">Birthday celebrations 🎂 · Making memories</div>
+                </div>
+
+                <div class="gallery-item">
+                    <img src="gallery/gujarati_thali.jpg" alt="Authentic Gujarati thali" loading="lazy">
+                    <div class="gallery-caption">Authentic Gujarati Thali 🍛 · Food is serious research too</div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <section class="beyond" id="beyond">
+        <div class="beyond-container">
+            <h2 class="section-title-huge">beyond code</h2>
+            <p class="beyond-subtitle">I'm not just a developer — I'm an artist, educator, and builder who believes
+                technology should feel human.</p>
+            <div class="beyond-grid">
+                <div class="beyond-card" data-interactive="true">
+                    <h3>Music Educator</h3>
+                    <p>Founder of a Piano Academy. Applying musical patience and pattern recognition to debugging code.
+                    </p>
+                </div>
+                <div class="beyond-card" data-interactive="true">
+                    <h3>A Poet</h3>
+                    <p>Treating code as language. I bring poetic elegance and a writer's perspective to User Experience.
+                    </p>
+                </div>
+                <div class="beyond-card" data-interactive="true">
+                    <h3>Animal Lover</h3>
+                    <p>Compassion first. Staying grounded, patient, and empathetic through a deep love for animals.</p>
+                </div>
+                <div class="beyond-card" data-interactive="true">
+                    <h3>Creative Spirit</h3>
+                    <p>High energy, visionary mindset. Thriving in collaboration to spark ideas through human
+                        connection.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="contact" id="contact">
+        <div class="contact-grid">
+            <div>
+                <h2 class="contact-headline">
+                    Let's Create<br />
+                    Something<br />
+                    <span class="contact-highlight">Unique</span>
+                </h2>
+
+                <p style="color: #aaa; font-size: 1.1rem; margin-bottom: 40px;">
+                    Have a project in mind? Looking for a partner to help bring your vision to life? I'd love to hear
+                    from you.
+                </p>
+
+                <div class="social-buttons">
+                    <a href="mailto:tribhuvansanika@gmail.com" class="social-btn mail" title="Email"
+                        data-interactive="true">
+                        <i class="fas fa-envelope"></i>
+                    </a>
+
+                    <a href="https://www.linkedin.com/in/sanika-tribhuvan-b3a392348/" class="social-btn linkedin"
+                        title="LinkedIn" target="_blank" data-interactive="true">
+                        <i class="fab fa-linkedin-in"></i>
+                    </a>
+
+                    <a href="https://github.com/SanikaTribhuvan" class="social-btn github" title="GitHub"
+                        target="_blank" data-interactive="true">
+                        <i class="fab fa-github"></i>
+                    </a>
+
+                    <a href="https://dev.to/sanikatribhuvan" class="social-btn dev" title="Dev.to" target="_blank"
+                        data-interactive="true">
+                        <i class="fab fa-dev"></i>
+                    </a>
+                </div>
+
+                <div
+                    style="color: #aaa; font-size: 1rem; margin-top: 0.5rem; display: flex; flex-direction: column; gap: 0.5rem;">
+                    <p style="display: flex; align-items: center; gap: 0.6rem;"><span>📧</span>
+                        tribhuvansanika@gmail.com</p>
+                    <p style="display: flex; align-items: center; gap: 0.6rem;"><span>📞</span> <a
+                            href="tel:+918669675198" style="color: #aaa; text-decoration: none;">+91 8669675198</a></p>
+                    <p style="display: flex; align-items: center; gap: 0.6rem;"><span>📍</span> Ahilyanagar,
+                        Maharashtra, India</p>
+                </div>
+            </div>
+
+            <div class="contact-form">
+                <form id="contactForm">
+                    <div class="form-group">
+                        <label>Name</label>
+                        <input type="text" placeholder="John Doe" required data-interactive="true">
+                    </div>
+                    <div class="form-group">
+                        <label>Email</label>
+                        <input type="email" placeholder="john@example.com" required data-interactive="true">
+                    </div>
+                    <div class="form-group">
+                        <label>Message</label>
+                        <textarea placeholder="Tell me about your project..." rows="5" required
+                            data-interactive="true"></textarea>
+                    </div>
+                    <button type="submit" class="btn-submit" data-interactive="true">Send Message</button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <p>© 2026 Sanika Portfolio. All rights reserved.</p>
+        <p style="margin-top: 10px;">tribhuvansanika@gmail.com</p>
+    </footer>
+
+    <script>
+        // 1. SCROLL OPTIMIZATION
+        let ticking = false;
+        let scrollProgress = 0;
+
+        function throttleScroll(callback, delay = 16) {
+            return function () {
+                if (!ticking) {
+                    ticking = true;
+                    requestAnimationFrame(() => {
+                        callback();
+                        ticking = false;
+                    });
+                }
+            };
+        }
+
+        // 2. AUDIO (Tone.js)
+        let audioContext = null;
+        let synth = null;
+        let soundEnabled = false;
+
+        function initAudio() {
+            if (audioContext) return;
+            audioContext = Tone.default;
+            synth = new Tone.PolySynth(Tone.Synth, {
+                oscillator: { type: 'triangle' },
+                envelope: { attack: 0.002, decay: 0.1, sustain: 0, release: 0.1 }
+            }).toDestination();
+        }
+
+        // 3. UPDATED CUSTOM CURSOR LOGIC (Matching React Snippet Behavior)
+        const cursor = document.getElementById('custom-cursor');
+        // Mouse Position
+        let mouseX = 0;
+        let mouseY = 0;
+        // Cursor Position (for lag/spring effect)
+        let cursorX = 0;
+        let cursorY = 0;
+
+        document.addEventListener('mousemove', (e) => {
+            mouseX = e.clientX;
+            mouseY = e.clientY;
+        });
+
+        // Animation Loop for Smooth Spring Effect
+        function animateCursor() {
+            // Linear interpolation (Lerp) for smooth follow (Spring stiffness: 0.15)
+            const dx = mouseX - cursorX;
+            const dy = mouseY - cursorY;
+
+            cursorX += dx * 0.15;
+            cursorY += dy * 0.15;
+
+            cursor.style.left = cursorX + 'px';
+            cursor.style.top = cursorY + 'px';
+
+            requestAnimationFrame(animateCursor);
+        }
+        animateCursor();
+
+        // Hover Effects
+        document.addEventListener('mouseover', (e) => {
+            if (e.target.closest('button') || e.target.closest('a') || e.target.hasAttribute('data-interactive')) {
+                cursor.classList.add('hover');
+            }
+        });
+
+        document.addEventListener('mouseout', (e) => {
+            if (e.target.closest('button') || e.target.closest('a') || e.target.hasAttribute('data-interactive')) {
+                cursor.classList.remove('hover');
+            }
+        });
+
+        // 4. SOUND TOGGLE
+        const soundToggle = document.getElementById('sound-toggle');
+        soundToggle.addEventListener('click', () => {
+            if (!audioContext) initAudio();
+            soundEnabled = !soundEnabled;
+            soundToggle.textContent = soundEnabled ? '🔊 Sound On' : '🔇 Sound Off';
+        });
+
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 500) {
+                soundToggle.classList.add('visible');
+            } else {
+                soundToggle.classList.remove('visible');
+            }
+        });
+
+        document.querySelectorAll('[data-interactive="true"]').forEach((el) => {
+            el.addEventListener('click', () => {
+                if (soundEnabled && synth) {
+                    synth.triggerAttackRelease('C4', '8n');
+                }
+            });
+        });
+
+        // 5. CONTACT FORM SUBMISSION
+        document.getElementById('contactForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const btn = e.target.querySelector('.btn-submit');
+            const originalText = btn.textContent;
+
+            btn.textContent = "Message Sent!";
+            btn.style.background = "#4ade80"; // Success Green
+
+            setTimeout(() => {
+                alert('Thank you for your message! This is a demo form.');
+                e.target.reset();
+                btn.textContent = originalText;
+                btn.style.background = ""; // Reset to CSS default
+            }, 100);
+        });
+
+        // 6. SMART MODAL LOGIC (Handle Live, GitHub, LinkedIn links dynamically)
+        const modal = document.querySelector('.project-modal');
+        const modalClose = document.querySelector('.modal-close');
+
+        const mTitle = document.getElementById('modal-title');
+        const mBadge = document.getElementById('modal-badge');
+        const mDesc = document.getElementById('modal-desc');
+        const mLinksContainer = document.getElementById('modal-links-container');
+
+        document.querySelectorAll('.project-card').forEach(card => {
+            card.addEventListener('click', (e) => {
+                e.stopPropagation();
+
+                const title = card.querySelector('h3').innerText;
+                const badge = card.querySelector('.card-badge').innerText;
+                const desc = card.dataset.description || "Project details.";
+
+                const type = card.dataset.type || "project";
+                const github = card.dataset.github;
+                const live = card.dataset.live;
+                const linkedin = card.dataset.linkedin;
+
+                mTitle.innerText = title;
+                mBadge.innerText = badge;
+                mDesc.innerText = desc;
+
+                // Clear previous buttons
+                mLinksContainer.innerHTML = '';
+
+                // Add Live Demo Button
+                if (live && live !== '#' && live !== '') {
+                    mLinksContainer.innerHTML += `<a href="${live}" class="modal-btn btn-primary" target="_blank" data-interactive="true">Live Demo</a>`;
+                }
+
+                // Add GitHub Button
+                if (github && github !== '#' && github !== '') {
+                    mLinksContainer.innerHTML += `<a href="${github}" class="modal-btn btn-outline" target="_blank" data-interactive="true">GitHub Repo</a>`;
+                }
+
+                // Add LinkedIn / Credential Button
+                if (linkedin && linkedin !== '#' && linkedin !== '') {
+                    const label = (type === 'cert') ? "View Credential" : "View on LinkedIn";
+                    mLinksContainer.innerHTML += `<a href="${linkedin}" class="modal-btn btn-primary" target="_blank" data-interactive="true">${label}</a>`;
+                }
+
+                modal.classList.add('active');
+            });
+        });
+
+        modalClose.addEventListener('click', () => modal.classList.remove('active'));
+        modal.addEventListener('click', (e) => { if (e.target === modal) modal.classList.remove('active'); });
+        document.addEventListener('keydown', (e) => { if (e.key === 'Escape') modal.classList.remove('active'); });
+
+    </script>
+
+    <script type="module">
+        import * as THREE from 'three';
+
+        // =========================================
+        // CONFIGURATION
+        // =========================================
+        const CONFIG = {
+            // Colors
+            colorCore: 0x8B0000,    // Dark Maroon (Core Nodes)
+            colorHalo: 0xDC143C,    // Crimson (Expanding Lines)
+            colorSignal: 0xFFFFFF,  // White (Data Pulses)
+
+            // Dimensions
+            orbRadius: 3.5,         // Size of the central brain
+            haloMaxRadius: 6.5,     // Max size of expanding lines
+
+            // Density
+            coreNodeCount: 30,      // Nodes in the brain
+            haloParticleCount: 60,  // Particles in the expanding shell
+
+            // Motion
+            rotationSpeed: 0.001,
+            scrollSensitivity: 4.0
+        };
+
+        // Global Variables
+        let scene, camera, renderer;
+        let coreGroup = new THREE.Group(); // The Brain
+        let haloGroup = new THREE.Group(); // The Expanding Lines
+        let masterGroup = new THREE.Group(); // Holds both
+
+        // Data Storage
+        let coreNodes = [];
+        let coreConnections = [];
+        let signals = [];
+        let haloParticles = [];
+        let haloLinesGeometry; // For dynamic line drawing
+
+        // Interaction State
+        let scrollProgress = 0;
+        let mouse = { x: 0, y: 0 };
+        let targetRotation = { x: 0, y: 0 };
+
+        // DOM References
+        const canvas = document.getElementById('orb-canvas');
+        const scrollWrapper = document.getElementById('projects-scroll-wrapper');
+
+        // =========================================
+        // 1. INITIALIZATION
+        // =========================================
+        function init() {
+            if (!canvas) return;
+
+            // Scene Setup
+            scene = new THREE.Scene();
+            // Fog gives depth - fades objects in back
+            scene.fog = new THREE.FogExp2(0xFFFFFF, 0.02);
+
+            // Camera
+            const containerSize = window.innerWidth < 768 ? 300 : 600; // Bigger on desktop
+            camera = new THREE.PerspectiveCamera(50, 1, 0.1, 100);
+            camera.position.z = 14;
+
+            // Renderer
+            renderer = new THREE.WebGLRenderer({
+                canvas,
+                alpha: true,
+                antialias: true,
+                powerPreference: "high-performance"
+            });
+            renderer.setSize(containerSize, containerSize);
+            renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+
+            // Lighting
+            const ambient = new THREE.AmbientLight(0xffffff, 0.6);
+            const spot = new THREE.SpotLight(0xffffff, 10);
+            spot.position.set(20, 20, 20);
+            scene.add(ambient, spot);
+
+            // Build Objects
+            createNeuralCore();
+            createExpandingHalo();
+
+            // Add to Master Group (for unified rotation)
+            masterGroup.add(coreGroup);
+            masterGroup.add(haloGroup);
+            scene.add(masterGroup);
+
+            // Start
+            animate();
+        }
+
+        // =========================================
+        // 2. THE NEURAL CORE (The Brain)
+        // =========================================
+        function createNeuralCore() {
+            // Geometry for Nodes
+            const geometry = new THREE.IcosahedronGeometry(0.12, 1);
+            const material = new THREE.MeshPhysicalMaterial({
+                color: CONFIG.colorCore,
+                emissive: 0x000000,
+                roughness: 0.1,
+                metalness: 0.5,
+                clearcoat: 1.0
+            });
+
+            // Fibonacci Sphere Distribution (Evenly spaced dots)
+            const phi = Math.PI * (3 - Math.sqrt(5));
+
+            for (let i = 0; i < CONFIG.coreNodeCount; i++) {
+                const y = 1 - (i / (CONFIG.coreNodeCount - 1)) * 2;
+                const radius = Math.sqrt(1 - y * y);
+                const theta = phi * i;
+
+                const x = Math.cos(theta) * radius;
+                const z = Math.sin(theta) * radius;
+
+                // Place Node
+                const node = new THREE.Mesh(geometry, material.clone());
+                // Randomize radius slightly for organic look
+                const r = CONFIG.orbRadius + (Math.random() * 0.5);
+
+                node.position.set(x * r, y * r, z * r);
+                node.originalPos = node.position.clone(); // Remember pos for breathing
+                node.randomPhase = Math.random() * Math.PI; // For unsynced pulsing
+
+                coreNodes.push(node);
+                coreGroup.add(node);
+            }
+
+            // Create Static Connections (The "Synapses")
+            const lineMat = new THREE.LineBasicMaterial({
+                color: CONFIG.colorCore,
+                transparent: true,
+                opacity: 0.15
+            });
+
+            for (let i = 0; i < coreNodes.length; i++) {
+                for (let j = i + 1; j < coreNodes.length; j++) {
+                    const dist = coreNodes[i].position.distanceTo(coreNodes[j].position);
+
+                    // Only connect neighbors
+                    if (dist < 2.5) {
+                        const geo = new THREE.BufferGeometry().setFromPoints([
+                            coreNodes[i].position,
+                            coreNodes[j].position
+                        ]);
+                        const line = new THREE.Line(geo, lineMat);
+                        coreGroup.add(line);
+
+                        // Save for Signal animation
+                        coreConnections.push({
+                            line: line,
+                            p1: coreNodes[i],
+                            p2: coreNodes[j],
+                            length: dist
+                        });
+                    }
+                }
+            }
+
+            // Create Signals (Data Packets)
+            const signalGeo = new THREE.SphereGeometry(0.06, 8, 8);
+            const signalMat = new THREE.MeshBasicMaterial({ color: CONFIG.colorSignal });
+
+            for (let i = 0; i < 6; i++) {
+                const signal = new THREE.Mesh(signalGeo, signalMat);
+                startSignal(signal);
+                signals.push(signal);
+                coreGroup.add(signal);
+            }
+        }
+
+        function startSignal(signal) {
+            // Pick random connection
+            const conn = coreConnections[Math.floor(Math.random() * coreConnections.length)];
+            signal.currentPath = conn;
+            signal.alpha = 0; // Progress 0 to 1
+            signal.speed = 0.02 + Math.random() * 0.02;
+        }
+
+        // =========================================
+        // 3. THE EXPANDING HALO (The "Project Lines")
+        // =========================================
+        function createExpandingHalo() {
+            // 1. Create Particles
+            const particleGeo = new THREE.SphereGeometry(0.05, 4, 4); // Tiny dots
+            const particleMat = new THREE.MeshBasicMaterial({
+                color: CONFIG.colorHalo,
+                transparent: true,
+                opacity: 0.8
+            });
+
+            for (let i = 0; i < CONFIG.haloParticleCount; i++) {
+                const mesh = new THREE.Mesh(particleGeo, particleMat);
+
+                // Assign a RANDOM DIRECTION vector (normalized)
+                const direction = new THREE.Vector3(
+                    Math.random() - 0.5,
+                    Math.random() - 0.5,
+                    Math.random() - 0.5
+                ).normalize();
+
+                haloParticles.push({
+                    mesh: mesh,
+                    direction: direction,
+                    // Assign a unique max radius for depth
+                    maxR: CONFIG.haloMaxRadius + (Math.random() * 2)
+                });
+
+                // Start at center (0,0,0)
+                mesh.position.set(0, 0, 0);
+                haloGroup.add(mesh);
+            }
+
+            // 2. Create Dynamic Lines (BufferGeometry)
+            // We will update vertices every frame based on particle positions
+            // Max possible lines = count * count (simplified logic)
+            // We create a pool of geometry points
+            const geometry = new THREE.BufferGeometry();
+            // Allocate buffer for 300 potential lines (600 vertices)
+            const positions = new Float32Array(600 * 3);
+            geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+
+            const lineMat = new THREE.LineBasicMaterial({
+                color: CONFIG.colorHalo,
+                transparent: true,
+                opacity: 0.0 // Starts invisible
+            });
+
+            const lines = new THREE.LineSegments(geometry, lineMat);
+            // Save ref to update later
+            haloGroup.linesMesh = lines;
+            haloGroup.linesPositions = positions;
+            haloGroup.add(lines);
+        }
+
+        // =========================================
+        // 4. ANIMATION LOOP
+        // =========================================
+        function animate() {
+            const time = Date.now() * 0.001;
+
+            // A. Scroll Logic (Smooth Lerp)
+            // Calculate target based on Scroll Wrapper visibility
+            if (scrollWrapper) {
+                const rect = scrollWrapper.getBoundingClientRect();
+                const viewH = window.innerHeight;
+                // 0 = top of section, 1 = scrolled passed it
+                let rawProgress = -rect.top / (viewH * 1.5);
+                rawProgress = Math.max(0, Math.min(1, rawProgress));
+                // Lerp for smoothness
+                scrollProgress += (rawProgress - scrollProgress) * 0.05;
+            }
+
+            // B. Rotation (Mouse Parallax)
+            targetRotation.x = mouse.y * 0.0005;
+            targetRotation.y = mouse.x * 0.0005;
+
+            masterGroup.rotation.x += (targetRotation.x - masterGroup.rotation.x) * 0.05;
+            masterGroup.rotation.y += (targetRotation.y - masterGroup.rotation.y) * 0.05;
+
+            // Constant Idle Rotation (Halo spins faster than core)
+            coreGroup.rotation.y += CONFIG.rotationSpeed;
+            haloGroup.rotation.y -= CONFIG.rotationSpeed * 2; // Counter-rotate
+
+            // C. Animate Core (Breathing)
+            coreNodes.forEach(node => {
+                const scale = 1 + Math.sin(time * 3 + node.randomPhase) * 0.2;
+                node.scale.setScalar(scale);
+            });
+
+            // D. Animate Signals
+            signals.forEach(sig => {
+                sig.alpha += sig.speed;
+                if (sig.alpha >= 1) startSignal(sig);
+                else {
+                    sig.position.lerpVectors(
+                        sig.currentPath.p1.position,
+                        sig.currentPath.p2.position,
+                        sig.alpha
+                    );
+                }
+            });
+
+            // E. ANIMATE HALO (The "Emerging Lines" Logic)
+            let lineVertexIndex = 0;
+            const positions = haloGroup.linesPositions;
+
+            // Update Halo Particles
+            haloParticles.forEach(p => {
+                // Calculate Current Radius based on Scroll
+                // Start at 0, expand to maxR
+                const currentR = p.maxR * scrollProgress;
+
+                // Update Position: Direction * Radius
+                p.mesh.position.copy(p.direction).multiplyScalar(currentR);
+
+                // Wiggle Effect (Organic)
+                p.mesh.position.y += Math.sin(time + p.maxR) * 0.01;
+            });
+
+            // Update Halo Lines
+            // Only draw connections if expanded enough
+            if (scrollProgress > 0.1) {
+                haloGroup.linesMesh.material.opacity = (scrollProgress - 0.1) * 0.5; // Fade in
+
+                for (let i = 0; i < haloParticles.length; i++) {
+                    for (let j = i + 1; j < haloParticles.length; j++) {
+                        const p1 = haloParticles[i].mesh.position;
+                        const p2 = haloParticles[j].mesh.position;
+                        const dist = p1.distanceTo(p2);
+
+                        // Connection Distance Logic
+                        // When compressed, dist must be tiny. When expanded, dist can be larger.
+                        const threshold = 1.5 + (scrollProgress * 2);
+
+                        if (dist < threshold && lineVertexIndex < 599) {
+                            positions[lineVertexIndex++] = p1.x;
+                            positions[lineVertexIndex++] = p1.y;
+                            positions[lineVertexIndex++] = p1.z;
+
+                            positions[lineVertexIndex++] = p2.x;
+                            positions[lineVertexIndex++] = p2.y;
+                            positions[lineVertexIndex++] = p2.z;
+                        }
+                    }
+                }
+            } else {
+                haloGroup.linesMesh.material.opacity = 0;
+            }
+
+            // Zero out remaining vertices to hide old lines
+            for (let k = lineVertexIndex; k < 600; k++) positions[k] = 0;
+
+            haloGroup.linesMesh.geometry.attributes.position.needsUpdate = true;
+
+            renderer.render(scene, camera);
+            requestAnimationFrame(animate);
+        }
+
+        // =========================================
+        // 5. EVENTS
+        // =========================================
+        window.addEventListener('resize', () => {
+            if (window.innerWidth >= 768 && renderer) {
+                const w = 600; // Keep fixed container size for consistency
+                renderer.setSize(w, w);
+                camera.aspect = 1;
+                camera.updateProjectionMatrix();
+            }
+        });
+
+        window.addEventListener('mousemove', (e) => {
+            mouse.x = e.clientX - window.innerWidth / 2;
+            mouse.y = e.clientY - window.innerHeight / 2;
+        });
+
+        // Boot
+        init();
+
+    </script>
+
+    <script>
+        /**
+         * PROJECT PARTICLE SYSTEM: CLEAN NUCLEUS VERSION
+         * Features: Limited connections, breathing nucleus, smooth expansion
+         */
+        (function () {
+            const canvas = document.getElementById('project-particle-network');
+            const scrollWrapper = document.getElementById('projects-scroll-wrapper');
+            const stickyContainer = document.getElementById('projects-sticky-view');
+
+            if (!canvas || !scrollWrapper || window.innerWidth < 768) return;
+
+            const ctx = canvas.getContext('2d');
+
+            // CONFIGURATION FOR A CLEAN LOOK
+            const config = {
+                count: 80,              // Enough for structure, not enough for mess
+                maxRadius: 280,         // Radius when fully expanded (matches orb size)
+                minRadius: 10,          // Radius when compressed (the "dot")
+                connectDist: 50,        // Short connection distance for cleaner geometry
+                maxConnections: 3,      // LIMIT CONNECTIONS: Key to looking "clean"
+
+                color: '139, 0, 0',     // Dark Maroon
+                dotSize: 1.5,
+                rotationSpeed: 0.001    // Very slow, elegant rotation
+            };
+
+            let width, height;
+            let particles = [];
+            let scrollProgress = 0;
+            let systemRotation = 0;
+
+            function resize() {
+                width = canvas.width = canvas.offsetWidth;
+                height = canvas.height = canvas.offsetHeight;
+            }
+
+            class Particle {
+                constructor() {
+                    // Assign a permanent angle (0 to 360 degrees)
+                    this.angle = Math.random() * Math.PI * 2;
+
+                    // Assign a distance tier (0 to 1)
+                    // Using square root biases positions towards the outside for a "halo" effect
+                    this.orbitTier = Math.sqrt(Math.random());
+
+                    // Individual wobble to make it look organic
+                    this.wobbleSpeed = 0.002 + Math.random() * 0.002;
+                    this.wobbleOffset = Math.random() * 10;
+                }
+
+                getPos() {
+                    // 1. Determine current system size based on scroll
+                    // We lerp (interpolate) between min and max radius
+                    const currentSysRadius = config.minRadius + (config.maxRadius - config.minRadius) * scrollProgress;
+
+                    // 2. Add organic breathing
+                    const time = Date.now() * 0.001;
+                    const breathe = Math.sin(time + this.wobbleOffset) * (10 * (1 - scrollProgress)); // Breathe more when compressed
+
+                    // 3. Calculate final radius for this specific particle
+                    const r = (currentSysRadius * this.orbitTier) + breathe;
+
+                    // 4. Calculate Angle (Base + System Rotation + Wobble)
+                    const theta = this.angle + systemRotation + Math.sin(time * this.wobbleSpeed);
+
+                    // 5. Convert Polar to Cartesian
+                    const x = (width / 2) + Math.cos(theta) * r;
+                    const y = (height / 2) + Math.sin(theta) * r;
+
+                    return { x, y };
+                }
+
+                draw(pos) {
+                    ctx.beginPath();
+                    ctx.arc(pos.x, pos.y, config.dotSize, 0, Math.PI * 2);
+
+                    // Opacity Logic: 
+                    // When compressed (progress 0): High opacity (0.8)
+                    // When expanded (progress 1): Medium opacity (0.5)
+                    const opacity = 0.8 - (scrollProgress * 0.3);
+
+                    ctx.fillStyle = `rgba(${config.color}, ${opacity})`;
+                    ctx.fill();
+                }
+            }
+
+            function init() {
+                resize();
+                particles = [];
+                for (let i = 0; i < config.count; i++) {
+                    particles.push(new Particle());
+                }
+            }
+
+            // Smoothed Scroll Calculation
+            let targetProgress = 0;
+
+            function updateScroll() {
+                const rect = scrollWrapper.getBoundingClientRect();
+                const viewH = window.innerHeight;
+
+                // Calculate progress: 0 when top of section hits screen, 1 when fully scrolled
+                let raw = -rect.top / (viewH * 1.5);
+                targetProgress = Math.max(0, Math.min(1, raw));
+            }
+
+            function animate() {
+                ctx.clearRect(0, 0, width, height);
+
+                // Smooth out the movement (Linear Interpolation)
+                // This makes the expansion feel fluid, not jagged
+                scrollProgress += (targetProgress - scrollProgress) * 0.05;
+
+                // Rotate entire system
+                systemRotation += config.rotationSpeed;
+
+                // Calculate all positions first
+                const positions = particles.map(p => p.getPos());
+
+                // Draw Particles
+                particles.forEach((p, i) => p.draw(positions[i]));
+
+                // Draw Connections (The "Clean" Logic)
+                // We only draw lines if we have expanded a bit (progress > 0.1)
+                // opacity fades in as we scroll
+                const masterOpacity = Math.max(0, (scrollProgress - 0.05) * 2);
+
+                if (masterOpacity > 0.01) {
+                    ctx.lineWidth = 0.5; // Very thin, elegant lines
+
+                    for (let i = 0; i < config.count; i++) {
+                        let connectionsCount = 0;
+
+                        for (let j = i + 1; j < config.count; j++) {
+                            // STOP if this particle already has 3 connections (Clean Look)
+                            if (connectionsCount >= config.maxConnections) break;
+
+                            const dx = positions[i].x - positions[j].x;
+                            const dy = positions[i].y - positions[j].y;
+                            const dist = Math.sqrt(dx * dx + dy * dy);
+
+                            // Dynamic Connection Distance:
+                            // When small, connection distance is small. When big, it grows.
+                            const dynamicConnectDist = config.connectDist * (0.5 + scrollProgress * 2.5);
+
+                            if (dist < dynamicConnectDist) {
+                                ctx.beginPath();
+
+                                // Opacity based on distance (fade out at edges of line)
+                                // Multiplied by masterOpacity (scroll based)
+                                const lineAlpha = (1 - dist / dynamicConnectDist) * masterOpacity * 0.4;
+
+                                ctx.strokeStyle = `rgba(${config.color}, ${lineAlpha})`;
+                                ctx.moveTo(positions[i].x, positions[i].y);
+                                ctx.lineTo(positions[j].x, positions[j].y);
+                                ctx.stroke();
+
+                                connectionsCount++;
+                            }
+                        }
+                    }
+                }
+
+                requestAnimationFrame(animate);
+            }
+
+            // Event Listeners
+            window.addEventListener('scroll', updateScroll);
+            window.addEventListener('resize', () => { resize(); init(); });
+
+            // Init
+            init();
+            updateScroll();
+            animate();
+
+        })();
+    </script>
+    <script>
+        /**
+         * CARD VISIBILITY ENGINE
+         * Connects scroll progress to CSS classes
+         */
+        document.addEventListener("DOMContentLoaded", () => {
+            const wrapper = document.getElementById('projects-scroll-wrapper');
+            const cards = document.querySelectorAll('.project-card');
+            const viewHeight = window.innerHeight;
+
+            function checkCards() {
+                if (!wrapper) return;
+
+                // 1. Calculate how far we have scrolled through the wrapper (0.0 to 1.0)
+                const rect = wrapper.getBoundingClientRect();
+                // The scrollable distance is the wrapper height minus one viewport height
+                const scrollableDistance = wrapper.offsetHeight - viewHeight;
+
+                // Calculate progress: -rect.top is how much has been scrolled up
+                let progress = -rect.top / scrollableDistance;
+
+                // Clamp progress between 0 and 1
+                progress = Math.max(0, Math.min(1, progress));
+
+                // 2. Loop through cards and check against data-start/data-end
+                cards.forEach(card => {
+                    const start = parseFloat(card.dataset.start);
+                    const end = parseFloat(card.dataset.end);
+
+                    // If mobile, we might want to just show them or use different logic, 
+                    // but this respects your desktop timeline:
+                    if (progress >= start && progress <= end) {
+                        card.classList.add('visible');
+                        card.style.pointerEvents = "auto"; // Enable clicking
+                    } else {
+                        card.classList.remove('visible');
+                        card.style.pointerEvents = "none"; // Prevent clicking hidden cards
+                    }
+                });
+            }
+
+            // Run on scroll and resize
+            window.addEventListener('scroll', checkCards);
+            window.addEventListener('resize', checkCards);
+
+            // Run once on load to catch initial state
+            checkCards();
+        });
+    </script>
+    <script>
+        // GALLERY TAB SWITCHER
+        function switchTab(tabName) {
+            // Hide all grids
+            document.querySelectorAll('.gallery-grid').forEach(g => g.classList.remove('active'));
+            document.querySelectorAll('.gallery-tab').forEach(t => t.classList.remove('active'));
+
+            // Show selected
+            document.getElementById('tab-' + tabName).classList.add('active');
+
+            // Activate the clicked button
+            event.target.classList.add('active');
+        }
+    </script>
+</body>
+
+</html>

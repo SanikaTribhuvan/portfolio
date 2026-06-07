@@ -1,0 +1,3945 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sanika Tribhuvan - Portfolio</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600&family=Inter:wght@400;500;600;700;900&family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.49/Tone.min.js"></script>
+    <style>
+        /* =========================================
+           CSS RESET & VARIABLES
+           ========================================= */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #1F1F1F;
+            --secondary: #6A665F;
+            --accent: #8A7A66;
+            --bg-light: #E9E4DB;
+            --background: #F7F3EC;
+            --text: #1F1F1F;
+            --border: #D8D1C7;
+            --font-display: 'Cormorant Garamond', serif;
+            --font-body: 'Inter', sans-serif;
+        }
+
+        body {
+            font-family: var(--font-body);
+            background: var(--background);
+            color: var(--text);
+            cursor: none;
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        /* =========================================
+           CUSTOM CURSOR
+           ========================================= */
+        #custom-cursor {
+            width: 20px;
+            height: 20px;
+            background: #000;
+            border: 2px solid #fff;
+            border-radius: 50%;
+            position: fixed;
+            pointer-events: none;
+            z-index: 20000;
+            transform: translate(-50%, -50%);
+            transition: transform 0.1s ease, background-color 0.2s;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+        }
+
+        #custom-cursor.hover {
+            transform: translate(-50%, -50%) scale(1.2);
+            background: var(--primary);
+            border-color: white;
+        }
+
+        /* =========================================
+           SOUND TOGGLE BUTTON
+           ========================================= */
+        #sound-toggle {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: var(--background);
+            border: 1px solid var(--border);
+            padding: 0.8rem 1.4rem;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 700;
+            font-size: 0.75rem;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: var(--primary);
+            z-index: 1000;
+            transition: all 0.3s;
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        #sound-toggle.visible {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        #sound-toggle:hover {
+            background: var(--bg-light);
+            border-color: var(--primary);
+        }
+
+        /* =========================================
+           NAVIGATION BAR
+           ========================================= */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            padding: 0.8rem 3rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+            background: rgba(247, 243, 236, 0.92);
+            backdrop-filter: blur(15px);
+            border-bottom: 1px solid var(--border);
+            height: 70px;
+        }
+
+        .logo {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--primary);
+            cursor: pointer;
+            text-decoration: none;
+            font-family: var(--font-display);
+            letter-spacing: 0.02em;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: var(--secondary);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.82rem;
+            letter-spacing: 0.04em;
+            transition: color 0.3s;
+            padding: 0.5rem 0;
+            border-bottom: 2px solid transparent;
+        }
+
+        .nav-links a:hover,
+        .nav-links a:active {
+            color: var(--primary);
+            border-bottom-color: var(--accent);
+        }
+
+        #nav-toggle { display: none; }
+        .hamburger {
+            display: none;
+            width: 28px; height: 20px;
+            cursor: pointer;
+            position: relative;
+        }
+        .hamburger::before {
+            content: "\2630";
+            display: block;
+            font-size: 1.7rem;
+            line-height: 1;
+            color: var(--primary);
+        }
+
+        .cta-button {
+            background: none;
+            color: var(--primary);
+            border: none;
+            border-bottom: 1px solid var(--accent);
+            border-radius: 0;
+            padding: 0.2rem 0.1rem;
+            font-size: 0.82rem;
+            letter-spacing: 0.04em;
+            text-decoration: none;
+            font-weight: 700;
+            transition: color 0.2s, border-color 0.2s;
+        }
+
+        .cta-button:hover {
+            color: var(--accent);
+            border-bottom-color: var(--primary);
+        }
+
+        /* =========================================
+           PROJECT MODAL
+           ========================================= */
+        .project-modal {
+            position: fixed;
+            inset: 0;
+            background: rgba(31, 31, 31, 0.4);
+            backdrop-filter: blur(10px);
+            z-index: 10000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.4s ease;
+        }
+
+        .project-modal.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .modal-content {
+            background: var(--background);
+            width: 90%;
+            max-width: 600px;
+            padding: 3rem;
+            border-radius: 8px;
+            box-shadow: none;
+            transform: translateY(50px) scale(0.9);
+            transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            position: relative;
+            border: 1px solid var(--border);
+        }
+
+        .project-modal.active .modal-content {
+            transform: translateY(0) scale(1);
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 20px;
+            right: 25px;
+            background: none;
+            border: none;
+            font-size: 2rem;
+            cursor: pointer;
+            color: var(--text);
+            transition: color 0.3s;
+        }
+
+        .modal-close:hover {
+            color: var(--primary);
+        }
+
+        .modal-title {
+            font-size: 2.2rem;
+            font-weight: 800;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+            line-height: 1.1;
+            font-family: var(--font-display);
+        }
+
+        .modal-badge {
+            display: inline-block;
+            background: var(--bg-light);
+            color: var(--secondary);
+            padding: 0.4rem 0.8rem;
+            border-radius: 4px;
+            font-weight: 700;
+            font-size: 0.8rem;
+            margin-bottom: 2rem;
+            border: 1px solid var(--border);
+        }
+
+        .modal-desc {
+            font-size: 1.05rem;
+            line-height: 1.7;
+            color: var(--text);
+            margin-bottom: 2.5rem;
+            opacity: 0.9;
+        }
+
+        .modal-links {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .modal-btn {
+            padding: 0.75rem 1.6rem;
+            border-radius: 4px;
+            font-weight: 700;
+            text-decoration: none;
+            transition: transform 0.2s, background-color 0.2s, border-color 0.2s;
+            cursor: pointer;
+            border: none;
+            display: inline-block;
+            font-size: 0.85rem;
+        }
+
+        /* =========================================
+           HERO SECTION
+           ========================================= */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            background: var(--background);
+            color: var(--text);
+            padding: 92px 4vw 3.5vh;
+            overflow: hidden;
+            position: relative;
+            z-index: 2;
+        }
+
+        .hero-wrap {
+            width: 100%;
+            max-width: 1540px;
+            margin: 0 auto;
+        }
+
+        .hero-headline {
+            font-family: var(--font-display);
+            display: flex;
+            flex-direction: column;
+            line-height: 0.8;
+            margin: 0;
+            position: relative;
+            z-index: 10;
+        }
+
+        .hero-headline .first-name {
+            font-size: clamp(3rem, 10vw, 8.5rem);
+            font-weight: 400;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--primary);
+            display: block;
+        }
+
+        .hero-headline .last-name {
+            font-family: var(--font-display);
+            font-size: clamp(4.5rem, 15vw, 12rem);
+            font-weight: 400;
+            font-style: italic;
+            text-transform: none;
+            color: var(--primary);
+            margin-top: -2vh;
+            margin-bottom: -5vh;
+            padding-left: 10vw;
+            display: block;
+            position: relative;
+            z-index: 15;
+            pointer-events: none;
+        }
+
+        .hero-band {
+            position: relative;
+            width: 100%;
+            height: 54vh;
+            margin: 0;
+            overflow: hidden;
+            background: var(--background);
+            padding: 12px;
+            border: 1px solid var(--border);
+        }
+
+        .hero-slideshow {
+            position: absolute;
+            top: 12px;
+            bottom: 12px;
+            left: 12px;
+            right: 12px;
+            z-index: 0;
+            overflow: hidden;
+        }
+
+        .hero-slide {
+            position: absolute;
+            inset: 0;
+            background-size: cover;
+            background-position: center;
+            opacity: 0;
+            transition: opacity 2.2s ease-in-out;
+            will-change: opacity;
+            filter: grayscale(0.25) contrast(1.05) sepia(0.08);
+        }
+
+        .hero-slide.is-active {
+            opacity: 1;
+        }
+
+        .hero-slide--1 { background-position: 58% 40%; }
+        .hero-slide--2 { background-position: 60% center; }
+        .hero-slide--3 { background-position: 78% center; }
+        .hero-slide--4 { background-position: center 40%; }
+        .hero-slide--5 { background-position: center 28%; }
+
+        .hero-foot {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            gap: 2.5rem;
+            margin-top: 2.2vh;
+        }
+
+        .hero-tagline {
+            font-family: var(--font-body);
+            font-size: 0.72rem;
+            font-weight: 600;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: var(--primary);
+            margin: 0;
+            max-width: 62ch;
+            line-height: 1.6;
+        }
+
+        .hero-cue {
+            font-family: var(--font-display);
+            font-style: italic;
+            font-size: clamp(1.1rem, 1.6vw, 1.6rem);
+            color: var(--primary);
+            text-decoration: none;
+            white-space: nowrap;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.45rem;
+            transition: gap 0.3s ease, color 0.3s ease;
+        }
+
+        .hero-cue span {
+            color: var(--accent);
+            transition: transform 0.3s ease;
+        }
+
+        .hero-cue:hover {
+            gap: 0.75rem;
+        }
+
+        .hero-cue:hover span {
+            transform: translateY(3px);
+        }
+
+        .hero-dots {
+            position: absolute;
+            right: 1.1rem;
+            bottom: 0.9rem;
+            z-index: 3;
+            display: flex;
+            gap: 0.85rem;
+            align-items: baseline;
+        }
+
+        .hero-dot {
+            width: auto;
+            height: auto;
+            border: none;
+            background: none;
+            padding: 0;
+            font-family: var(--font-body);
+            font-size: 0.7rem;
+            font-weight: 600;
+            letter-spacing: 0.12em;
+            color: rgba(31,31,31,0.6);
+            cursor: pointer;
+            transition: color 0.5s ease;
+        }
+
+        .hero-dot:hover {
+            color: rgba(31,31,31,0.92);
+        }
+
+        .hero-dot.is-active {
+            color: var(--primary);
+            border-bottom: 1px solid var(--accent);
+            padding-bottom: 2px;
+        }
+
+        /* =========================================
+           STATS BANNER
+           ========================================= */
+        .stats-banner {
+            background: transparent;
+            padding: 6rem 2rem;
+            position: relative;
+            z-index: 3;
+        }
+
+        .stats-banner-title {
+            text-align: center;
+            font-size: clamp(2rem, 5vw, 3.5rem);
+            font-weight: 900;
+            color: var(--primary);
+            margin-bottom: 1rem;
+        }
+
+        .stats-banner-subtitle {
+            text-align: center;
+            font-size: clamp(1rem, 2vw, 1.3rem);
+            color: var(--text);
+            margin: 0 auto 4rem;
+            max-width: 800px;
+            opacity: 0.85;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            max-width: 1200px;
+            margin: 0 auto 4rem;
+        }
+
+        .stat-card {
+            background: var(--bg-light);
+            padding: 2rem 1.5rem;
+            border-radius: 12px;
+            text-align: center;
+            transition: all 0.2s ease-in-out;
+            border: 1px solid var(--border);
+        }
+
+        .stat-card:hover {
+            border-color: var(--primary);
+            background: var(--background);
+        }
+
+        .stat-card-number {
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            font-weight: 800;
+            line-height: 1;
+            margin-bottom: 0.5rem;
+            color: var(--primary);
+        }
+
+        .stat-card-label {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text);
+        }
+
+        .stat-card-description {
+            font-size: 0.9rem;
+            color: var(--text);
+            opacity: 0.7;
+            margin-top: 0.5rem;
+        }
+
+        .stats-footer {
+            text-align: center;
+            font-size: 1rem;
+            color: var(--text);
+            opacity: 0.7;
+            font-style: italic;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* =========================================
+           HORIZONTAL SCROLL CARD TRACKS
+           ========================================= */
+        .scroll-section-header {
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-between;
+            gap: 2rem;
+            flex-wrap: wrap;
+            margin-bottom: 2.2rem;
+        }
+
+        .scroll-count {
+            font-size: 0.65rem;
+            font-weight: 800;
+            letter-spacing: 0.22em;
+            color: var(--secondary);
+            text-transform: uppercase;
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+
+        .scroll-track {
+            display: flex;
+            gap: 1.4rem;
+            overflow-x: auto;
+            padding-bottom: 2rem;
+            scroll-snap-type: x mandatory;
+            -webkit-overflow-scrolling: touch;
+            cursor: grab;
+            scrollbar-width: thin;
+            scrollbar-color: var(--accent) transparent;
+        }
+
+        .scroll-track:active {
+            cursor: grabbing;
+        }
+
+        .scroll-track::-webkit-scrollbar {
+            height: 2px;
+        }
+
+        .scroll-track::-webkit-scrollbar-thumb {
+            background: var(--accent);
+            border-radius: 2px;
+        }
+
+        /* Research module cards - Paper Catalogue style */
+        .rmod-card {
+            min-width: 340px;
+            height: 520px;
+            border-radius: 12px;
+            flex-shrink: 0;
+            scroll-snap-align: start;
+            position: relative;
+            background: var(--bg-light);
+            border: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            padding: 1.25rem;
+            transition: border-color 0.2s ease-in-out, background-color 0.2s ease-in-out;
+        }
+
+        .rmod-card:hover {
+            border-color: var(--primary);
+            background: var(--background);
+        }
+
+        .rmod-card__bg {
+            width: 100%;
+            height: 190px;
+            object-fit: cover;
+            border-radius: 6px;
+            border: 1px solid var(--border);
+            margin-bottom: 1rem;
+            filter: grayscale(0.2) contrast(1.02);
+            transition: filter 0.3s ease;
+        }
+
+        .rmod-card:hover .rmod-card__bg {
+            filter: grayscale(0) contrast(1.02);
+        }
+
+        .rmod-card__body {
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+            justify-content: space-between;
+            padding: 0;
+        }
+
+        .rmod-card__role {
+            font-size: 0.65rem;
+            font-weight: 700;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: var(--accent);
+            margin-bottom: 0.4rem;
+        }
+
+        .rmod-card__title {
+            font-size: 1.35rem;
+            font-weight: 800;
+            color: var(--primary) !important;
+            margin: 0 0 0.4rem;
+            line-height: 1.2;
+            font-family: var(--font-display);
+        }
+
+        .rmod-card__desc {
+            font-size: 0.85rem;
+            color: var(--secondary) !important;
+            line-height: 1.5;
+            margin-bottom: 0.8rem;
+        }
+
+        .rmod-card__metrics {
+            display: flex;
+            gap: 0.85rem;
+            flex-wrap: wrap;
+            margin-bottom: 0.8rem;
+        }
+
+        .rmod-card__metric {
+            font-size: 0.7rem;
+            font-weight: 700;
+            letter-spacing: 0.02em;
+            color: var(--secondary) !important;
+        }
+
+        .rmod-card__links {
+            display: flex;
+            gap: 1rem;
+            margin-top: auto;
+        }
+
+        .rmod-card__link {
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: var(--primary) !important;
+            text-decoration: none;
+            border-bottom: 1px solid var(--accent);
+            padding-bottom: 0.1rem;
+            transition: color 0.2s, border-color 0.2s;
+        }
+
+        .rmod-card__link:hover {
+            color: var(--accent) !important;
+            border-color: var(--primary);
+        }
+
+        /* Engineering cards - Paper Catalogue style */
+        .eng-card {
+            min-width: 290px;
+            height: 400px;
+            border-radius: 12px;
+            flex-shrink: 0;
+            scroll-snap-align: start;
+            position: relative;
+            background: var(--bg-light);
+            border: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 1.5rem;
+            transition: border-color 0.2s ease-in-out, background-color 0.2s ease-in-out;
+        }
+
+        .eng-card:hover {
+            border-color: var(--primary);
+            background: var(--background);
+        }
+
+        .eng-card__num {
+            font-size: 0.65rem;
+            font-weight: 700;
+            letter-spacing: 0.15em;
+            color: var(--accent);
+        }
+
+        .eng-card__body {
+            margin-top: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .eng-card__badge {
+            font-size: 0.62rem;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            margin-bottom: 0.5rem;
+            color: var(--accent) !important;
+        }
+
+        .eng-card__title {
+            font-size: 1.45rem;
+            font-weight: 800;
+            color: var(--primary);
+            margin: 0 0 0.5rem;
+            line-height: 1.15;
+            font-family: var(--font-display);
+        }
+
+        .eng-card__stack {
+            font-size: 0.8rem;
+            color: var(--secondary);
+            line-height: 1.45;
+        }
+
+        .eng-card__links {
+            display: flex;
+            gap: 0.85rem;
+        }
+
+        .eng-card__link {
+            font-size: 0.72rem;
+            font-weight: 700;
+            color: var(--primary) !important;
+            text-decoration: none;
+            border-bottom: 1px solid var(--accent);
+            padding-bottom: 0.1rem;
+            transition: color 0.2s, border-color 0.2s;
+        }
+
+        .eng-card__link:hover {
+            color: var(--accent) !important;
+            border-color: var(--primary);
+        }
+
+        /* =========================================
+           GLOBAL CONTENT SECTIONS
+           ========================================= */
+        .content-section {
+            padding: 6rem 4rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .section-title {
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            font-weight: 900;
+            margin-bottom: 3rem;
+            color: var(--primary);
+            text-transform: lowercase;
+            font-family: var(--font-display) !important;
+        }
+
+        /* ===== PIANO WAVE DIVIDER ===== */
+        .piano-divider {
+            width: 100%;
+            padding: 3.4rem 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: var(--background);
+            overflow: hidden;
+            border-top: 1px solid var(--border);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .piano-divider .piano-wave-image {
+            width: 74%;
+            max-width: 1080px;
+            height: auto;
+            opacity: 0.95;
+            filter: grayscale(1) contrast(1.1);
+        }
+
+        /* =========================================
+           GALLERY SECTION
+           ========================================= */
+        .gallery-section {
+            padding: 5rem 4rem;
+            background: var(--background);
+            border-top: 1px solid var(--border);
+        }
+
+        .gallery-tabs {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2.5rem;
+            flex-wrap: wrap;
+        }
+
+        .gallery-tab {
+            padding: 0.6rem 1.5rem;
+            border-radius: 50px;
+            border: 1px solid var(--border);
+            background: var(--bg-light);
+            color: var(--secondary);
+            font-weight: 700;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-family: var(--font-body);
+        }
+
+        .gallery-tab.active,
+        .gallery-tab:hover {
+            background: var(--primary);
+            color: var(--background);
+            border-color: var(--primary);
+        }
+
+        .gallery-grid {
+            display: none;
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 1.2rem;
+        }
+
+        .gallery-grid.active {
+            display: grid;
+        }
+
+        .gallery-item {
+            border-radius: 8px;
+            overflow: hidden;
+            position: relative;
+            aspect-ratio: 1;
+            cursor: pointer;
+            box-shadow: none;
+            border: 1px solid var(--border);
+            transition: transform 0.3s, border-color 0.3s;
+            background: var(--bg-light);
+        }
+
+        .gallery-item:hover {
+            transform: scale(1.03);
+            border-color: var(--primary);
+        }
+
+        .gallery-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .gallery-item .gallery-caption {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(to top, rgba(31, 31, 31, 0.9), transparent);
+            color: white;
+            padding: 1.2rem 1rem 0.8rem;
+            font-size: 0.82rem;
+            font-weight: 600;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .gallery-item:hover .gallery-caption {
+            opacity: 1;
+        }
+
+        .gallery-item.cert {
+            aspect-ratio: 4/3;
+        }
+
+        /* =========================================
+           SELECTED PUBLICATIONS SECTION
+           ========================================= */
+        .publications-section {
+            padding: 6rem 4rem;
+            background: var(--background);
+            border-top: 1px solid var(--border);
+        }
+
+        .publications-container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .publications-desc {
+            font-size: 1.05rem;
+            color: var(--secondary);
+            margin: 1rem 0 2rem 0;
+            max-width: 800px;
+            line-height: 1.6;
+        }
+
+        .affiliations-strip {
+            display: flex;
+            gap: 1.5rem;
+            align-items: center;
+            flex-wrap: wrap;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 1.5rem;
+            margin-bottom: 3rem;
+        }
+
+        .affiliations-label {
+            font-size: 0.72rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--secondary);
+        }
+
+        .affiliation-tag {
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .pub-list {
+            display: flex;
+            flex-direction: column;
+            gap: 4rem;
+        }
+
+        .pub-card {
+            background: var(--bg-light);
+            border: 1px solid var(--border);
+            border-left: 4px solid var(--accent);
+            border-radius: 8px;
+            padding: 3rem;
+            transition: border-color 0.3s, background-color 0.3s;
+        }
+
+        .pub-card:hover {
+            border-left-color: var(--primary);
+            background: var(--background);
+        }
+
+        .pub-tags {
+            display: flex;
+            gap: 0.8rem;
+            flex-wrap: wrap;
+            margin-bottom: 1.2rem;
+        }
+
+        .pub-tag {
+            font-size: 0.65rem;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            padding: 0.3rem 0.8rem;
+            border-radius: 4px;
+            background: var(--background);
+            color: var(--secondary);
+            border: 1px solid var(--border);
+        }
+
+        .pub-tag.accent-tag {
+            background: var(--primary);
+            color: var(--background);
+            border-color: var(--primary);
+        }
+
+        .pub-title {
+            font-family: var(--font-display);
+            font-size: clamp(1.6rem, 3vw, 2.2rem);
+            font-weight: 700;
+            line-height: 1.2;
+            color: var(--primary);
+            margin-bottom: 0.6rem;
+        }
+
+        .pub-journal {
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: var(--accent);
+            margin-bottom: 1.8rem;
+        }
+
+        .pub-img-container {
+            width: 100%;
+            max-width: 800px;
+            height: auto;
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            overflow: hidden;
+            margin-bottom: 0.6rem;
+        }
+
+        .pub-img {
+            width: 100%;
+            height: auto;
+            display: block;
+            filter: grayscale(0.2) contrast(1.02);
+            transition: filter 0.3s;
+        }
+
+        .pub-card:hover .pub-img {
+            filter: grayscale(0) contrast(1.02);
+        }
+
+        .pub-img-caption {
+            font-size: 0.78rem;
+            color: var(--secondary);
+            margin-bottom: 1.8rem;
+            font-style: italic;
+        }
+
+        .pub-abstract {
+            font-size: 1rem;
+            line-height: 1.7;
+            color: var(--text);
+            margin-bottom: 1.5rem;
+        }
+
+        .pub-note {
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: var(--accent);
+            margin-bottom: 2rem;
+        }
+
+        .pub-links {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .pub-details-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+            margin-bottom: 1.8rem;
+            border-top: 1px solid var(--border);
+            border-bottom: 1px solid var(--border);
+            padding: 1.5rem 0;
+        }
+
+        .pub-detail-card {
+            text-align: center;
+        }
+
+        .pub-detail-value {
+            font-family: var(--font-display);
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .pub-detail-label {
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--secondary);
+            margin-top: 0.3rem;
+        }
+
+        .pub-dp-note {
+            font-size: 0.88rem;
+            line-height: 1.6;
+            color: var(--secondary);
+            font-style: italic;
+            margin-bottom: 1.8rem;
+        }
+
+        .pub-details-tags {
+            display: flex;
+            gap: 0.6rem;
+            flex-wrap: wrap;
+            margin-bottom: 2rem;
+        }
+
+        .pub-details-tag {
+            font-size: 0.7rem;
+            font-weight: 600;
+            padding: 0.25rem 0.6rem;
+            border-radius: 4px;
+            background: var(--background);
+            color: var(--secondary);
+            border: 1px solid var(--border);
+        }
+
+        /* =========================================
+           RESEARCH JOURNEY SECTION
+           ========================================= */
+        .journey-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .journey-card {
+            background: var(--bg-light);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 2rem;
+            transition: all 0.2s ease-in-out;
+        }
+
+        .journey-card:hover {
+            border-color: var(--primary);
+            background: var(--background);
+        }
+
+        .journey-num {
+            font-family: var(--font-display);
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: var(--accent);
+            margin-bottom: 0.8rem;
+            line-height: 1;
+        }
+
+        .journey-title {
+            font-size: 1.15rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 0.4rem;
+        }
+
+        .journey-desc {
+            font-size: 0.88rem;
+            color: var(--secondary);
+            line-height: 1.5;
+        }
+
+        /* =========================================
+           AWARDS & HONOURS SECTION
+           ========================================= */
+        .awards-section {
+            padding: 6rem 4rem;
+            background: var(--bg-light);
+            border-top: 1px solid var(--border);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .awards-container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .awards-title {
+            font-family: var(--font-display) !important;
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            font-weight: 600 !important;
+            margin-bottom: 1rem;
+            color: var(--primary);
+            text-transform: lowercase;
+        }
+
+        .awards-subtitle {
+            font-size: 1.05rem;
+            color: var(--secondary);
+            margin-bottom: 4rem;
+            max-width: 800px;
+            line-height: 1.6;
+        }
+
+        .awards-tiers-container {
+            display: flex;
+            flex-direction: column;
+            gap: 4rem;
+        }
+
+        .awards-tier-title {
+            font-family: var(--font-display);
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--accent);
+            margin-bottom: 2rem;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 0.6rem;
+        }
+
+        .cv-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1.8rem;
+        }
+
+        .cv-item {
+            display: grid;
+            grid-template-columns: 200px 1fr;
+            gap: 2rem;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 1.5rem;
+        }
+
+        .cv-item:last-child {
+            border-bottom: none;
+            padding-bottom: 0;
+        }
+
+        .cv-meta {
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: var(--primary);
+            line-height: 1.5;
+        }
+
+        .cv-badge {
+            display: inline-block;
+            font-size: 0.72rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--accent);
+            margin-top: 0.3rem;
+        }
+
+        .cv-content h4 {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 0.3rem;
+        }
+
+        .cv-institution {
+            font-size: 0.95rem;
+            color: var(--secondary);
+            margin-bottom: 0.3rem;
+            font-weight: 500;
+        }
+
+        .cv-details {
+            font-size: 0.9rem;
+            color: var(--secondary);
+            line-height: 1.5;
+        }
+
+        .cv-item-simple {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 1.2rem;
+            gap: 2rem;
+        }
+
+        .cv-item-simple:last-child {
+            border-bottom: none;
+            padding-bottom: 0;
+        }
+
+        .cv-item-simple h4 {
+            font-size: 1.15rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 0.2rem;
+        }
+
+        .cv-item-simple p {
+            font-size: 0.9rem;
+            color: var(--secondary);
+        }
+
+        .cv-date {
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: var(--accent);
+            white-space: nowrap;
+        }
+
+        .memberships-block {
+            border-top: 1px solid var(--border);
+            padding-top: 4rem;
+            margin-top: 2rem;
+        }
+
+        .memberships-title {
+            font-family: var(--font-display);
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--accent);
+            margin-bottom: 2rem;
+        }
+
+        .memberships-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .membership-card {
+            background: var(--background);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 2rem;
+            transition: all 0.2s ease-in-out;
+        }
+
+        .membership-card:hover {
+            border-color: var(--primary);
+            background: var(--bg-light);
+        }
+
+        .membership-meta {
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--secondary);
+            margin-bottom: 0.8rem;
+        }
+
+        .membership-name {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 0.4rem;
+        }
+
+        .membership-desc {
+            font-size: 0.88rem;
+            color: var(--secondary);
+            line-height: 1.5;
+        }
+
+        /* =========================================
+           FUTURE RESEARCH SECTION
+           ========================================= */
+        .future-section {
+            padding: 6rem 4rem;
+            background: var(--background);
+            border-top: 1px solid var(--border);
+        }
+
+        .future-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 3rem;
+        }
+
+        .future-card {
+            background: var(--bg-light);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 2.2rem;
+            transition: all 0.2s ease-in-out;
+        }
+
+        .future-card:hover {
+            border-color: var(--primary);
+            background: var(--background);
+        }
+
+        .future-card-label {
+            font-size: 0.72rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--accent);
+            margin-bottom: 0.8rem;
+        }
+
+        .future-card h3 {
+            font-family: var(--font-display);
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 0.8rem;
+            line-height: 1.2;
+        }
+
+        .future-card p {
+            font-size: 0.95rem;
+            color: var(--secondary);
+            line-height: 1.6;
+        }
+
+        .future-questions {
+            border-top: 1px solid var(--border);
+            padding-top: 2.5rem;
+        }
+
+        .future-questions-title {
+            font-family: var(--font-display);
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 1.2rem;
+        }
+
+        .future-questions-list {
+            list-style: none;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+        }
+
+        .future-questions-list li {
+            font-size: 1.05rem;
+            color: var(--secondary);
+            font-weight: 500;
+        }
+
+        /* =========================================
+           BEYOND SECTION (HUMAN SIDE)
+           ========================================= */
+        .beyond {
+            padding: 6rem 4rem;
+            background: var(--background);
+            border-top: 1px solid var(--border);
+        }
+
+        .beyond-container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .section-title-huge {
+            font-family: var(--font-display) !important;
+            font-size: clamp(3rem, 8vw, 6rem);
+            font-weight: 600 !important;
+            margin-bottom: 1.5rem;
+            color: var(--primary);
+            text-transform: lowercase;
+            line-height: 1;
+        }
+
+        .beyond-subtitle {
+            font-size: 1.25rem;
+            margin-bottom: 4rem;
+            color: var(--secondary);
+            max-width: 800px;
+            line-height: 1.6;
+        }
+
+        .beyond-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 3rem;
+        }
+
+        .beyond-card {
+            background: var(--bg-light);
+            padding: 2.2rem;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            transition: border-color 0.2s, background-color 0.2s;
+        }
+
+        .beyond-card:hover {
+            border-color: var(--primary);
+            background: var(--background);
+        }
+
+        .beyond-card h3 {
+            font-family: var(--font-display);
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 0.8rem;
+        }
+
+        .beyond-card p {
+            font-size: 0.95rem;
+            color: var(--secondary);
+            line-height: 1.6;
+        }
+
+        .beyond-moments-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.5rem;
+            margin-bottom: 3rem;
+        }
+
+        .beyond-education-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 2rem;
+            border-top: 1px solid var(--border);
+            padding-top: 3rem;
+        }
+
+        .beyond-education-box {
+            background: var(--bg-light);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 2.5rem;
+        }
+
+        .beyond-education-box h3 {
+            font-family: var(--font-display);
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 1.8rem;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 0.6rem;
+        }
+
+        .beyond-education-item {
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 1rem;
+        }
+
+        .beyond-education-item:last-child {
+            border-bottom: none;
+            padding-bottom: 0;
+        }
+
+        .beyond-education-item-title {
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 0.2rem;
+        }
+
+        .beyond-education-item-inst {
+            font-size: 0.9rem;
+            color: var(--secondary);
+            margin-bottom: 0.2rem;
+        }
+
+        .beyond-education-item-date {
+            font-size: 0.82rem;
+            font-weight: 600;
+            color: var(--accent);
+        }
+
+        .beyond-lang-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 0.6rem;
+        }
+
+        .beyond-lang-item:last-child {
+            border-bottom: none;
+            padding-bottom: 0;
+        }
+
+        .beyond-lang-name {
+            font-weight: 700;
+            color: var(--primary);
+            font-size: 0.95rem;
+        }
+
+        .beyond-lang-val {
+            font-size: 0.88rem;
+            color: var(--secondary);
+            font-weight: 600;
+        }
+
+        /* =========================================
+           CONTACT SECTION
+           ========================================= */
+        .contact {
+            padding: 6rem 4rem;
+            background: var(--background);
+            border-top: 1px solid var(--border);
+        }
+
+        .contact-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .contact-headline {
+            font-family: var(--font-display) !important;
+            font-size: clamp(2.5rem, 5vw, 4.2rem);
+            font-weight: 600 !important;
+            line-height: 1.05;
+            color: var(--primary);
+            margin-bottom: 1.5rem;
+        }
+
+        .contact-highlight {
+            font-style: italic;
+            font-weight: 400 !important;
+            color: var(--accent);
+        }
+
+        .social-buttons {
+            display: flex;
+            gap: 0.8rem;
+            margin-bottom: 2.5rem;
+            flex-wrap: wrap;
+        }
+
+        .social-btn {
+            width: 44px;
+            height: 44px;
+            border-radius: 4px;
+            border: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary);
+            text-decoration: none;
+            background: var(--bg-light);
+            transition: all 0.2s ease-in-out;
+            font-size: 1.05rem;
+        }
+
+        .social-btn:hover {
+            background: var(--primary);
+            color: var(--background);
+            border-color: var(--primary);
+            transform: translateY(-2px);
+        }
+
+        .contact-form {
+            background: var(--bg-light);
+            padding: 3rem;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .form-group label {
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--secondary);
+        }
+
+        .form-group input,
+        .form-group textarea {
+            padding: 0.9rem 1.1rem;
+            border-radius: 4px;
+            border: 1px solid var(--border);
+            background: var(--background);
+            color: var(--primary);
+            font-family: var(--font-body);
+            font-size: 0.95rem;
+            transition: border-color 0.2s;
+            outline: none;
+            width: 100%;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
+            border-color: var(--primary);
+        }
+
+        .btn-submit {
+            width: 100%;
+            padding: 1rem;
+            border-radius: 4px;
+            background: var(--primary);
+            color: var(--background);
+            border: 1px solid var(--primary);
+            font-family: var(--font-body);
+            font-weight: 700;
+            font-size: 0.9rem;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-submit:hover {
+            background: var(--bg-light);
+            color: var(--primary);
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: var(--background) !important;
+            border: 1px solid var(--primary);
+        }
+
+        .btn-primary:hover {
+            background: var(--bg-light);
+            color: var(--primary) !important;
+            border-color: var(--primary);
+        }
+
+        .btn-outline {
+            background: transparent;
+            color: var(--primary) !important;
+            border: 1px solid var(--border);
+        }
+
+        .btn-outline:hover {
+            background: var(--bg-light);
+            border-color: var(--primary);
+        }
+
+        /* =========================================
+           FONT PROPAGATION & HEADINGS
+           ========================================= */
+        h1, h2, .section-title, .stats-banner-title, .contact-headline,
+        .section-title-huge, .scroll-section-header h2 {
+            font-family: var(--font-display) !important;
+            font-weight: 600 !important;
+            letter-spacing: -0.005em;
+        }
+
+        /* =========================================
+           RESPONSIVE DESIGN (MEDIA QUERIES)
+           ========================================= */
+        @media (max-width: 1024px) {
+            .contact-headline {
+                font-size: 4rem;
+                margin-left: 0;
+            }
+        }
+
+        @media (max-width: 768px) {
+            nav {
+                padding: 0.8rem 1.5rem;
+            }
+            .hamburger {
+                display: block;
+            }
+            .cta-button {
+                display: none;
+            }
+            .nav-links {
+                position: absolute;
+                top: 70px;
+                left: 0;
+                right: 0;
+                flex-direction: column;
+                gap: 0;
+                background: rgba(247, 243, 236, 0.98);
+                backdrop-filter: blur(15px);
+                box-shadow: 0 10px 24px rgba(0, 0, 0, 0.05);
+                max-height: 0;
+                overflow: hidden;
+                transition: max-height 0.32s ease;
+                border-bottom: 1px solid var(--border);
+            }
+            #nav-toggle:checked ~ .nav-links {
+                max-height: 85vh;
+            }
+            .nav-links li {
+                width: 100%;
+            }
+            .nav-links a {
+                display: block;
+                text-align: center;
+                padding: 1rem;
+                border-bottom: 1px solid var(--border);
+            }
+            #custom-cursor {
+                display: none;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .contact-grid {
+                grid-template-columns: 1fr;
+                gap: 40px;
+            }
+
+            .contact-form {
+                padding: 25px;
+            }
+
+            .contact-headline {
+                font-size: 3rem;
+                text-align: center;
+                margin-left: 0;
+            }
+
+            .social-buttons {
+                justify-content: center;
+            }
+
+            .rmod-card {
+                min-width: 270px;
+                height: 460px;
+            }
+            .eng-card {
+                min-width: 255px;
+                height: 360px;
+            }
+            .piano-divider {
+                padding: 2rem 0;
+            }
+            .piano-divider .piano-wave-image {
+                width: 92%;
+            }
+            .gallery-section {
+                padding: 3rem 1.5rem;
+            }
+            .gallery-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 0.8rem;
+            }
+            #research {
+                padding: 3rem 1.5rem !important;
+            }
+            #awards {
+                padding: 3rem 1.5rem !important;
+            }
+            #awards h2 {
+                font-size: 2.5rem !important;
+            }
+
+            .hero {
+                padding: 84px 6vw 3vh !important;
+                justify-content: flex-start;
+            }
+            .hero-headline {
+                margin-top: 5vh;
+            }
+            .hero-headline .first-name {
+                font-size: clamp(2.2rem, 10vw, 4.5rem);
+            }
+            .hero-headline .last-name {
+                font-size: clamp(3.2rem, 15vw, 6.5rem);
+                margin-bottom: -3vh;
+                padding-left: 4vw;
+                margin-top: -1.5vh;
+            }
+            .hero-band {
+                height: 44vh;
+                padding: 8px;
+            }
+            .hero-slideshow {
+                top: 8px !important;
+                bottom: 8px !important;
+                left: 8px !important;
+                right: 8px !important;
+            }
+            .hero-foot {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1rem;
+                margin-top: 2.6vh;
+            }
+            .hero-tagline {
+                font-size: 0.64rem;
+                letter-spacing: 0.16em;
+            }
+            .hero-cue {
+                font-size: 1.2rem;
+            }
+            .pub-card {
+                padding: 1.8rem;
+            }
+            .pub-details-grid {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+                padding: 1rem 0;
+            }
+            .pub-title {
+                font-size: 1.4rem;
+            }
+            .cv-item {
+                grid-template-columns: 1fr;
+                gap: 0.5rem;
+                padding-bottom: 1.2rem;
+            }
+            .beyond-moments-grid {
+                grid-template-columns: 1fr;
+            }
+            .beyond-education-grid {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+            .beyond-education-box {
+                padding: 1.8rem;
+            }
+            .beyond {
+                padding: 3rem 1.5rem !important;
+            }
+            .contact {
+                padding: 3rem 1.5rem !important;
+            }
+            .future-section {
+                padding: 3rem 1.5rem !important;
+            }
+        }
+
+        /* =========================================
+           CREDENTIALS STRIP
+           ========================================= */
+        .credentials-section {
+            border-top: 1px solid var(--border);
+            padding-top: 3rem;
+            margin-top: 3rem;
+        }
+
+        .credentials-title {
+            font-family: var(--font-display);
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--accent);
+            margin-bottom: 1.5rem;
+            letter-spacing: 0.02em;
+        }
+
+        .credentials-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.8rem;
+        }
+
+        .credential-tag {
+            background: var(--bg-light);
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            padding: 0.55rem 1.1rem;
+            font-size: 0.85rem;
+            color: var(--primary);
+            transition: border-color 0.2s;
+        }
+
+        .credential-tag:hover {
+            border-color: var(--primary);
+        }
+
+        .credential-tag span {
+            color: var(--secondary);
+        }
+
+        /* =========================================
+           PHILOSOPHY SECTION
+           ========================================= */
+        .philosophy-section {
+            padding: 6rem 4rem;
+            background: var(--background);
+            border-top: 1px solid var(--border);
+        }
+
+        .philosophy-content {
+            max-width: 860px;
+        }
+
+        .philosophy-lead {
+            font-family: var(--font-display);
+            font-size: clamp(1.5rem, 2.5vw, 2rem);
+            font-weight: 500;
+            line-height: 1.4;
+            color: var(--primary);
+            margin-bottom: 1.5rem;
+        }
+
+        .philosophy-body {
+            font-size: 1.05rem;
+            line-height: 1.8;
+            color: var(--secondary);
+        }
+
+        /* =========================================
+           FOOTER
+           ========================================= */
+        footer {
+            background: var(--primary);
+            color: var(--background);
+            text-align: center;
+            padding: 2.5rem 4rem;
+            font-size: 0.85rem;
+            font-weight: 600;
+            letter-spacing: 0.04em;
+        }
+
+        footer p {
+            opacity: 0.85;
+        }
+
+        /* =========================================
+           STAT CARD NUMBERS — DISPLAY FONT
+           ========================================= */
+        .stat-card-number {
+            font-family: var(--font-display);
+        }
+
+        /* =========================================
+           ENGINEERING SECTION HELPERS
+           ========================================= */
+        #engineering p[style] {
+            color: var(--secondary) !important;
+        }
+
+
+        /* Section eyebrow label */
+        .section-eyebrow {
+            font-size: 0.65rem;
+            font-weight: 700;
+            letter-spacing: 0.22em;
+            text-transform: uppercase;
+            color: var(--accent);
+            margin-bottom: 0.8rem;
+        }
+        .section-title {
+            margin-bottom: 1rem;
+        }
+
+/* =========================================
+   PHASE 9 — ADDITIONAL STYLES
+   ========================================= */
+
+/* ── About ───────────────────────────────── */
+.about-section {
+    padding: 7rem 4rem;
+    background: var(--background);
+    border-bottom: 1px solid var(--border);
+}
+.about-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1.1fr 0.9fr;
+    gap: 6rem;
+    align-items: start;
+}
+.about-eyebrow {
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 1.5rem;
+}
+.about-name {
+    font-family: var(--font-display);
+    font-size: clamp(2rem, 4vw, 3rem);
+    font-weight: 600;
+    color: var(--primary);
+    line-height: 1.1;
+    margin: 0 0 0.3rem;
+}
+.about-pronouns {
+    font-size: 0.78rem;
+    color: var(--secondary);
+    letter-spacing: 0.08em;
+    margin-bottom: 1.2rem;
+}
+.about-tagline {
+    font-family: var(--font-display);
+    font-size: clamp(0.95rem, 1.4vw, 1.1rem);
+    font-style: italic;
+    color: var(--accent);
+    margin-bottom: 2rem;
+    line-height: 1.5;
+}
+.about-bio {
+    font-size: 1rem;
+    line-height: 1.85;
+    color: var(--secondary);
+    margin-bottom: 2.5rem;
+}
+.about-bio p + p {
+    margin-top: 1rem;
+}
+.about-bio strong {
+    color: var(--primary);
+    font-weight: 600;
+}
+.about-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.8rem;
+}
+.about-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.6rem 1.2rem;
+    border: 1px solid var(--primary);
+    font-size: 0.78rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--primary);
+    text-decoration: none;
+    transition: background 0.2s, color 0.2s;
+}
+.about-link:hover {
+    background: var(--primary);
+    color: var(--background);
+}
+.about-stats-col {
+    padding-top: 1rem;
+}
+.about-stats-rule {
+    width: 36px;
+    height: 1px;
+    background: var(--accent);
+    margin-bottom: 2rem;
+}
+.about-stat-row {
+    display: flex;
+    align-items: baseline;
+    gap: 1rem;
+    padding: 1.2rem 0;
+    border-bottom: 1px solid var(--border);
+}
+.about-stat-row:first-of-type {
+    border-top: 1px solid var(--border);
+}
+.about-stat-num {
+    font-family: var(--font-display);
+    font-size: 2.8rem;
+    font-weight: 600;
+    color: var(--primary);
+    line-height: 1;
+    min-width: 4rem;
+}
+.about-stat-label {
+    font-size: 0.82rem;
+    color: var(--secondary);
+    line-height: 1.4;
+}
+.about-stat-label strong {
+    display: block;
+    color: var(--primary);
+    font-size: 0.88rem;
+    margin-bottom: 0.15rem;
+}
+.about-academic-note {
+    margin-top: 2.5rem;
+    padding: 1.5rem;
+    background: var(--bg-light);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--accent);
+}
+.about-academic-note-label {
+    font-size: 0.6rem;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 0.5rem;
+}
+.about-academic-note-value {
+    font-family: var(--font-display);
+    font-size: 1.6rem;
+    color: var(--primary);
+}
+.about-academic-note-sub {
+    font-size: 0.8rem;
+    color: var(--secondary);
+    margin-top: 0.2rem;
+}
+
+/* ── Publications Editorial ─────────────── */
+.pubs-section {
+    padding: 7rem 4rem;
+    background: var(--bg-light);
+    border-bottom: 1px solid var(--border);
+}
+.pubs-inner {
+    max-width: 1100px;
+    margin: 0 auto;
+}
+.pub-entry {
+    display: grid;
+    grid-template-columns: 120px 1fr;
+    gap: 2rem;
+    padding: 3rem 0;
+    border-bottom: 1px solid var(--border);
+    align-items: start;
+}
+.pub-entry:first-of-type {
+    padding-top: 3rem;
+    border-top: 1px solid var(--border);
+}
+.pub-issue-num {
+    font-family: var(--font-display);
+    font-size: 5rem;
+    font-weight: 600;
+    color: var(--border);
+    line-height: 1;
+    user-select: none;
+}
+.pub-entry-status {
+    display: inline-block;
+    font-size: 0.6rem;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    padding: 0.25rem 0.7rem;
+    border: 1px solid var(--accent);
+    color: var(--accent);
+    margin-bottom: 0.8rem;
+}
+.pub-entry-title {
+    font-family: var(--font-display);
+    font-size: clamp(1.4rem, 2.5vw, 2rem);
+    font-weight: 500;
+    color: var(--primary);
+    line-height: 1.25;
+    margin-bottom: 0.6rem;
+}
+.pub-entry-venue {
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    color: var(--secondary);
+    text-transform: uppercase;
+    margin-bottom: 0.8rem;
+}
+.pub-entry-badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+}
+.pub-entry-badge {
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    padding: 0.2rem 0.6rem;
+    background: var(--primary);
+    color: var(--background);
+}
+.pub-entry-abstract {
+    font-size: 0.92rem;
+    line-height: 1.75;
+    color: var(--secondary);
+    max-width: 640px;
+}
+
+/* ── Piano Divider (enhanced) ───────────── */
+.piano-divider-large {
+    width: 100%;
+    overflow: hidden;
+    background: var(--background);
+    line-height: 0;
+    padding: 0;
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+}
+.piano-divider-large img {
+    width: 100%;
+    max-height: 480px;
+    object-fit: cover;
+    object-position: center 30%;
+    display: block;
+    filter: sepia(0.15) contrast(1.05);
+    opacity: 0.88;
+}
+
+/* ── Project Demo Library ───────────────── */
+.demo-section {
+    padding: 7rem 4rem;
+    background: var(--background);
+    border-bottom: 1px solid var(--border);
+}
+.demo-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+.demo-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 2rem;
+    margin-top: 3rem;
+}
+.demo-card {
+    border: 1px solid var(--border);
+    background: var(--bg-light);
+    overflow: hidden;
+    transition: border-color 0.2s;
+}
+.demo-card:hover {
+    border-color: var(--primary);
+}
+.demo-thumb-wrap {
+    aspect-ratio: 16 / 9;
+    overflow: hidden;
+    background: var(--border);
+    position: relative;
+}
+.demo-thumb-wrap img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.4s ease;
+    filter: sepia(0.08) contrast(1.05);
+}
+.demo-card:hover .demo-thumb-wrap img {
+    transform: scale(1.03);
+}
+.demo-card-body {
+    padding: 1.4rem;
+}
+.demo-card-label {
+    font-size: 0.6rem;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 0.4rem;
+}
+.demo-card-title {
+    font-family: var(--font-display);
+    font-size: 1.25rem;
+    font-weight: 500;
+    color: var(--primary);
+    margin-bottom: 0.5rem;
+}
+.demo-card-desc {
+    font-size: 0.85rem;
+    line-height: 1.65;
+    color: var(--secondary);
+    margin-bottom: 1.1rem;
+}
+.demo-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+.demo-btn {
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 0.5rem 1rem;
+    text-decoration: none;
+    border: 1px solid;
+    transition: background 0.2s, color 0.2s;
+}
+.demo-btn-primary {
+    border-color: var(--primary);
+    color: var(--primary);
+    background: transparent;
+}
+.demo-btn-primary:hover {
+    background: var(--primary);
+    color: var(--background);
+}
+.demo-btn-secondary {
+    border-color: var(--border);
+    color: var(--secondary);
+    background: transparent;
+}
+.demo-btn-secondary:hover {
+    border-color: var(--secondary);
+    color: var(--primary);
+}
+
+/* ── Creative Lab ───────────────────────── */
+.creative-section {
+    padding: 7rem 4rem;
+    background: var(--bg-light);
+    border-bottom: 1px solid var(--border);
+}
+.creative-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+.creative-feature {
+    display: grid;
+    grid-template-columns: 1.2fr 0.8fr;
+    gap: 4rem;
+    align-items: center;
+    margin-top: 3rem;
+    border: 1px solid var(--border);
+    background: var(--background);
+    overflow: hidden;
+}
+.creative-thumb {
+    aspect-ratio: 4 / 3;
+    overflow: hidden;
+}
+.creative-thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.5s ease;
+    filter: sepia(0.06) contrast(1.04);
+}
+.creative-feature:hover .creative-thumb img {
+    transform: scale(1.03);
+}
+.creative-body {
+    padding: 2.5rem 3rem 2.5rem 0;
+}
+.creative-body .demo-card-label {
+    margin-bottom: 0.8rem;
+}
+.creative-body-title {
+    font-family: var(--font-display);
+    font-size: clamp(1.5rem, 2.5vw, 2.2rem);
+    font-weight: 500;
+    color: var(--primary);
+    line-height: 1.2;
+    margin-bottom: 0.8rem;
+}
+.creative-body-sub {
+    font-size: 0.78rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 1.2rem;
+}
+.creative-body-desc {
+    font-size: 0.95rem;
+    line-height: 1.75;
+    color: var(--secondary);
+    margin-bottom: 1.5rem;
+}
+.creative-note {
+    font-size: 0.8rem;
+    font-style: italic;
+    color: var(--secondary);
+    border-left: 2px solid var(--accent);
+    padding-left: 0.8rem;
+    margin-bottom: 1.5rem;
+}
+
+/* ── Speaking & Events ──────────────────── */
+.speaking-section {
+    padding: 7rem 4rem;
+    background: var(--background);
+    border-bottom: 1px solid var(--border);
+}
+.speaking-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+.speaking-blocks {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 3rem;
+    margin-top: 3.5rem;
+}
+.speaking-block {
+    border-top: 2px solid var(--primary);
+    padding-top: 1.5rem;
+}
+.speaking-block-num {
+    font-family: var(--font-display);
+    font-size: 3.5rem;
+    font-weight: 600;
+    color: var(--border);
+    line-height: 1;
+    margin-bottom: 0.5rem;
+}
+.speaking-block-title {
+    font-family: var(--font-display);
+    font-size: 1.3rem;
+    font-weight: 500;
+    color: var(--primary);
+    margin-bottom: 1rem;
+}
+.speaking-block-img {
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+    display: block;
+    margin-bottom: 1.2rem;
+    filter: sepia(0.12) contrast(1.05);
+    border: 1px solid var(--border);
+}
+.speaking-block-body {
+    font-size: 0.9rem;
+    line-height: 1.75;
+    color: var(--secondary);
+}
+.speaking-block-body p + p {
+    margin-top: 0.8rem;
+}
+.speaking-block-body em {
+    color: var(--primary);
+    font-style: italic;
+}
+
+/* ── Journey + Blog ─────────────────────── */
+.journey-section {
+    padding: 7rem 4rem;
+    background: var(--bg-light);
+    border-bottom: 1px solid var(--border);
+}
+.journey-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 5rem;
+    align-items: start;
+}
+.journey-col-img {
+    width: 100%;
+    aspect-ratio: 4 / 5;
+    object-fit: cover;
+    object-position: top;
+    display: block;
+    margin-bottom: 1.5rem;
+    border: 1px solid var(--border);
+    filter: sepia(0.1) contrast(1.05);
+}
+.journey-col-title {
+    font-family: var(--font-display);
+    font-size: 1.6rem;
+    font-weight: 500;
+    color: var(--primary);
+    margin-bottom: 1.5rem;
+}
+.journey-milestones {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 1.5rem;
+}
+.journey-milestones li {
+    display: flex;
+    gap: 1rem;
+    padding: 0.7rem 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 0.88rem;
+    color: var(--secondary);
+    line-height: 1.5;
+}
+.journey-milestones li strong {
+    color: var(--primary);
+    min-width: 60px;
+    font-weight: 600;
+}
+.journey-sgpa {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    margin: 1rem 0 1.5rem;
+}
+.journey-sgpa-item {
+    text-align: center;
+    padding: 0.6rem 0.8rem;
+    border: 1px solid var(--border);
+    min-width: 60px;
+}
+.journey-sgpa-item .num {
+    font-family: var(--font-display);
+    font-size: 1.3rem;
+    color: var(--primary);
+    display: block;
+}
+.journey-sgpa-item .lbl {
+    font-size: 0.6rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--secondary);
+}
+.journey-quote {
+    font-family: var(--font-display);
+    font-size: 1.15rem;
+    font-style: italic;
+    color: var(--secondary);
+    border-left: 3px solid var(--accent);
+    padding-left: 1.2rem;
+    margin: 1.5rem 0 2rem;
+    line-height: 1.6;
+}
+.journey-btn {
+    display: inline-block;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 0.7rem 1.4rem;
+    border: 1px solid var(--primary);
+    color: var(--primary);
+    text-decoration: none;
+    transition: background 0.2s, color 0.2s;
+}
+.journey-btn:hover {
+    background: var(--primary);
+    color: var(--background);
+}
+.blog-col-title {
+    font-family: var(--font-display);
+    font-size: 1.6rem;
+    font-weight: 500;
+    color: var(--primary);
+    margin-bottom: 0.5rem;
+}
+.blog-col-sub {
+    font-size: 0.7rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--secondary);
+    margin-bottom: 2rem;
+}
+.blog-article-card {
+    border: 1px solid var(--border);
+    background: var(--background);
+    padding: 2rem;
+    margin-bottom: 1.5rem;
+}
+.blog-article-tag {
+    font-size: 0.6rem;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 0.6rem;
+}
+.blog-article-title {
+    font-family: var(--font-display);
+    font-size: 1.3rem;
+    font-weight: 500;
+    color: var(--primary);
+    margin-bottom: 0.8rem;
+    line-height: 1.3;
+}
+.blog-article-excerpt {
+    font-size: 0.88rem;
+    line-height: 1.7;
+    color: var(--secondary);
+    margin-bottom: 1.2rem;
+}
+.blog-platform-btns {
+    display: flex;
+    gap: 0.6rem;
+}
+.blog-platform-btn {
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 0.5rem 1rem;
+    border: 1px solid var(--border);
+    color: var(--secondary);
+    text-decoration: none;
+    transition: border-color 0.2s, color 0.2s;
+}
+.blog-platform-btn:hover {
+    border-color: var(--primary);
+    color: var(--primary);
+}
+
+/* ── Community Engagement ───────────────── */
+.community-section {
+    padding: 7rem 4rem;
+    background: var(--background);
+    border-bottom: 1px solid var(--border);
+}
+.community-inner {
+    max-width: 1100px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 0.9fr 1.1fr;
+    gap: 5rem;
+    align-items: start;
+}
+.community-essay {
+    font-size: 0.95rem;
+    line-height: 1.85;
+    color: var(--secondary);
+}
+.community-essay p + p {
+    margin-top: 1rem;
+}
+.community-essay strong {
+    color: var(--primary);
+}
+.community-photos {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.8rem;
+}
+.community-photo {
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+    display: block;
+    border: 1px solid var(--border);
+    filter: sepia(0.1) contrast(1.05);
+}
+.community-photo.full-width {
+    grid-column: 1 / -1;
+    aspect-ratio: 16 / 7;
+}
+.community-caption {
+    font-size: 0.72rem;
+    color: var(--secondary);
+    letter-spacing: 0.05em;
+    margin-top: 0.8rem;
+    font-style: italic;
+}
+
+/* ── Beyond Code ────────────────────────── */
+.beyond-code-section {
+    padding: 7rem 4rem;
+    background: var(--bg-light);
+    border-bottom: 1px solid var(--border);
+}
+.beyond-code-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+.beyond-code-intro {
+    max-width: 600px;
+    font-size: 1rem;
+    line-height: 1.8;
+    color: var(--secondary);
+    margin-bottom: 3rem;
+}
+.beyond-photo-wall {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1rem;
+}
+.beyond-photo-item {
+    position: relative;
+    overflow: hidden;
+}
+.beyond-photo-item.tall {
+    grid-row: span 2;
+}
+.beyond-photo-item img {
+    width: 100%;
+    height: 100%;
+    min-height: 200px;
+    object-fit: cover;
+    display: block;
+    border: 1px solid var(--border);
+    filter: sepia(0.1) contrast(1.05);
+    transition: filter 0.3s;
+}
+.beyond-photo-item:hover img {
+    filter: sepia(0) contrast(1.08);
+}
+.beyond-caption-overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 0.6rem 0.8rem;
+    background: rgba(31, 31, 31, 0.72);
+    font-size: 0.68rem;
+    color: #F7F3EC;
+    letter-spacing: 0.06em;
+    opacity: 0;
+    transition: opacity 0.25s;
+}
+.beyond-photo-item:hover .beyond-caption-overlay {
+    opacity: 1;
+}
+.beyond-interests {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+    margin-top: 2rem;
+}
+.beyond-tag {
+    font-size: 0.72rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 0.4rem 0.9rem;
+    border: 1px solid var(--border);
+    color: var(--secondary);
+}
+
+/* ── Awards Photo Wall ──────────────────── */
+.awards-photo-wall-wrap {
+    margin-top: 4rem;
+    padding-top: 3rem;
+    border-top: 1px solid var(--border);
+}
+.awards-photo-wall {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 0.8rem;
+    margin-top: 1.5rem;
+}
+.award-photo-item {
+    aspect-ratio: 4 / 3;
+    overflow: hidden;
+    border: 1px solid var(--border);
+    position: relative;
+}
+.award-photo-item.portrait {
+    aspect-ratio: 3 / 4;
+}
+.award-photo-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    filter: sepia(0.08) contrast(1.04);
+    transition: filter 0.3s, transform 0.3s;
+}
+.award-photo-item:hover img {
+    filter: sepia(0) contrast(1.07);
+    transform: scale(1.03);
+}
+
+/* ── Responsive: Phase 9 sections ──────── */
+@media (max-width: 900px) {
+    .about-inner { grid-template-columns: 1fr; gap: 3rem; }
+    .pub-entry { grid-template-columns: 60px 1fr; gap: 1.2rem; }
+    .pub-issue-num { font-size: 3rem; }
+    .creative-feature { grid-template-columns: 1fr; }
+    .creative-body { padding: 1.5rem; }
+    .speaking-blocks { grid-template-columns: 1fr; gap: 2.5rem; }
+    .journey-inner { grid-template-columns: 1fr; gap: 2.5rem; }
+    .community-inner { grid-template-columns: 1fr; gap: 2.5rem; }
+    .community-photos { grid-template-columns: 1fr; }
+    .community-photo.full-width { aspect-ratio: 16 / 9; }
+    .beyond-photo-wall { grid-template-columns: repeat(2, 1fr); }
+    .beyond-photo-item.tall { grid-row: span 1; }
+    .demo-grid { grid-template-columns: 1fr; }
+    .about-section { padding: 4rem 1.5rem; }
+    .pubs-section { padding: 4rem 1.5rem; }
+    .demo-section { padding: 4rem 1.5rem; }
+    .creative-section { padding: 4rem 1.5rem; }
+    .speaking-section { padding: 4rem 1.5rem; }
+    .journey-section { padding: 4rem 1.5rem; }
+    .community-section { padding: 4rem 1.5rem; }
+    .beyond-code-section { padding: 4rem 1.5rem; }
+}
+
+    
+        /* Phase-9 repair: show full images (no cropping) on a soft archival matte */
+        .rmod-card__bg, .gallery-item img, .demo-thumb-wrap img, .creative-thumb,
+        .speaking-block-img, .journey-col-img, .community-photo,
+        .beyond-photo-item img, .award-photo-item img, .beyond-photo-item .tall,
+        .award-photo-item .portrait {
+            object-fit: cover !important;
+            background: var(--bg-light);
+        }
+        .piano-divider-large img { object-fit: contain !important; background: transparent; }
+        /* Phase-9 rebuild additions */
+        .nav-left { display: flex; flex-direction: column; gap: 2px; }
+        .nav-imprint { font-size: 0.55rem; letter-spacing: 0.34em; text-transform: uppercase; color: var(--muted); font-weight: 600; }
+        .piano-divider-large { width: 100%; padding: 1.4rem 0; background: var(--background); overflow: hidden; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+        .piano-divider-large img { width: 100%; max-width: none; height: auto; display: block; opacity: 0.9; filter: grayscale(1) contrast(1.05); }
+        .rmod-card__ph { display: flex; align-items: center; justify-content: center; text-align: center; height: 190px; border-radius: 6px; border: 1px solid var(--border); margin-bottom: 1rem; background: var(--bg-light); color: var(--muted); font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 1.05rem; letter-spacing: 0.02em; }
+        /* 9.2 — video triggers, modal, events show-more */
+        .demo-thumb-wrap.video-trigger { position: relative; border: none; padding: 0; margin: 0; width: 100%; display: block; cursor: pointer; background: var(--bg-light); overflow: hidden; }
+        a.demo-thumb-wrap { display: block; }
+        .video-play-badge { position: absolute; inset: 0; margin: auto; width: 58px; height: 58px; display: flex; align-items: center; justify-content: center; background: rgba(31,31,31,0.62); color: #F7F3EC; border-radius: 50%; font-size: 1.05rem; transition: background .2s, transform .2s; pointer-events: none; }
+        .demo-thumb-wrap.video-trigger:hover .video-play-badge { background: var(--accent); transform: scale(1.08); }
+        .video-modal { position: fixed; inset: 0; z-index: 4000; display: none; align-items: center; justify-content: center; padding: 4vw; }
+        .video-modal.is-open { display: flex; }
+        .video-modal__backdrop { position: absolute; inset: 0; background: rgba(20,18,15,0.88); }
+        .video-modal__inner { position: relative; z-index: 1; width: min(960px, 92vw); }
+        .video-modal__player { width: 100%; max-height: 80vh; display: block; background: #000; border: 1px solid var(--border); }
+        .video-modal__close { position: fixed; top: 18px; right: 18px; width: 50px; height: 50px; display: flex; align-items: center; justify-content: center; background: rgba(31,31,31,0.92); border: 1px solid rgba(247,243,236,0.55); color: #F7F3EC; font-size: 1.9rem; line-height: 1; border-radius: 50%; cursor: pointer; z-index: 10; transition: background .2s, transform .2s; }
+        .video-modal__close:hover { background: var(--accent); transform: scale(1.06); }
+        .video-modal__caption { margin-top: 0.8rem; color: #E9E4DB; font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 1.1rem; }
+        .awards-photo-wall.is-collapsed .award-photo-item:nth-child(n+13) { display: none; }
+        .events-more-wrap { text-align: center; margin-top: 1.8rem; }
+        .events-more-btn { font-family: 'Inter', sans-serif; font-size: 0.72rem; letter-spacing: 0.18em; text-transform: uppercase; font-weight: 600; color: var(--primary); background: none; border: 1px solid var(--border); padding: 0.75rem 1.7rem; cursor: pointer; transition: background .2s; }
+        .events-more-btn:hover { background: var(--bg-light); }
+    </style>
+</head>
+
+<body>
+
+    <div class="project-modal">
+        <div class="modal-content">
+            <button class="modal-close" data-interactive="true">&times;</button>
+            <h2 class="modal-title" id="modal-title">Project Title</h2>
+            <span class="modal-badge" id="modal-badge">Tech Stack</span>
+            <p class="modal-desc" id="modal-desc">Description goes here.</p>
+            <div class="modal-links" id="modal-links-container"></div>
+        </div>
+    </div>
+
+
+    <div id="custom-cursor"></div>
+    <button id="sound-toggle" data-interactive="true"><i class="fas fa-volume-high"></i> Sound On</button>
+
+    <nav>
+        <div class="nav-left"><span class="nav-imprint">Soli Deo Gloria</span><a href="#top" class="logo" data-interactive="true">Sanika Tribhuvan</a></div>
+        <input type="checkbox" id="nav-toggle" aria-label="Toggle navigation menu">
+        <label for="nav-toggle" class="hamburger" aria-hidden="true"></label>
+        <ul class="nav-links">
+            <li><a href="#about" data-interactive="true">About</a></li>
+            <li><a href="#publications" data-interactive="true">Publications</a></li>
+            <li><a href="#ecosystem" data-interactive="true">Systems</a></li>
+            <li><a href="#demos" data-interactive="true">Demos</a></li>
+            <li><a href="#speaking" data-interactive="true">Events</a></li>
+            <li><a href="#journey" data-interactive="true">Journey</a></li>
+            <li><a href="#community" data-interactive="true">Community</a></li>
+            <li><a href="#beyond-code" data-interactive="true">Beyond</a></li>
+            <li><a href="#awards" data-interactive="true">Awards</a></li>
+            <li><a href="#contact" data-interactive="true">Contact</a></li>
+        </ul>
+        <a href="#contact" class="cta-button" data-interactive="true">Inquiries</a>
+    </nav>
+
+<section class="hero" id="top">
+        <div class="hero-wrap">
+            <div style="font-family: var(--font-body); font-size: 0.68rem; font-weight: 700; letter-spacing: 0.25em; text-transform: uppercase; color: var(--accent); margin-bottom: 1.2rem; text-align: left; padding-left: 0.4vw;">ARCHIVE REF: ST-2026 // VOL. 01 / ISSUE 04</div>
+            <h1 class="hero-headline">
+                <span class="first-name">SANIKA</span>
+                <span class="last-name">Tribhuvan</span>
+            </h1>
+
+            <figure class="hero-band">
+                <div class="hero-slideshow" aria-hidden="true">
+                    <div class="hero-slide hero-slide--1 is-active" style="background-image: url('land-1.jpg');"></div>
+                    <div class="hero-slide hero-slide--2" style="background-image: url('land-2.jpg');"></div>
+                    <div class="hero-slide hero-slide--3" style="background-image: url('land-3.jpg');"></div>
+                    <div class="hero-slide hero-slide--4" style="background-image: url('land-4.jpg');"></div>
+                    <div class="hero-slide hero-slide--5" style="background-image: url('land-5.jpg');"></div>
+                </div>
+                <div class="hero-dots" role="tablist" aria-label="Hero slides">
+                    <button class="hero-dot is-active" data-interactive="true" aria-label="Slide 1">01</button>
+                    <button class="hero-dot" data-interactive="true" aria-label="Slide 2">02</button>
+                    <button class="hero-dot" data-interactive="true" aria-label="Slide 3">03</button>
+                    <button class="hero-dot" data-interactive="true" aria-label="Slide 4">04</button>
+                    <button class="hero-dot" data-interactive="true" aria-label="Slide 5">05</button>
+                </div>
+            </figure>
+
+            <div class="hero-foot">
+                <p class="hero-tagline">Independent research in trustworthy AI, data integrity &amp; intelligent systems</p>
+                <a href="#research" class="hero-cue" data-interactive="true">scroll down to explore <span aria-hidden="true">↓</span></a>
+            </div>
+        </div>
+    </section>
+<!-- IEEE Affiliation Banner -->
+    <div style="background: var(--bg-light); padding: 0.9rem 3rem; display: flex; align-items: center; justify-content: center; gap: 2rem; flex-wrap: wrap; border-bottom: 1px solid var(--border);">
+        <span style="font-size: 0.7rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--secondary);">Professional Affiliations</span>
+        <span style="display: flex; align-items: center; gap: 0.4rem; color: var(--primary); font-size: 0.8rem; font-weight: 700;"><span style="width: 8px; height: 8px; border-radius: 50%; background: var(--accent); display: inline-block;"></span>IEEE Member</span>
+        <span style="display: flex; align-items: center; gap: 0.4rem; color: var(--primary); font-size: 0.8rem; font-weight: 700;"><span style="width: 8px; height: 8px; border-radius: 50%; background: var(--accent); display: inline-block;"></span>IEEE Communications Society (ComSoc)</span>
+        <span style="display: flex; align-items: center; gap: 0.4rem; color: var(--primary); font-size: 0.8rem; font-weight: 700;"><span style="width: 8px; height: 8px; border-radius: 50%; background: var(--accent); display: inline-block;"></span>IEEE Women in Engineering (WIE)</span>
+        <span style="display: flex; align-items: center; gap: 0.4rem; color: var(--primary); font-size: 0.8rem; font-weight: 700;"><span style="width: 8px; height: 8px; border-radius: 50%; background: var(--accent); display: inline-block;"></span>Scopus Author</span>
+    </div>
+
+    <!-- ══ ABOUT ══════════════════════════════════════════ -->
+    <section class="about-section" id="about">
+        <div class="about-inner">
+            <!-- Left: Bio -->
+            <div class="about-bio-col">
+                <div class="about-eyebrow">About the researcher</div>
+                <h2 class="about-name">Sanika Tribhuvan</h2>
+                <p class="about-pronouns">She / Her</p>
+                <p class="about-tagline">IEEE ComSoc Member · Forensic AI Researcher<br>2× Published · 7 Competition Wins · BCA '26 SPPU</p>
+                <div class="about-bio">
+                    <p>I'm a BCA graduate from Ahilyanagar who builds forensic AI systems that make data manipulation impossible to hide — and cryptographically impossible to deny.</p>
+                    <p>My research sits at the intersection of <strong>Trustworthy AI</strong>, <strong>Forensic Data Systems</strong>, <strong>Anomaly Detection</strong>, and <strong>Explainable AI</strong>. I work independently — no lab, no institutional resources — and publish at international, Scopus-indexed venues.</p>
+                    <p>Every project in this archive was built solo, from Ahilyanagar, Maharashtra.</p>
+                </div>
+                <div class="about-links">
+                    <a href="https://github.com/SanikaTribhuvan" class="about-link" target="_blank" rel="noopener"><i class="fab fa-github"></i> GitHub</a>
+                    <a href="mailto:tribhuvansanika@gmail.com" class="about-link"><i class="fas fa-envelope"></i> Email</a>
+                    <a href="https://www.linkedin.com/in/sanika-tribhuvan-b3a392348/" class="about-link" target="_blank" rel="noopener"><i class="fab fa-linkedin-in"></i> LinkedIn</a>
+                </div>
+            </div>
+            <!-- Right: Stats -->
+            <div class="about-stats-col">
+                <div class="about-stats-rule"></div>
+                <div class="about-stat-row">
+                    <div class="about-stat-num">7+</div>
+                    <div class="about-stat-label"><strong>Competition Wins</strong>National &amp; International — including 2× First Prize at Scopus-indexed venues</div>
+                </div>
+                <div class="about-stat-row">
+                    <div class="about-stat-num">2</div>
+                    <div class="about-stat-label"><strong>Peer-Reviewed Publications</strong>ICIISTM 2026 (Scopus) &amp; IJAAR · 1 paper under review</div>
+                </div>
+                <div class="about-stat-row">
+                    <div class="about-stat-num">1</div>
+                    <div class="about-stat-label"><strong>Patent in Progress</strong>Phantom Ledger forensic audit architecture</div>
+                </div>
+                <div class="about-stat-row">
+                    <div class="about-stat-num" style="font-size:1.8rem;min-width:4rem;">IEEE</div>
+                    <div class="about-stat-label"><strong>IEEE Member</strong>Communications Society (ComSoc) · Women in Engineering (WIE) · Scopus Author</div>
+                </div>
+                <div class="about-academic-note">
+                    <div class="about-academic-note-label">Academic Record</div>
+                    <div class="about-academic-note-value">BCA (Science) &mdash; Completed 2026</div>
+                    <div class="about-academic-note-sub">Savitribai Phule Pune University &middot; Semester GPAs: 9.36 &middot; 8.91 &middot; 9.09 &middot; 9.41 &middot; 9.73</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <!-- ══ SELECTED PUBLICATIONS ══════════════════════════ -->
+    <section class="pubs-section" id="publications">
+        <div class="pubs-inner">
+            <div class="section-eyebrow">Selected Publications</div>
+            <h2 class="section-title">Research in Print</h2>
+
+            <!-- 01 Phantom Ledger -->
+            <div class="pub-entry">
+                <div class="pub-issue-num">01</div>
+                <div class="pub-entry-body">
+                    <div class="pub-entry-status">Published · Scopus-Indexed</div>
+                    <h3 class="pub-entry-title">Phantom Ledger: A Cryptographically Anchored Forensic Audit System for Institutional Data Integrity</h3>
+                    <div class="pub-entry-venue">ICIISTM 2026 — International Conference on Inventions, Innovations in Science, Technology &amp; Management</div>
+                    <div class="pub-entry-badges">
+                        <span class="pub-entry-badge"><i class="fas fa-trophy"></i> Best Paper Award</span>
+                        <span class="pub-entry-badge"><i class="fas fa-trophy"></i> 1st Prize</span>
+                        <span class="pub-entry-badge">Solo-Authored</span>
+                        <span class="pub-entry-badge">Scopus Proceedings</span>
+                    </div>
+                    <p class="pub-entry-abstract">Phantom Ledger proposes a tamper-evident audit architecture for institutional databases using cryptographic chaining, anomaly detection, and explainable AI. The system makes data manipulation detectable, traceable, and cryptographically deniable — independently developed and presented at ICIISTM 2026, March.</p>
+                </div>
+            </div>
+
+            <!-- 02 GlitchZero -->
+            <div class="pub-entry">
+                <div class="pub-issue-num">02</div>
+                <div class="pub-entry-body">
+                    <div class="pub-entry-status">Published · IJAAR</div>
+                    <h3 class="pub-entry-title">GlitchZero: Language-Agnostic AI Middleware for Real-Time Data Integrity Verification</h3>
+                    <div class="pub-entry-venue">IJAAR — International Journal of Advanced Academic Research</div>
+                    <div class="pub-entry-badges">
+                        <span class="pub-entry-badge">Language-Agnostic</span>
+                        <span class="pub-entry-badge">Real-Time</span>
+                        <span class="pub-entry-badge">Middleware Architecture</span>
+                    </div>
+                    <p class="pub-entry-abstract">GlitchZero introduces an AI-driven middleware layer capable of intercepting and verifying data streams in real-time, independent of the underlying programming language or system stack. The approach enables integrity guarantees in heterogeneous production environments without requiring source-level instrumentation.</p>
+                </div>
+            </div>
+
+            <!-- 03 FedCohort -->
+            <div class="pub-entry">
+                <div class="pub-issue-num">03</div>
+                <div class="pub-entry-body">
+                    <div class="pub-entry-status">Under Review</div>
+                    <h3 class="pub-entry-title">FedCohort: Privacy-Preserving Federated Learning for Hantavirus-Inspired Epidemiological Modelling</h3>
+                    <div class="pub-entry-venue">Manuscript under review — 2026</div>
+                    <div class="pub-entry-badges">
+                        <span class="pub-entry-badge">Federated Learning</span>
+                        <span class="pub-entry-badge">Differential Privacy</span>
+                        <span class="pub-entry-badge">Public Health AI</span>
+                    </div>
+                    <p class="pub-entry-abstract">FedCohort adapts federated learning with differential privacy guarantees to epidemiological outbreak modelling, drawing on Hantavirus transmission dynamics as a case study. The architecture allows multi-institutional collaboration without centralised data exposure — a privacy-first approach to public health intelligence.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <!-- ══ RESEARCH SYSTEMS ════════════════════════════════ -->
+    <section class="content-section" id="ecosystem" style="padding-top: 5rem; padding-bottom: 5rem; background: var(--background); border-top: 1px solid var(--border);">
+        <div style="max-width: 1400px; margin: 0 auto; padding: 0 4rem;">
+
+            <div class="scroll-section-header">
+                <div>
+                    <div style="font-size:0.65rem;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;color:var(--accent);margin-bottom:0.8rem;">Built solo at CASAS · New Arts College, Ahilyanagar</div>
+                    <h2 style="font-family:var(--font-display);font-size:clamp(2rem,5vw,3.5rem);font-weight:600;color:var(--primary);margin:0 0 0.6rem;line-height:1.1;">Research Systems<br><span style="color:var(--accent);font-style:italic;">Systems &amp; Studies</span></h2>
+                    <p style="font-size:1.05rem;color:var(--secondary);max-width:650px;line-height:1.7;margin:0;">Four research systems, built solo end to end &mdash; spanning forensic data integrity, real-time middleware, privacy-preserving federated learning, and clinical risk prediction.</p>
+                </div>
+                <div class="scroll-count">[04 SYSTEMS]</div>
+            </div>
+
+            <div class="scroll-track" id="research-track">
+
+                <div class="rmod-card">
+                    <img class="rmod-card__bg" src="gallery/projects landing ui/phantom_ledger_ui.png" alt="Phantom Ledger dashboard" loading="lazy">
+                    <div class="rmod-card__body">
+                        <div class="rmod-card__badge">Python · Cryptography · XAI</div>
+                        <h3 class="rmod-card__title">Phantom<br>Ledger</h3>
+                        <p class="rmod-card__stack">Forensic audit system · ICIISTM 2026 Best Paper · Scopus</p>
+                    </div>
+                    <div class="rmod-card__links">
+                        <a href="https://phantom-ledger-2pjd.onrender.com" class="rmod-card__link" target="_blank" rel="noopener">Live Demo ↗</a>
+                    </div>
+                </div>
+
+                <div class="rmod-card">
+                    <img class="rmod-card__bg" src="gallery/projects landing ui/glitchzero_ui.png" alt="GlitchZero interface" loading="lazy">
+                    <div class="rmod-card__body">
+                        <div class="rmod-card__badge">AI Middleware · Node.js · Python</div>
+                        <h3 class="rmod-card__title">Glitch<br>Zero</h3>
+                        <p class="rmod-card__stack">Real-time data integrity · IJAAR published · Language-agnostic</p>
+                    </div>
+                    <div class="rmod-card__links">
+                        <a href="https://glitchzero.onrender.com" class="rmod-card__link" target="_blank" rel="noopener">Live Demo ↗</a>
+                    </div>
+                </div>
+
+                <div class="rmod-card">
+                    <div class="rmod-card__bg rmod-card__ph">FedCohort &middot; under review</div>
+                    <div class="rmod-card__body">
+                        <div class="rmod-card__badge">Federated Learning &middot; Differential Privacy</div>
+                        <h3 class="rmod-card__title">Fed<br>Cohort</h3>
+                        <p class="rmod-card__stack">Privacy-preserving federated learning for public-health surveillance &middot; manuscript under peer review</p>
+                    </div>
+                    <div class="rmod-card__links">
+                        <a href="#publications" class="rmod-card__link">Read More &darr;</a>
+                    </div>
+                </div>
+
+                <div class="rmod-card">
+                    <img class="rmod-card__bg" src="gallery/projects landing ui/STROKE RISK MONITOR.png" alt="Smart Stroke Risk Monitor" loading="lazy">
+                    <div class="rmod-card__body">
+                        <div class="rmod-card__badge">ML &middot; Streamlit &middot; Healthcare</div>
+                        <h3 class="rmod-card__title">Smart Stroke<br>Monitor</h3>
+                        <p class="rmod-card__stack">Real-time stroke-risk prediction &middot; 94.6% Decision Tree accuracy &middot; explainable clinical dashboard</p>
+                    </div>
+                    <div class="rmod-card__links">
+                        <a href="https://lnkd.in/d_eYVcc4" class="rmod-card__link" target="_blank" rel="noopener">Live Demo &#8599;</a>
+                    </div>
+                </div>
+
+                </div><!-- /scroll-track -->
+        </div>
+    </section>
+
+
+    <!-- ══ PIANO DIVIDER ══════════════════════════════════ -->
+    <div class="piano-divider-large" aria-hidden="true">
+        <img src="piano-wave.png" alt="Piano wave editorial divider" loading="lazy">
+    </div>
+
+
+    <!-- ══ PROJECT DEMONSTRATION LIBRARY ══════════════════ -->
+    <section class="demo-section" id="demos">
+        <div class="demo-inner">
+            <div class="section-eyebrow">Demonstration Library</div>
+            <h2 class="section-title">Video References</h2>
+            <p style="max-width:640px;font-size:1rem;line-height:1.8;color:var(--secondary);margin-top:-1rem;">
+                Each video documents a working, deployable system — built independently and demonstrated at international venues.
+            </p>
+
+            <div class="demo-grid">
+
+                <!-- Phantom Ledger -->
+                <div class="demo-card">
+                    <button type="button" class="demo-thumb-wrap video-trigger" data-video="videos/PHANTOM_LEDGER_VIDEO.mp4" data-title="Phantom Ledger">
+                        <img src="gallery/reference videos thumbnails/phantom ledger.png" alt="Phantom Ledger demonstration" loading="lazy"><span class="video-play-badge"><i class="fas fa-play"></i></span>
+                    </button>
+                    <div class="demo-card-body">
+                        <div class="demo-card-label">Forensic AI · Cryptography</div>
+                        <div class="demo-card-title">Phantom Ledger</div>
+                        <p class="demo-card-desc">Tamper-evident audit architecture using cryptographic chaining and XAI — ICIISTM 2026 Best Paper.</p>
+                        <div class="demo-buttons">
+                            <a href="https://www.linkedin.com/posts/sanika-tribhuvan-b3a392348_phantomledger-cybersecurity-ai-activity-7468371753757556737-WXpZ" class="demo-btn demo-btn-primary" target="_blank" rel="noopener">Watch on LinkedIn</a>
+                            <a href="https://phantom-ledger-2pjd.onrender.com" class="demo-btn demo-btn-secondary" target="_blank" rel="noopener">Live Demo</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- GlitchZero -->
+                <div class="demo-card">
+                    <button type="button" class="demo-thumb-wrap video-trigger" data-video="videos/GITCHZERO_VIDEO.mp4" data-title="GlitchZero">
+                        <img src="gallery/reference videos thumbnails/glitchzero.png" alt="GlitchZero demonstration" loading="lazy"><span class="video-play-badge"><i class="fas fa-play"></i></span>
+                    </button>
+                    <div class="demo-card-body">
+                        <div class="demo-card-label">AI Middleware · Real-Time</div>
+                        <div class="demo-card-title">GlitchZero</div>
+                        <p class="demo-card-desc">Language-agnostic AI middleware intercepting data streams in real-time — published in IJAAR.</p>
+                        <div class="demo-buttons">
+                            <a href="https://www.linkedin.com/posts/sanika-tribhuvan-b3a392348_ai-cybersecurity-blockchain-activity-7454257964703449088-mg4Q" class="demo-btn demo-btn-primary" target="_blank" rel="noopener">Watch on LinkedIn</a>
+                            <a href="https://glitchzero.onrender.com" class="demo-btn demo-btn-secondary" target="_blank" rel="noopener">Live Demo</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- EcoVision AI -->
+                <div class="demo-card">
+                    <button type="button" class="demo-thumb-wrap video-trigger" data-video="videos/ECOVISION_AI_VIDEO.mp4" data-title="EcoVision AI">
+                        <img src="gallery/reference videos thumbnails/ecovision.png" alt="EcoVision AI demonstration" loading="lazy"><span class="video-play-badge"><i class="fas fa-play"></i></span>
+                    </button>
+                    <div class="demo-card-body">
+                        <div class="demo-card-label">Computer Vision · YOLOv8</div>
+                        <div class="demo-card-title">EcoVision AI</div>
+                        <p class="demo-card-desc">Real-time environmental object detection using YOLOv8 — ecological monitoring through computer vision.</p>
+                        <div class="demo-buttons">
+                            <a href="https://www.linkedin.com/posts/sanika-tribhuvan-b3a392348_ecovisionai-yolov8-computervision-activity-7435677604805898240-Vh4c" class="demo-btn demo-btn-primary" target="_blank" rel="noopener">Watch on LinkedIn</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Pathfinding Visualizer -->
+                <div class="demo-card">
+                    <button type="button" class="demo-thumb-wrap video-trigger" data-video="videos/PATHFINIDNG_ALGORITHM_VIDEO.mp4" data-title="Pathfinding Visualizer">
+                        <img src="gallery/projects landing ui/PATHFINIDING ALGORITHM.png" alt="Pathfinding Visualizer" loading="lazy"><span class="video-play-badge"><i class="fas fa-play"></i></span>
+                    </button>
+                    <div class="demo-card-body">
+                        <div class="demo-card-label">Algorithms · Visualization</div>
+                        <div class="demo-card-title">Pathfinding Visualizer</div>
+                        <p class="demo-card-desc">A* and Dijkstra visualised — 1st Prize ICADMA 2025, beating IIT, IISER &amp; DRDO entries.</p>
+                        <div class="demo-buttons">
+                            <a href="https://www.linkedin.com/posts/sanika-tribhuvan-b3a392348_1st-prize-winner-at-icadma-2025-visualizing-activity-7401975788792631296-v25h" class="demo-btn demo-btn-primary" target="_blank" rel="noopener">Watch on LinkedIn</a>
+                            <a href="https://pathfinding-algorithm-visualizer-m6rkahkr3n22nlz2gj4e6m.streamlit.app/" class="demo-btn demo-btn-secondary" target="_blank" rel="noopener">Live Demo</a>
+                            <a href="https://github.com/SanikaTribhuvan" class="demo-btn demo-btn-secondary" target="_blank" rel="noopener">GitHub</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Smart Stroke Monitor -->
+                <div class="demo-card">
+                    <button type="button" class="demo-thumb-wrap video-trigger" data-video="videos/SMART_STROKE_VIDEO.mp4" data-title="Smart Stroke Monitor">
+                        <img src="gallery/projects landing ui/STROKE RISK MONITOR.png" alt="Smart Stroke Monitor" loading="lazy"><span class="video-play-badge"><i class="fas fa-play"></i></span>
+                    </button>
+                    <div class="demo-card-body">
+                        <div class="demo-card-label">Healthcare AI · ML</div>
+                        <div class="demo-card-title">Smart Stroke Monitor</div>
+                        <p class="demo-card-desc">Real-time stroke risk prediction with an explainable clinical dashboard — healthcare ML in practice.</p>
+                        <div class="demo-buttons">
+                            <a href="https://www.linkedin.com/posts/sanika-tribhuvan-b3a392348_ai-healthcare-machinelearning-activity-7390012316928593920-WAou" class="demo-btn demo-btn-primary" target="_blank" rel="noopener">Watch on LinkedIn</a>
+                            <a href="https://lnkd.in/d_eYVcc4" class="demo-btn demo-btn-secondary" target="_blank" rel="noopener">Live Demo</a>
+                            <a href="https://lnkd.in/diBrfW2t" class="demo-btn demo-btn-secondary" target="_blank" rel="noopener">GitHub</a>
+                        </div>
+                    </div>
+                </div>
+
+
+                <!-- Demon Slayer Companion -->
+                <div class="demo-card">
+                    <button type="button" class="demo-thumb-wrap video-trigger" data-video="videos/KIMETSU_NO_YAIBA_VIDEO.mp4" data-title="Demon Slayer Companion">
+                        <img src="gallery/reference videos thumbnails/kimetsu no yaiba.png" alt="Demon Slayer Companion demonstration" loading="lazy"><span class="video-play-badge"><i class="fas fa-play"></i></span>
+                    </button>
+                    <div class="demo-card-body">
+                        <div class="demo-card-label">Creative &middot; React &middot; Claude API</div>
+                        <div class="demo-card-title">Demon Slayer Companion</div>
+                        <p class="demo-card-desc">An AI-powered anime companion app &mdash; character conversations and gamified exploration of Kimetsu no Yaiba.</p>
+                        <div class="demo-buttons">
+                            <a href="https://www.linkedin.com/posts/sanika-tribhuvan-b3a392348_reactjs-webdevelopment-frontenddevelopment-activity-7402760751276498944-2xrq" class="demo-btn demo-btn-primary" target="_blank" rel="noopener">Watch on LinkedIn</a>
+                            <a href="https://kimetsu-no-yoiba.netlify.app/" class="demo-btn demo-btn-secondary" target="_blank" rel="noopener">Live Demo</a>
+                            <a href="https://github.com/SanikaTribhuvan" class="demo-btn demo-btn-secondary" target="_blank" rel="noopener">GitHub</a>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+
+    <!-- ══ CREATIVE LAB ════════════════════════════════════ -->
+    <section class="creative-section" id="creative-lab">
+        <div class="creative-inner">
+            <div class="section-eyebrow">A Passion Project</div>
+            <h2 class="section-title">Something Creative</h2>
+
+            <div class="creative-feature">
+                <div class="creative-thumb">
+                    <img src="demon-slayer-ui.png" alt="Demon Slayer AI Web Application — Select Your Path" loading="lazy">
+                </div>
+                <div class="creative-body">
+                    <div class="demo-card-label">React · Claude API · Gamification</div>
+                    <h3 class="creative-body-title">AI-Powered Demon Slayer<br>Web Application</h3>
+                    <div class="creative-body-sub">React &middot; Tailwind &middot; Claude API &middot; Character AI &middot; Gamification &middot; Local Storage</div>
+                    <p class="creative-body-desc">Built for the love of anime and the curiosity about generative AI. An interactive fan-experience where users explore the world of Kimetsu no Yaiba through AI-powered character conversations, gamified battles, and a breathing-style classifier — all running in the browser.</p>
+                    <div class="creative-note">"Every researcher needs a playground. This is mine."</div>
+                    <div class="demo-buttons">
+                        <a href="https://www.linkedin.com/posts/sanika-tribhuvan-b3a392348_reactjs-webdevelopment-frontenddevelopment-activity-7402760751276498944-2xrq" class="demo-btn demo-btn-primary" target="_blank" rel="noopener">Watch Demo</a>
+                        <a href="https://kimetsu-no-yoiba.netlify.app/" class="demo-btn demo-btn-secondary" target="_blank" rel="noopener">Live Demo</a>
+                        <a href="https://github.com/SanikaTribhuvan" class="demo-btn demo-btn-secondary" target="_blank" rel="noopener">GitHub</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <!-- ══ SPEAKING & EVENTS ═══════════════════════════════ -->
+    <section class="speaking-section" id="speaking">
+        <div class="speaking-inner">
+            <div class="section-eyebrow">Speaking &amp; Events</div>
+            <h2 class="section-title">In the Room</h2>
+
+            <div class="speaking-blocks">
+
+                <!-- Block 01: AI Gramin Summit -->
+                <div class="speaking-block">
+                    <div class="speaking-block-num">01</div>
+                    <div class="speaking-block-title">Gramin AI Summit</div>
+                    <img class="speaking-block-img" src="gallery/research moments/AI GRAMIN SUMMIT.jpg" alt="Gramin AI Summit" loading="lazy">
+                    <div class="speaking-block-body">
+                        <p>An invitation to speak at a grassroots AI event aimed at bringing artificial intelligence literacy to rural communities in Maharashtra. <em>Preparing the talk forced me to strip away jargon and speak to the core of what this technology means for people living outside tech hubs.</em></p>
+                        <p>The questions from the audience were the most grounding I have received. They did not ask about accuracy benchmarks. They asked about trust.</p>
+                    </div>
+                </div>
+
+                <!-- Block 02: Conferences & Research Events -->
+                <div class="speaking-block">
+                    <div class="speaking-block-num">02</div>
+                    <div class="speaking-block-title">Conferences &amp; Research Events</div>
+                    <img class="speaking-block-img" src="gallery/research moments/conference_session.jpg" alt="Conference session" loading="lazy">
+                    <div class="speaking-block-body">
+                        <p>Presenting at ICIISTM 2026, ICADMA 2025, NCRT AIML, COGNOTSAV, and TECH-EXPO taught me that the room matters. <em>You are not defending a paper. You are making a case for why the problem matters.</em></p>
+                        <p>Solo entries at every venue. The solitude was not a disadvantage — it was clarifying. You learn to trust your own reasoning when there is nobody else to defer to.</p>
+                    </div>
+                </div>
+
+                <!-- Block 03: Music & Stage -->
+                <div class="speaking-block">
+                    <div class="speaking-block-num">03</div>
+                    <div class="speaking-block-title">Music &amp; Stage Performances</div>
+                    <img class="speaking-block-img" src="gallery/beyond code/blossom2k26_performance.jpeg" alt="Stage performance at Blossom 2K26" loading="lazy">
+                    <div class="speaking-block-body">
+                        <p>Piano and vocals at Blossom 2K26 — our college annual fest. <em>Performance anxiety for a research presentation and performance anxiety for a stage act feel different, but they have the same cure: preparation until the fear runs out of room.</em></p>
+                        <p>Music teaches what research sometimes forgets: that the feeling of a thing is as important as the correctness of a thing.</p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+
+    <!-- ══ JOURNEY + BLOG ══════════════════════════════════ -->
+    <section class="journey-section" id="journey">
+        <div class="journey-inner">
+
+            <!-- LEFT: BCA Journey -->
+            <div>
+                <div class="section-eyebrow">Three Years in the Making</div>
+                <div class="journey-col-title">My BCA Journey</div>
+                <img class="journey-col-img" src="gallery/JOURNEY/3 YEAR JOURNEY.jpg" alt="Sanika Tribhuvan — 3 year BCA journey" loading="lazy">
+                <ul class="journey-milestones">
+                    <li><strong>2023</strong>Joined BCA at New Arts, Commerce &amp; Science College, Ahilyanagar. Won Miss Arts 2023 in the same first semester.</li>
+                    <li><strong>2024</strong>Started independent research. Began building Phantom Ledger and the GlitchZero prototype.</li>
+                    <li><strong>2025</strong>1st Prize at ICADMA 2025 (Pathfinding Visualizer). GlitchZero published in IJAAR. Presented at NCRT, COGNOTSAV.</li>
+                    <li><strong>2026</strong>Best Paper + 1st Prize at ICIISTM 2026 (Phantom Ledger). 2nd Prize TECH-EXPO. Patent in progress. FedCohort under review. Joined IEEE ComSoc &amp; WIE (April 2026).</li>
+                </ul>
+                <div class="journey-sgpa">
+                    <div class="journey-sgpa-item"><span class="num">9.36</span><span class="lbl">Sem I</span></div>
+                    <div class="journey-sgpa-item"><span class="num">8.91</span><span class="lbl">Sem II</span></div>
+                    <div class="journey-sgpa-item"><span class="num">9.09</span><span class="lbl">Sem III</span></div>
+                    <div class="journey-sgpa-item"><span class="num">9.41</span><span class="lbl">Sem IV</span></div>
+                    <div class="journey-sgpa-item"><span class="num">9.73</span><span class="lbl">Sem V</span></div>
+                </div>
+                <blockquote class="journey-quote">"Some redirections are blessings in disguise."</blockquote>
+                <a href="https://www.linkedin.com/posts/sanika-tribhuvan-b3a392348_bca-research-ieee-activity-7465124274073407488-8OfC" class="journey-btn" target="_blank" rel="noopener">Read Full Journey ↗</a>
+            </div>
+
+            <!-- RIGHT: Blog -->
+            <div>
+                <div class="section-eyebrow">Writing &amp; Reflection</div>
+                <div class="blog-col-title">Blog &amp; Insights</div>
+                <p class="blog-col-sub">Essays on technology, research, and the choices that define a path</p>
+
+                <div class="blog-article-card">
+                    <div class="blog-article-tag">Career · Technology · Self-Discovery</div>
+                    <div class="blog-article-title">Coding vs Business Analytics:<br>Finding Your True Path</div>
+                    <p class="blog-article-excerpt">A reflective essay on the moment I had to choose between two directions — and why understanding what you actually want matters more than picking the more impressive option. The intersection of technical skill and analytical thinking is where the most interesting careers live.</p>
+                    <div class="blog-platform-btns">
+                        <a href="https://dev.to/sanikatribhuvan" class="blog-platform-btn" target="_blank" rel="noopener">Dev.to ↗</a>
+                        <a href="https://hashnode.com/@SanikaTribhuvan" class="blog-platform-btn" target="_blank" rel="noopener">Hashnode ↗</a>
+                    </div>
+                </div>
+
+                <img src="gallery/JOURNEY/STANDING NEAR DEPARTMENT'S LOGO.jpg" alt="Sanika at the BCA department" loading="lazy" style="width:100%;aspect-ratio:4/3;object-fit: cover;object-position:top;border:1px solid var(--border);filter:sepia(0.1) contrast(1.05);margin-top:1.5rem;">
+            </div>
+
+        </div>
+    </section>
+
+
+    <!-- ══ COMMUNITY ENGAGEMENT ════════════════════════════ -->
+    <section class="community-section" id="community">
+        <div class="community-inner">
+            <!-- Left: Essay -->
+            <div>
+                <div class="section-eyebrow">Community Engagement</div>
+                <h2 style="font-family:var(--font-display);font-size:clamp(1.6rem,3vw,2.4rem);font-weight:500;color:var(--primary);margin:0 0 1.5rem;line-height:1.2;">People For Animals<br><em style="color:var(--accent);">Ahilyanagar</em></h2>
+                <div class="community-essay">
+                    <p>Animal welfare did not feel like a cause I chose — it felt like something I stumbled into and could not walk away from. <strong>People For Animals, Ahilyanagar</strong> gave me a way to act on that.</p>
+                    <p>I joined as a volunteer, showed up for awareness drives, and helped document cases. The work is unglamorous and often distressing. But it is also the most unambiguous thing I do — there is no publication to chase, no prize to win. Just the immediate problem of an animal in need and the people trying to help it.</p>
+                    <p>Research asks you to think in systems. Community work asks you to act on the individual case in front of you. Both are necessary. I find they make each other better.</p>
+                </div>
+            </div>
+            <!-- Right: Photos -->
+            <div>
+                <div class="community-photos">
+                    <img class="community-photo full-width" src="gallery/NGO/NGO PFA PRESENTATION.jpg" alt="People For Animals awareness session" loading="lazy">
+                    <div style="padding:1.5rem;background:var(--bg-light);border:1px solid var(--border);display:flex;flex-direction:column;justify-content:center;">
+                        <div style="font-size:0.6rem;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;color:var(--accent);margin-bottom:0.6rem;">Organisation</div>
+                        <div style="font-family:var(--font-display);font-size:1.3rem;color:var(--primary);margin-bottom:0.4rem;">People For Animals</div>
+                        <div style="font-size:0.82rem;color:var(--secondary);line-height:1.5;">Ahilyanagar, Maharashtra<br>Animal welfare · Awareness drives · Documentation</div>
+                    </div>
+                    <img class="community-photo" src="gallery/NGO/PFA NGO.jpg" alt="People For Animals — PFA" loading="lazy">
+                </div>
+                <p class="community-caption">Awareness session and community outreach — People For Animals, Ahilyanagar.</p>
+            </div>
+        </div>
+    </section>
+
+
+    <!-- ══ BEYOND CODE ═════════════════════════════════════ -->
+    <section class="beyond-code-section" id="beyond-code">
+        <div class="beyond-code-inner">
+            <div class="section-eyebrow">Beyond the Research</div>
+            <h2 class="section-title">Life Outside the Lab</h2>
+            <p class="beyond-code-intro">Piano, animals, food, and nature. The parts that do not appear in a CV but that make the research feel human.</p>
+
+            <div class="beyond-photo-wall">
+                <div class="beyond-photo-item tall">
+                    <img src="gallery/beyond code/piano_stage_red.jpeg" alt="Piano performance on stage" loading="lazy">
+                    <div class="beyond-caption-overlay">Piano · Stage</div>
+                </div>
+                <div class="beyond-photo-item">
+                    <img src="gallery/beyond code/other than academics piano performances.jpg" alt="Piano performances" loading="lazy">
+                    <div class="beyond-caption-overlay">Piano Recital</div>
+                </div>
+                <div class="beyond-photo-item">
+                    <img src="gallery/beyond code/leo_bw.jpeg" alt="Leo, my dog" loading="lazy">
+                    <div class="beyond-caption-overlay">Leo</div>
+                </div>
+                <div class="beyond-photo-item">
+                    <img src="gallery/beyond code/other than academics hinata again.jpg" alt="Hinata, my cat" loading="lazy">
+                    <div class="beyond-caption-overlay">Hinata</div>
+                </div>
+                <div class="beyond-photo-item">
+                    <img src="gallery/beyond code/other than academics me chilling in nature.jpg" alt="In nature" loading="lazy">
+                    <div class="beyond-caption-overlay">Chilling in nature</div>
+                </div>
+                <div class="beyond-photo-item">
+                    <img src="gallery/beyond code/gujarati_thali.jpg" alt="Gujarati thali" loading="lazy">
+                    <div class="beyond-caption-overlay">Gujarati Thali</div>
+                </div>
+                <div class="beyond-photo-item">
+                    <img src="gallery/beyond code/other than academics i love desserts.jpg" alt="Desserts" loading="lazy">
+                    <div class="beyond-caption-overlay">Desserts</div>
+                </div>
+            </div>
+
+            <div class="beyond-interests">
+                <span class="beyond-tag">Piano</span>
+                <span class="beyond-tag">Vocals</span>
+                <span class="beyond-tag">Leo &amp; Hinata</span>
+                <span class="beyond-tag">Nature Walks</span>
+                
+                <span class="beyond-tag">Anime</span>
+                <span class="beyond-tag">Gujarati Cuisine</span>
+            </div>
+        </div>
+    </section>
+
+
+    <!-- ══ AWARDS & HONOURS ════════════════════════════════ -->
+    <section id="awards" class="awards-section">
+        <div class="awards-container">
+            <h2 class="awards-title">awards &amp; honours</h2>
+            <p class="awards-subtitle">Solo entries — no team, no mentor. Grouped by selectivity: flagship international wins first, then national &amp; state placements, then earlier recognition.</p>
+
+            <div class="awards-tiers-container">
+
+                <!-- TIER A — Flagship -->
+                <div>
+                    <h3 class="awards-tier-title">Flagship · International</h3>
+                    <div class="cv-list">
+                        <div class="cv-item">
+                            <div class="cv-meta">Mar 2026<br><span class="cv-badge"><i class="fas fa-trophy"></i> 1st Prize + Best Paper</span></div>
+                            <div class="cv-content">
+                                <h4>ICIISTM 2026</h4>
+                                <p class="cv-institution">International Conference on Inventions, Innovations in Science, Technology &amp; Management</p>
+                                <p class="cv-details">Phantom Ledger · solo-authored · Scopus-indexed proceedings</p>
+                            </div>
+                        </div>
+                        <div class="cv-item">
+                            <div class="cv-meta">Nov 2025<br><span class="cv-badge"><i class="fas fa-medal"></i> 1st Prize</span></div>
+                            <div class="cv-content">
+                                <h4>ICADMA 2025</h4>
+                                <p class="cv-institution">International Conference on Analysis, Discrete Mathematics &amp; Applications</p>
+                                <p class="cv-details">Pathfinding Visualizer (A*) · placed above 50+ entries including IIT, IISER &amp; DRDO teams</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- TIER B — National & State -->
+                <div>
+                    <h3 class="awards-tier-title">National &amp; State Placements</h3>
+                    <div class="cv-list">
+                        <div class="cv-item">
+                            <div class="cv-meta">Apr 2026<br><span class="cv-badge"><i class="fas fa-medal"></i> 2nd Prize</span></div>
+                            <div class="cv-content">
+                                <h4>TECH-EXPO 2026</h4>
+                                <p class="cv-institution">Pravara Rural Engineering College, Loni</p>
+                                <p class="cv-details">Phantom Ledger · solo entry · &#8377;4,000 cash prize</p>
+                            </div>
+                        </div>
+                        <div class="cv-item">
+                            <div class="cv-meta">Jan 2026<br><span class="cv-badge"><i class="fas fa-medal"></i> 1st Prize</span></div>
+                            <div class="cv-content">
+                                <h4>NCRT AIML 2026</h4>
+                                <p class="cv-institution">National Conference on Recent Trends in AI &amp; ML</p>
+                                <p class="cv-details">GlitchZero poster presentation · best paper track</p>
+                            </div>
+                        </div>
+                        <div class="cv-item">
+                            <div class="cv-meta">2025<br><span class="cv-badge"><i class="fas fa-trophy"></i> Winner</span></div>
+                            <div class="cv-content">
+                                <h4>COGNOTSAV 2025</h4>
+                                <p class="cv-institution">State-level technical festival</p>
+                                <p class="cv-details">Research presentation track · solo entry</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- TIER C — Recognition -->
+                <div>
+                    <h3 class="awards-tier-title">Recognition &amp; Milestones</h3>
+                    <div class="cv-list">
+                        <div class="cv-item">
+                            <div class="cv-meta">2026<br><span class="cv-badge">Felicitation</span></div>
+                            <div class="cv-content">
+                                <h4>SPPU Blossom 2K26</h4>
+                                <p class="cv-institution">Savitribai Phule Pune University Cultural Festival</p>
+                                <p class="cv-details">Felicitation for academic &amp; research excellence</p>
+                            </div>
+                        </div>
+                        <div class="cv-item">
+                            <div class="cv-meta">2023<br><span class="cv-badge">Miss Arts 2023</span></div>
+                            <div class="cv-content">
+                                <h4>Miss Arts — New Arts, Commerce &amp; Science College</h4>
+                                <p class="cv-institution">Ahilyanagar</p>
+                                <p class="cv-details">First semester — before the research began</p>
+                            </div>
+                        </div>
+                        <div class="cv-item">
+                            <div class="cv-meta">2025<br><span class="cv-badge">Media</span></div>
+                            <div class="cv-content">
+                                <h4>Lokmat Newspaper Feature</h4>
+                                <p class="cv-institution">Ahilyanagar Edition</p>
+                                <p class="cv-details">Felicitation coverage for research achievements</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- AWARDS PHOTO WALL -->
+            <div class="awards-photo-wall-wrap">
+                <div style="font-size:0.65rem;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;color:var(--accent);margin-bottom:0.5rem;">Archive Wall</div>
+                <h3 style="font-family:var(--font-display);font-size:1.6rem;color:var(--primary);margin:0 0 0.5rem;">From the Events</h3>
+                <p style="font-size:0.85rem;color:var(--secondary);margin-bottom:1.5rem;">Photographs from presentations, award ceremonies, and conferences.</p>
+                <div class="awards-photo-wall is-collapsed" id="eventsWall">
+                    <div class="award-photo-item"><img src="gallery/awards and conferences/MAHINDRA PRIDE CLASSROMM AND NANDI FOUNDATION PERSONALITY DEVELOPMENT TRAINING FELICITATION.png" alt="Mahindra Pride Classromm And Nandi Foundation Personality De" loading="lazy"></div>
+                    <div class="award-photo-item"><img src="gallery/awards and conferences/MISS ARTS 2024.jpg" alt="Miss Arts 2024" loading="lazy"></div>
+                    <div class="award-photo-item"><img src="gallery/awards and conferences/SYMBIOSIS PEOPLE GIFTING ME WITH GOODIES FOR PARTICIPATING INT HE CAP GEMINI SPONSERED FULL STACK JAVA.png" alt="Symbiosis People Gifting Me With Goodies For Participating I" loading="lazy"></div>
+                    <div class="award-photo-item"><img src="gallery/awards and conferences/award iciistm.png" alt="Award Iciistm" loading="lazy"></div>
+                    <div class="award-photo-item"><img src="gallery/awards and conferences/award national_science_day.png" alt="Award National Science Day" loading="lazy"></div>
+                    <div class="award-photo-item"><img src="gallery/awards and conferences/award ncrtaiml.png" alt="Award Ncrtaiml" loading="lazy"></div>
+                    <div class="award-photo-item"><img src="gallery/awards and conferences/award powerbi camp.jpeg" alt="Award Powerbi Camp" loading="lazy"></div>
+                    <div class="award-photo-item"><img src="gallery/awards and conferences/award prize for college cultural.jpeg" alt="Award Prize For College Cultural" loading="lazy"></div>
+                    <div class="award-photo-item"><img src="gallery/awards and conferences/award_ceremony_stage1.png" alt="Award Ceremony Stage1" loading="lazy"></div>
+                    <div class="award-photo-item"><img src="gallery/awards and conferences/award_ncrtaiml by principal.jpg" alt="Award Ncrtaiml By Principal" loading="lazy"></div>
+                    <div class="award-photo-item"><img src="gallery/awards and conferences/award_office_cert.jpeg" alt="Award Office Cert" loading="lazy"></div>
+                    <div class="award-photo-item"><img src="gallery/awards and conferences/blossom2k26_felicitation.jpeg" alt="Blossom2K26 Felicitation" loading="lazy"></div>
+                    <div class="award-photo-item"><img src="gallery/awards and conferences/cognotsav_ceremony.png" alt="Cognotsav Ceremony" loading="lazy"></div>
+                    <div class="award-photo-item"><img src="gallery/research moments/AI GRAMIN SUMMIT.jpg" alt="Ai Gramin Summit" loading="lazy"></div>
+                    <div class="award-photo-item"><img src="gallery/research moments/BLOCKCHAIN BOOTCAMP BY TRUSTGRID.jpg" alt="Blockchain Bootcamp By Trustgrid" loading="lazy"></div>
+                    <div class="award-photo-item"><img src="gallery/research moments/WhatsApp Image 2026-05-26 at 3.07.35 PM.jpeg" alt="Whatsapp Image 2026-05-26 At 3.07.35 Pm" loading="lazy"></div>
+                    <div class="award-photo-item"><img src="gallery/research moments/award_cognotsav_selfie2.jpg" alt="Award Cognotsav Selfie2" loading="lazy"></div>
+                    <div class="award-photo-item"><img src="gallery/research moments/conference_session.jpg" alt="Conference Session" loading="lazy"></div>
+                    <div class="award-photo-item"><img src="gallery/research moments/glitchzero_outdoor_cert.png" alt="Glitchzero Outdoor Cert" loading="lazy"></div>
+                    <div class="award-photo-item"><img src="gallery/research moments/glitchzero_paper.png" alt="Glitchzero Paper" loading="lazy"></div>
+                    <div class="award-photo-item"><img src="gallery/research moments/pravara_campus.jpg" alt="Pravara Campus" loading="lazy"></div>
+                    <div class="award-photo-item"><img src="gallery/research moments/research moment at icadma me with trophy and poster.jpg" alt="Research Moment At Icadma Me With Trophy And Poster" loading="lazy"></div>
+                    <div class="award-photo-item"><img src="gallery/research moments/research moment glitchzero_poster_presentation at ncrt.jpg" alt="Research Moment Glitchzero Poster Presentation At Ncrt" loading="lazy"></div>
+                    <div class="award-photo-item"><img src="gallery/research moments/research moment me presenting at cognotsav.jpeg" alt="Research Moment Me Presenting At Cognotsav" loading="lazy"></div>
+                    <div class="award-photo-item"><img src="gallery/research moments/research moment my phantom ledger abstract published in the proceeding of icisstm.png" alt="Research Moment My Phantom Ledger Abstract Published In The " loading="lazy"></div>
+                    <div class="award-photo-item"><img src="gallery/research moments/research moments TECH EXPO.jpeg" alt="Research Moments Tech Expo" loading="lazy"></div>
+                    <div class="award-photo-item"><img src="gallery/research moments/research moments at TECH EXPO presentation.jpeg" alt="Research Moments At Tech Expo Presentation" loading="lazy"></div>
+                    <div class="award-photo-item"><img src="gallery/research moments/research moments at iciistm with the sweetest mentors i was gifted with at that college.jpeg" alt="Research Moments At Iciistm With The Sweetest Mentors I Was " loading="lazy"></div>
+                    <div class="award-photo-item"><img src="gallery/research moments/research moments at ncrt glitchzero.jpeg" alt="Research Moments At Ncrt Glitchzero" loading="lazy"></div>
+                    <div class="award-photo-item"><img src="gallery/research moments/research moments giving a speech at iciistm.jpeg" alt="Research Moments Giving A Speech At Iciistm" loading="lazy"></div>
+                    <div class="award-photo-item"><img src="gallery/research moments/research moments me with my award at iciistm.jpg" alt="Research Moments Me With My Award At Iciistm" loading="lazy"></div>
+                    <div class="award-photo-item"><img src="gallery/research moments/research moments my newspaper article of me gettinf felicitated.jpeg" alt="Research Moments My Newspaper Article Of Me Gettinf Felicita" loading="lazy"></div>
+                    <div class="award-photo-item"><img src="gallery/research moments/research moments presenting glitchzero paper at ncrt.jpeg" alt="Research Moments Presenting Glitchzero Paper At Ncrt" loading="lazy"></div>
+                    <div class="award-photo-item"><img src="gallery/research moments/research moments presenting phantom ledger paper at iciistm.jpeg" alt="Research Moments Presenting Phantom Ledger Paper At Iciistm" loading="lazy"></div>
+                    <div class="award-photo-item"><img src="gallery/research moments/research moments while presenting my glitchzero poster at ncrt competetion.jpeg" alt="Research Moments While Presenting My Glitchzero Poster At Nc" loading="lazy"></div>
+                    <div class="award-photo-item"><img src="gallery/research moments/reserahc moments me w my mentor for glitchzero prof jagdale who always believed in me and supported me.jpeg" alt="Reserahc Moments Me W My Mentor For Glitchzero Prof Jagdale " loading="lazy"></div>
+                </div>
+            </div>
+            <div class="events-more-wrap"><button class="events-more-btn" id="eventsMoreBtn" type="button">Tap to see more &#8595;</button></div>
+        </div>
+    </section>
+
+
+    <!-- ══ CONTACT / INQUIRIES ════════════════════════════ -->
+    <section class="contact" id="contact">
+        <div class="contact-grid">
+            <div class="contact-info">
+                <div class="section-eyebrow">Correspondence</div>
+                <h2 class="contact-headline">Inquiries &amp;<br>Scientific<br>Correspondence</h2>
+                <p style="font-size:0.9rem;line-height:1.8;color:var(--secondary);margin:1.5rem 0 2rem;">Open to research collaborations, mentorship conversations, and conference invitations. Response within 48 hours.</p>
+
+                <div class="social-buttons">
+                    <a href="mailto:tribhuvansanika@gmail.com" class="social-btn mail" title="Email" data-interactive="true"><i class="fas fa-envelope"></i></a>
+                    <a href="https://www.linkedin.com/in/sanika-tribhuvan-b3a392348/" class="social-btn linkedin" title="LinkedIn" target="_blank" data-interactive="true"><i class="fab fa-linkedin-in"></i></a>
+                    <a href="https://github.com/SanikaTribhuvan" class="social-btn github" title="GitHub" target="_blank" data-interactive="true"><i class="fab fa-github"></i></a>
+                    <a href="https://dev.to/sanikatribhuvan" class="social-btn dev" title="Dev.to" target="_blank" data-interactive="true"><i class="fab fa-dev"></i></a>
+                </div>
+
+                <div style="color:var(--secondary);font-size:0.9rem;margin-top:2rem;display:flex;flex-direction:column;gap:0.6rem;">
+                    <p><i class="fas fa-envelope"></i> tribhuvansanika@gmail.com</p>
+                    <p><i class="fas fa-location-dot"></i> Ahilyanagar, Maharashtra, India</p>
+                </div>
+            </div>
+
+            <div class="contact-form">
+                <form id="contactForm">
+                    <div class="form-group">
+                        <label>Name</label>
+                        <input type="text" placeholder="Your name" required data-interactive="true">
+                    </div>
+                    <div class="form-group">
+                        <label>Email</label>
+                        <input type="email" placeholder="your@email.com" required data-interactive="true">
+                    </div>
+                    <div class="form-group">
+                        <label>Message</label>
+                        <textarea placeholder="Your inquiry, collaboration idea, or message..." rows="6" required data-interactive="true"></textarea>
+                    </div>
+                    <button type="submit" class="btn-submit" data-interactive="true">Submit Inquiry</button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+
+    <!-- VIDEO MODAL -->
+    <div id="video-modal" class="video-modal" aria-hidden="true" role="dialog" aria-modal="true">
+        <div class="video-modal__backdrop" data-close></div>
+        <div class="video-modal__inner">
+            <button class="video-modal__close" data-close aria-label="Close video">&times;</button>
+            <video id="video-modal__player" controls playsinline preload="metadata"></video>
+            <div class="video-modal__caption" id="video-modal__caption"></div>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2026 Sanika Tribhuvan. Research Archive. All rights reserved.</p>
+        <p style="margin-top:18px;font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.05rem;opacity:0.92;">By the grace of God I am what I am. <span style="font-style:normal;font-size:0.8rem;letter-spacing:0.08em;">&mdash; 1 Corinthians 15:10</span></p>
+        <p style="margin-top:14px;font-size:0.8rem;letter-spacing:0.05em;opacity:0.7;">EST. 2023 &middot; ARCHIVE REF. ST-2026 &middot; VOL. 01 / ISSUE 04</p>
+    </footer>
+
+<script>
+        // 1. SCROLL OPTIMIZATION
+        let ticking = false;
+        let scrollProgress = 0;
+
+        function throttleScroll(callback, delay = 16) {
+            return function () {
+                if (!ticking) {
+                    ticking = true;
+                    requestAnimationFrame(() => {
+                        callback();
+                        ticking = false;
+                    });
+                }
+            };
+        }
+
+        // 2. AUDIO (Tone.js)
+        let audioContext = null;
+        let synth = null;
+        let soundEnabled = false;
+
+        function initAudio() {
+            if (audioContext) return;
+            audioContext = Tone.default;
+            synth = new Tone.PolySynth(Tone.Synth, {
+                oscillator: { type: 'triangle' },
+                envelope: { attack: 0.002, decay: 0.1, sustain: 0, release: 0.1 }
+            }).toDestination();
+        }
+
+        // 3. UPDATED CUSTOM CURSOR LOGIC (Matching React Snippet Behavior)
+        const cursor = document.getElementById('custom-cursor');
+        // Mouse Position
+        let mouseX = 0;
+        let mouseY = 0;
+        // Cursor Position (for lag/spring effect)
+        let cursorX = 0;
+        let cursorY = 0;
+
+        document.addEventListener('mousemove', (e) => {
+            mouseX = e.clientX;
+            mouseY = e.clientY;
+        });
+
+        // Animation Loop for Smooth Spring Effect
+        function animateCursor() {
+            // Linear interpolation (Lerp) for smooth follow (Spring stiffness: 0.15)
+            const dx = mouseX - cursorX;
+            const dy = mouseY - cursorY;
+
+            cursorX += dx * 0.15;
+            cursorY += dy * 0.15;
+
+            cursor.style.left = cursorX + 'px';
+            cursor.style.top = cursorY + 'px';
+
+            requestAnimationFrame(animateCursor);
+        }
+        animateCursor();
+
+        // Hover Effects
+        document.addEventListener('mouseover', (e) => {
+            if (e.target.closest('button') || e.target.closest('a') || e.target.hasAttribute('data-interactive')) {
+                cursor.classList.add('hover');
+            }
+        });
+
+        document.addEventListener('mouseout', (e) => {
+            if (e.target.closest('button') || e.target.closest('a') || e.target.hasAttribute('data-interactive')) {
+                cursor.classList.remove('hover');
+            }
+        });
+
+        // 4. SOUND TOGGLE
+        const soundToggle = document.getElementById('sound-toggle');
+        soundToggle.addEventListener('click', () => {
+            if (!audioContext) initAudio();
+            soundEnabled = !soundEnabled;
+            soundToggle.innerHTML = soundEnabled ? '<i class="fas fa-volume-high"></i> Sound On' : '<i class="fas fa-volume-xmark"></i> Sound Off';
+        });
+
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 500) {
+                soundToggle.classList.add('visible');
+            } else {
+                soundToggle.classList.remove('visible');
+            }
+        });
+
+        document.querySelectorAll('[data-interactive="true"]').forEach((el) => {
+            el.addEventListener('click', () => {
+                if (soundEnabled && synth) {
+                    synth.triggerAttackRelease('C4', '8n');
+                }
+            });
+        });
+
+        // 5. CONTACT FORM SUBMISSION
+        document.getElementById('contactForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const btn = e.target.querySelector('.btn-submit');
+            const originalText = btn.textContent;
+
+            btn.textContent = "Inquiry Submitted";
+            btn.style.background = "var(--accent)"; // Success Accent
+
+            setTimeout(() => {
+                alert('Inquiry recorded in this archive demo.');
+                e.target.reset();
+                btn.textContent = originalText;
+                btn.style.background = ""; // Reset to CSS default
+            }, 100);
+        });
+
+        // 6. SMART MODAL LOGIC (Handle Live, GitHub, LinkedIn links dynamically)
+        const modal = document.querySelector('.project-modal');
+        const modalClose = document.querySelector('.modal-close');
+
+        const mTitle = document.getElementById('modal-title');
+        const mBadge = document.getElementById('modal-badge');
+        const mDesc = document.getElementById('modal-desc');
+        const mLinksContainer = document.getElementById('modal-links-container');
+
+        document.querySelectorAll('.project-card').forEach(card => {
+            card.addEventListener('click', (e) => {
+                e.stopPropagation();
+
+                const title = card.querySelector('h3').innerText;
+                const badge = card.querySelector('.card-badge').innerText;
+                const desc = card.dataset.description || "Project details.";
+
+                const type = card.dataset.type || "project";
+                const github = card.dataset.github;
+                const live = card.dataset.live;
+                const linkedin = card.dataset.linkedin;
+
+                mTitle.innerText = title;
+                mBadge.innerText = badge;
+                mDesc.innerText = desc;
+
+                // Clear previous buttons
+                mLinksContainer.innerHTML = '';
+
+                // Add Live Demo Button
+                if (live && live !== '#' && live !== '') {
+                    mLinksContainer.innerHTML += `<a href="${live}" class="modal-btn btn-primary" target="_blank" data-interactive="true">Live Demo</a>`;
+                }
+
+                // Add GitHub Button
+                if (github && github !== '#' && github !== '') {
+                    mLinksContainer.innerHTML += `<a href="${github}" class="modal-btn btn-outline" target="_blank" data-interactive="true">GitHub Repo</a>`;
+                }
+
+                // Add LinkedIn / Credential Button
+                if (linkedin && linkedin !== '#' && linkedin !== '') {
+                    const label = (type === 'cert') ? "View Credential" : "View on LinkedIn";
+                    mLinksContainer.innerHTML += `<a href="${linkedin}" class="modal-btn btn-primary" target="_blank" data-interactive="true">${label}</a>`;
+                }
+
+                modal.classList.add('active');
+            });
+        });
+
+        modalClose.addEventListener('click', () => modal.classList.remove('active'));
+        modal.addEventListener('click', (e) => { if (e.target === modal) modal.classList.remove('active'); });
+        document.addEventListener('keydown', (e) => { if (e.key === 'Escape') modal.classList.remove('active'); });
+
+    </script>
+
+    
+
+    
+    
+    <script>
+        // GALLERY TAB SWITCHER
+        function switchTab(tabName) {
+            // Hide all grids
+            document.querySelectorAll('.gallery-grid').forEach(g => g.classList.remove('active'));
+            document.querySelectorAll('.gallery-tab').forEach(t => t.classList.remove('active'));
+
+            // Show selected
+            document.getElementById('tab-' + tabName).classList.add('active');
+
+            // Activate the clicked button
+            event.target.classList.add('active');
+        }
+    </script>
+    
+    <script>
+
+        /* ── Drag-to-scroll for horizontal card tracks ── */
+        document.querySelectorAll('.scroll-track').forEach(function(track){
+            var isDown=false,startX,scrollLeft;
+            track.addEventListener('mousedown',function(e){isDown=true;startX=e.pageX-track.offsetLeft;scrollLeft=track.scrollLeft;});
+            ['mouseleave','mouseup'].forEach(function(ev){track.addEventListener(ev,function(){isDown=false;});});
+            track.addEventListener('mousemove',function(e){if(!isDown)return;e.preventDefault();var x=e.pageX-track.offsetLeft;track.scrollLeft=scrollLeft-(x-startX)*1.5;});
+        });
+
+        /* ---- Hero slideshow: auto-advance, dots, pause on hover ---- */
+        (function () {
+            const slides = Array.from(document.querySelectorAll('.hero-slide'));
+            const dots = Array.from(document.querySelectorAll('.hero-dot'));
+            if (slides.length < 2) return;
+
+            let index = 0;
+            let timer = null;
+            const INTERVAL = 7000;
+            const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+            function show(next) {
+                next = (next + slides.length) % slides.length;
+                if (next === index) return;
+                slides[index].classList.remove('is-active');
+                dots[index].classList.remove('is-active');
+                index = next;
+                slides[index].classList.add('is-active');
+                dots[index].classList.add('is-active');
+            }
+
+            function start() {
+                stop();
+                timer = setInterval(() => show(index + 1), INTERVAL);
+            }
+            function stop() {
+                if (timer) { clearInterval(timer); timer = null; }
+            }
+
+            dots.forEach((dot, i) => {
+                dot.addEventListener('click', () => { show(i); start(); });
+            });
+
+            const hero = document.querySelector('.hero');
+            if (hero) {
+                hero.addEventListener('mouseenter', stop);
+                hero.addEventListener('mouseleave', start);
+            }
+
+            // Pause when tab is hidden to save resources
+            document.addEventListener('visibilitychange', () => {
+                document.hidden ? stop() : start();
+            });
+
+            start();
+        })();
+    </script>
+    <script>
+        document.querySelectorAll('.nav-links a').forEach(function (a) {
+            a.addEventListener('click', function () {
+                var t = document.getElementById('nav-toggle');
+                if (t) { t.checked = false; }
+            });
+        });
+    </script>
+
+<script>
+(function(){
+  var modal=document.getElementById('video-modal');
+  if(modal){
+    var player=document.getElementById('video-modal__player');
+    var cap=document.getElementById('video-modal__caption');
+    function openV(src,title){ player.src=src; cap.textContent=title||''; modal.classList.add('is-open'); modal.setAttribute('aria-hidden','false'); var pr=player.play(); if(pr&&pr.catch)pr.catch(function(){}); }
+    function closeV(){ try{player.pause();}catch(e){} player.removeAttribute('src'); player.load(); modal.classList.remove('is-open'); modal.setAttribute('aria-hidden','true'); }
+    document.querySelectorAll('.video-trigger').forEach(function(b){ b.addEventListener('click',function(){ openV(b.getAttribute('data-video'), b.getAttribute('data-title')); }); });
+    modal.querySelectorAll('[data-close]').forEach(function(el){ el.addEventListener('click',closeV); });
+    document.addEventListener('keydown',function(e){ if(e.key==='Escape'&&modal.classList.contains('is-open'))closeV(); });
+  }
+  var wall=document.getElementById('eventsWall'), mb=document.getElementById('eventsMoreBtn');
+  if(wall&&mb){ mb.addEventListener('click',function(){ var c=wall.classList.toggle('is-collapsed'); mb.innerHTML = c ? 'Tap to see more &#8595;' : 'Show less &#8593;'; }); }
+})();
+</script>
+</body>
+</html>

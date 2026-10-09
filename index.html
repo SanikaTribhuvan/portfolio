@@ -2891,6 +2891,216 @@
         .events-more-wrap { text-align: center; margin-top: 1.8rem; }
         .events-more-btn { font-family: 'Inter', sans-serif; font-size: 0.72rem; letter-spacing: 0.18em; text-transform: uppercase; font-weight: 600; color: var(--primary); background: none; border: 1px solid var(--border); padding: 0.75rem 1.7rem; cursor: pointer; transition: background .2s; }
         .events-more-btn:hover { background: var(--bg-light); }
+
+        /* =========================================
+           EDUCATION & CREDENTIALS SECTION
+           ========================================= */
+        .edu-creds-section {
+            padding: 6rem 4rem;
+            background: var(--background);
+            border-top: 1px solid var(--border);
+        }
+        .edu-creds-inner {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        .edu-creds-grid {
+            display: grid;
+            grid-template-columns: 1.2fr 1fr;
+            gap: 4rem;
+            margin-top: 2.5rem;
+        }
+        .edu-timeline {
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+        }
+        .edu-item {
+            display: grid;
+            grid-template-columns: 100px 1fr;
+            gap: 1.5rem;
+            padding: 1.8rem 0;
+            border-bottom: 1px solid var(--border);
+            position: relative;
+        }
+        .edu-item:last-child { border-bottom: none; }
+        .edu-year {
+            font-size: 0.72rem;
+            font-weight: 700;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: var(--accent);
+            padding-top: 0.3rem;
+        }
+        .edu-body h4 {
+            font-family: var(--font-display);
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--primary);
+            margin-bottom: 0.3rem;
+        }
+        .edu-body .edu-inst {
+            font-size: 0.88rem;
+            color: var(--secondary);
+            margin-bottom: 0.3rem;
+        }
+        .edu-body .edu-detail {
+            font-size: 0.82rem;
+            color: var(--accent);
+            font-weight: 600;
+        }
+        .edu-badge {
+            display: inline-block;
+            background: var(--bg-light);
+            border: 1px solid var(--border);
+            padding: 0.2rem 0.6rem;
+            border-radius: 3px;
+            font-size: 0.72rem;
+            font-weight: 700;
+            letter-spacing: 0.06em;
+            color: var(--primary);
+            margin-top: 0.4rem;
+        }
+
+        /* Right column: Certs + Languages + Skills */
+        .creds-col {
+            display: flex;
+            flex-direction: column;
+            gap: 2.5rem;
+        }
+        .creds-block {
+            background: var(--bg-light);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 2rem 2.2rem;
+        }
+        .creds-block-title {
+            font-family: var(--font-display);
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 1.2rem;
+            padding-bottom: 0.6rem;
+            border-bottom: 1px solid var(--border);
+        }
+        .cert-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            padding: 0.6rem 0;
+            border-bottom: 1px solid rgba(216, 209, 199, 0.4);
+        }
+        .cert-item:last-child { border-bottom: none; }
+        .cert-name {
+            font-size: 0.88rem;
+            font-weight: 600;
+            color: var(--primary);
+        }
+        .cert-issuer {
+            font-size: 0.78rem;
+            color: var(--secondary);
+        }
+        .cert-date {
+            font-size: 0.72rem;
+            font-weight: 700;
+            color: var(--accent);
+            letter-spacing: 0.08em;
+            white-space: nowrap;
+            margin-left: 1rem;
+        }
+        .lang-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.55rem 0;
+            border-bottom: 1px solid rgba(216, 209, 199, 0.4);
+        }
+        .lang-row:last-child { border-bottom: none; }
+        .lang-name {
+            font-weight: 700;
+            color: var(--primary);
+            font-size: 0.92rem;
+        }
+        .lang-level {
+            font-size: 0.82rem;
+            color: var(--secondary);
+            font-weight: 600;
+        }
+
+        /* =========================================
+           TECHNICAL SKILLS SECTION
+           ========================================= */
+        .skills-section {
+            padding: 5rem 4rem;
+            background: var(--bg-light);
+            border-top: 1px solid var(--border);
+        }
+        .skills-inner {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        .skills-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+        .skill-card {
+            background: var(--background);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 1.8rem 2rem;
+            transition: border-color 0.2s, transform 0.2s;
+        }
+        .skill-card:hover {
+            border-color: var(--primary);
+            transform: translateY(-2px);
+        }
+        .skill-card-icon {
+            font-size: 1.3rem;
+            color: var(--accent);
+            margin-bottom: 0.8rem;
+        }
+        .skill-card h4 {
+            font-family: var(--font-display);
+            font-size: 1.15rem;
+            font-weight: 600;
+            color: var(--primary);
+            margin-bottom: 0.8rem;
+        }
+        .skill-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.4rem;
+        }
+        .skill-tag {
+            background: var(--bg-light);
+            border: 1px solid var(--border);
+            padding: 0.25rem 0.6rem;
+            border-radius: 3px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--secondary);
+            transition: color 0.2s, border-color 0.2s;
+        }
+        .skill-card:hover .skill-tag {
+            border-color: var(--accent);
+            color: var(--primary);
+        }
+
+        /* ORCID icon colour */
+        .social-btn.orcid:hover { background: #A6CE39; border-color: #A6CE39; }
+        .social-btn.website:hover { background: var(--accent); border-color: var(--accent); }
+
+        @media (max-width: 768px) {
+            .edu-creds-section { padding: 3rem 1.5rem !important; }
+            .edu-creds-grid { grid-template-columns: 1fr; gap: 2rem; }
+            .edu-item { grid-template-columns: 1fr; gap: 0.5rem; }
+            .skills-section { padding: 3rem 1.5rem !important; }
+            .skills-grid { grid-template-columns: 1fr; }
+            .cert-item { flex-direction: column; gap: 0.2rem; }
+            .cert-date { margin-left: 0; }
+        }
     </style>
 </head>
 
@@ -2924,6 +3134,7 @@
             <li><a href="#community" data-interactive="true">Community</a></li>
             <li><a href="#beyond-code" data-interactive="true">Beyond</a></li>
             <li><a href="#awards" data-interactive="true">Awards</a></li>
+            <li><a href="#resume" data-interactive="true">Resume</a></li>
             <li><a href="#contact" data-interactive="true">Contact</a></li>
         </ul>
         <a href="#contact" class="cta-button" data-interactive="true">Inquiries</a>
@@ -2966,6 +3177,7 @@
         <span style="display: flex; align-items: center; gap: 0.4rem; color: var(--primary); font-size: 0.8rem; font-weight: 700;"><span style="width: 8px; height: 8px; border-radius: 50%; background: var(--accent); display: inline-block;"></span>IEEE Member</span>
         <span style="display: flex; align-items: center; gap: 0.4rem; color: var(--primary); font-size: 0.8rem; font-weight: 700;"><span style="width: 8px; height: 8px; border-radius: 50%; background: var(--accent); display: inline-block;"></span>IEEE Communications Society (ComSoc)</span>
         <span style="display: flex; align-items: center; gap: 0.4rem; color: var(--primary); font-size: 0.8rem; font-weight: 700;"><span style="width: 8px; height: 8px; border-radius: 50%; background: var(--accent); display: inline-block;"></span>IEEE Women in Engineering (WIE)</span>
+        <span style="display: flex; align-items: center; gap: 0.4rem; color: var(--primary); font-size: 0.8rem; font-weight: 700;"><span style="width: 8px; height: 8px; border-radius: 50%; background: var(--accent); display: inline-block;"></span>IEEE Biometrics Council</span>
         <span style="display: flex; align-items: center; gap: 0.4rem; color: var(--primary); font-size: 0.8rem; font-weight: 700;"><span style="width: 8px; height: 8px; border-radius: 50%; background: var(--accent); display: inline-block;"></span>Scopus Author</span>
     </div>
 
@@ -2977,28 +3189,29 @@
                 <div class="about-eyebrow">About the researcher</div>
                 <h2 class="about-name">Sanika Tribhuvan</h2>
                 <p class="about-pronouns">She / Her</p>
-                <p class="about-tagline">IEEE ComSoc Member · Forensic AI Researcher<br>2× Published · 7 Competition Wins · BCA '26 SPPU</p>
+                <p class="about-tagline">IEEE ComSoc Member · Forensic AI Researcher<br>3× Published · 8+ Competition Wins · MCA Student</p>
                 <div class="about-bio">
-                    <p>I'm a BCA graduate from Ahilyanagar who builds forensic AI systems that make data manipulation impossible to hide — and cryptographically impossible to deny.</p>
+                    <p>I'm an MCA student (AI &amp; Cybersecurity) and BCA graduate who builds forensic AI systems that make data manipulation impossible to hide — and cryptographically impossible to deny.</p>
                     <p>My research sits at the intersection of <strong>Trustworthy AI</strong>, <strong>Forensic Data Systems</strong>, <strong>Anomaly Detection</strong>, and <strong>Explainable AI</strong>. I work independently — no lab, no institutional resources — and publish at international, Scopus-indexed venues.</p>
-                    <p>Every project in this archive was built solo, from Ahilyanagar, Maharashtra.</p>
+                    <p>Every project in this archive was built solo, from Ahmednagar, Maharashtra.</p>
                 </div>
                 <div class="about-links">
                     <a href="https://github.com/SanikaTribhuvan" class="about-link" target="_blank" rel="noopener"><i class="fab fa-github"></i> GitHub</a>
                     <a href="mailto:tribhuvansanika@gmail.com" class="about-link"><i class="fas fa-envelope"></i> Email</a>
                     <a href="https://www.linkedin.com/in/sanika-tribhuvan-b3a392348/" class="about-link" target="_blank" rel="noopener"><i class="fab fa-linkedin-in"></i> LinkedIn</a>
+                    <a href="https://orcid.org/0009-0005-5522-556X" class="about-link" target="_blank" rel="noopener"><i class="fab fa-orcid"></i> ORCID</a>
                 </div>
             </div>
             <!-- Right: Stats -->
             <div class="about-stats-col">
                 <div class="about-stats-rule"></div>
                 <div class="about-stat-row">
-                    <div class="about-stat-num">7+</div>
+                    <div class="about-stat-num">8+</div>
                     <div class="about-stat-label"><strong>Competition Wins</strong>National &amp; International — including 2× First Prize at Scopus-indexed venues</div>
                 </div>
                 <div class="about-stat-row">
-                    <div class="about-stat-num">2</div>
-                    <div class="about-stat-label"><strong>Peer-Reviewed Publications</strong>ICIISTM 2026 (Scopus) &amp; IJAAR · 1 paper under review</div>
+                    <div class="about-stat-num">3</div>
+                    <div class="about-stat-label"><strong>Peer-Reviewed Publications</strong>IEEE FMLDS 2026, ICIISTM 2026 (Scopus) &amp; IJAAR</div>
                 </div>
                 <div class="about-stat-row">
                     <div class="about-stat-num">1</div>
@@ -3006,12 +3219,12 @@
                 </div>
                 <div class="about-stat-row">
                     <div class="about-stat-num" style="font-size:1.8rem;min-width:4rem;">IEEE</div>
-                    <div class="about-stat-label"><strong>IEEE Member</strong>Communications Society (ComSoc) · Women in Engineering (WIE) · Scopus Author</div>
+                    <div class="about-stat-label"><strong>IEEE Member</strong>ComSoc · WIE · Biometrics Council · Scopus Author</div>
                 </div>
                 <div class="about-academic-note">
                     <div class="about-academic-note-label">Academic Record</div>
-                    <div class="about-academic-note-value">BCA (Science) &mdash; Completed 2026</div>
-                    <div class="about-academic-note-sub">Savitribai Phule Pune University &middot; Semester GPAs: 9.36 &middot; 8.91 &middot; 9.09 &middot; 9.41 &middot; 9.73</div>
+                    <div class="about-academic-note-value">MCA (AI &amp; Cybersecurity) &mdash; Present<br>BCA &mdash; Completed 2026</div>
+                    <div class="about-academic-note-sub">Savitribai Phule Pune University &middot; BCA CGPA 9.18 (86.08%)</div>
                 </div>
             </div>
         </div>
@@ -3028,9 +3241,9 @@
             <div class="pub-entry">
                 <div class="pub-issue-num">01</div>
                 <div class="pub-entry-body">
-                    <div class="pub-entry-status">Published · Scopus-Indexed</div>
-                    <h3 class="pub-entry-title">Phantom Ledger: A Cryptographically Anchored Forensic Audit System for Institutional Data Integrity</h3>
-                    <div class="pub-entry-venue">ICIISTM 2026 — International Conference on Inventions, Innovations in Science, Technology &amp; Management</div>
+                    <div class="pub-entry-status">Under Review · Scopus-Indexed (Best Paper)</div>
+                    <h3 class="pub-entry-title">Phantom Ledger: Detecting Hidden Manipulation in Public Budget Datasets via Cryptographic Integrity, Temporal Edit Graph Analysis &amp; Agentic Alerting</h3>
+                    <div class="pub-entry-venue">IEEE ICCC 2026 (Track 9, Wuhan) — First Prize + Best Paper at ICIISTM 2026</div>
                     <div class="pub-entry-badges">
                         <span class="pub-entry-badge"><i class="fas fa-trophy"></i> Best Paper Award</span>
                         <span class="pub-entry-badge"><i class="fas fa-trophy"></i> 1st Prize</span>
@@ -3061,15 +3274,15 @@
             <div class="pub-entry">
                 <div class="pub-issue-num">03</div>
                 <div class="pub-entry-body">
-                    <div class="pub-entry-status">Under Review</div>
-                    <h3 class="pub-entry-title">FedCohort: Privacy-Preserving Federated Learning for Hantavirus-Inspired Epidemiological Modelling</h3>
-                    <div class="pub-entry-venue">Manuscript under review — 2026</div>
+                    <div class="pub-entry-status">Accepted — Full Paper</div>
+                    <h3 class="pub-entry-title">FedCohort: A Federated Differential-Privacy Framework for Distributed Physiological Monitoring of Disembarked Cohorts During Cross-Border Zoonotic Outbreaks</h3>
+                    <div class="pub-entry-venue">IEEE FMLDS 2026, Kobe, Japan</div>
                     <div class="pub-entry-badges">
                         <span class="pub-entry-badge">Federated Learning</span>
                         <span class="pub-entry-badge">Differential Privacy</span>
                         <span class="pub-entry-badge">Public Health AI</span>
                     </div>
-                    <p class="pub-entry-abstract">FedCohort adapts federated learning with differential privacy guarantees to epidemiological outbreak modelling, drawing on Hantavirus transmission dynamics as a case study. The architecture allows multi-institutional collaboration without centralised data exposure — a privacy-first approach to public health intelligence.</p>
+                    <p class="pub-entry-abstract">Federated learning with differential privacy for distributed physiological monitoring: privacy-preserving computation over sensitive health data, designed for public health informatics and cross-border outbreak response.</p>
                 </div>
             </div>
         </div>
@@ -3116,11 +3329,11 @@
                 </div>
 
                 <div class="rmod-card">
-                    <div class="rmod-card__bg rmod-card__ph">FedCohort &middot; under review</div>
+                    <div class="rmod-card__bg rmod-card__ph" style="color:var(--primary); font-style:normal; font-weight:600; font-family:var(--font-body); background:var(--background);">FedCohort</div>
                     <div class="rmod-card__body">
                         <div class="rmod-card__badge">Federated Learning &middot; Differential Privacy</div>
                         <h3 class="rmod-card__title">Fed<br>Cohort</h3>
-                        <p class="rmod-card__stack">Privacy-preserving federated learning for public-health surveillance &middot; manuscript under peer review</p>
+                        <p class="rmod-card__stack">Privacy-preserving federated learning for public-health surveillance &middot; Full Paper accepted at IEEE FMLDS 2026</p>
                     </div>
                     <div class="rmod-card__links">
                         <a href="#publications" class="rmod-card__link">Read More &darr;</a>
@@ -3351,7 +3564,7 @@
                     <li><strong>2023</strong>Joined BCA at New Arts, Commerce &amp; Science College, Ahilyanagar. Won Miss Arts 2023 in the same first semester.</li>
                     <li><strong>2024</strong>Started independent research. Began building Phantom Ledger and the GlitchZero prototype.</li>
                     <li><strong>2025</strong>1st Prize at ICADMA 2025 (Pathfinding Visualizer). GlitchZero published in IJAAR. Presented at NCRT, COGNOTSAV.</li>
-                    <li><strong>2026</strong>Best Paper + 1st Prize at ICIISTM 2026 (Phantom Ledger). 2nd Prize TECH-EXPO. Patent in progress. FedCohort under review. Joined IEEE ComSoc &amp; WIE (April 2026).</li>
+                    <li><strong>2026</strong>Best Paper + 1st Prize at ICIISTM 2026. 2nd Prize TECH-EXPO &amp; NCRT-AIML. FedCohort accepted at IEEE FMLDS. Started MCA in AI &amp; Cybersecurity. Joined IEEE ComSoc &amp; WIE.</li>
                 </ul>
                 <div class="journey-sgpa">
                     <div class="journey-sgpa-item"><span class="num">9.36</span><span class="lbl">Sem I</span></div>
@@ -3481,6 +3694,14 @@
                     <h3 class="awards-tier-title">Flagship · International</h3>
                     <div class="cv-list">
                         <div class="cv-item">
+                            <div class="cv-meta">Mar 2026<br><span class="cv-badge">Invited Reviewer</span></div>
+                            <div class="cv-content">
+                                <h4>IEEE FMLDS 2026</h4>
+                                <p class="cv-institution">IEEE International Conference on Future Machine Learning and Data Science</p>
+                                <p class="cv-details">Selected to review submissions (400+ received)</p>
+                            </div>
+                        </div>
+                        <div class="cv-item">
                             <div class="cv-meta">Mar 2026<br><span class="cv-badge"><i class="fas fa-trophy"></i> 1st Prize + Best Paper</span></div>
                             <div class="cv-content">
                                 <h4>ICIISTM 2026</h4>
@@ -3504,27 +3725,35 @@
                     <h3 class="awards-tier-title">National &amp; State Placements</h3>
                     <div class="cv-list">
                         <div class="cv-item">
+                            <div class="cv-meta">Apr 2026<br><span class="cv-badge"><i class="fas fa-medal"></i> 1st Prize + Gold</span></div>
+                            <div class="cv-content">
+                                <h4>COGNOTSAV 2026</h4>
+                                <p class="cv-institution">Vitthalrao Vikhe Patil College of Engineering</p>
+                                <p class="cv-details">Inter-college poster presentation · Solo entry</p>
+                            </div>
+                        </div>
+                        <div class="cv-item">
+                            <div class="cv-meta">Mar 2026<br><span class="cv-badge"><i class="fas fa-medal"></i> 1st Prize</span></div>
+                            <div class="cv-content">
+                                <h4>National Science Day Model Competition 2025–26</h4>
+                                <p class="cv-institution">New Arts, Commerce &amp; Science College, Ahilyanagar</p>
+                                <p class="cv-details">EcoVision AI</p>
+                            </div>
+                        </div>
+                        <div class="cv-item">
                             <div class="cv-meta">Apr 2026<br><span class="cv-badge"><i class="fas fa-medal"></i> 2nd Prize</span></div>
                             <div class="cv-content">
                                 <h4>TECH-EXPO 2026</h4>
                                 <p class="cv-institution">Pravara Rural Engineering College, Loni</p>
-                                <p class="cv-details">Phantom Ledger · solo entry · &#8377;4,000 cash prize</p>
+                                <p class="cv-details">Phantom Ledger · solo entry</p>
                             </div>
                         </div>
                         <div class="cv-item">
-                            <div class="cv-meta">Jan 2026<br><span class="cv-badge"><i class="fas fa-medal"></i> 1st Prize</span></div>
+                            <div class="cv-meta">Mar 2026<br><span class="cv-badge"><i class="fas fa-medal"></i> 2nd Prize</span></div>
                             <div class="cv-content">
                                 <h4>NCRT AIML 2026</h4>
-                                <p class="cv-institution">National Conference on Recent Trends in AI &amp; ML</p>
-                                <p class="cv-details">GlitchZero poster presentation · best paper track</p>
-                            </div>
-                        </div>
-                        <div class="cv-item">
-                            <div class="cv-meta">2025<br><span class="cv-badge"><i class="fas fa-trophy"></i> Winner</span></div>
-                            <div class="cv-content">
-                                <h4>COGNOTSAV 2025</h4>
-                                <p class="cv-institution">State-level technical festival</p>
-                                <p class="cv-details">Research presentation track · solo entry</p>
+                                <p class="cv-institution">National Conference on Recent Trends in AI &amp; ML, SPPU</p>
+                                <p class="cv-details">GlitchZero v6 poster presentation · Solo entry</p>
                             </div>
                         </div>
                     </div>
@@ -3612,6 +3841,176 @@
     </section>
 
 
+    <!-- ══ RESUME / CREDENTIALS ═══════════════════════════ -->
+    <section class="edu-creds-section" id="resume">
+        <div class="edu-creds-inner">
+            <div class="section-eyebrow">Academic &amp; Professional Qualifications</div>
+            <h2 class="section-title">Education &amp; Credentials</h2>
+
+            <div class="edu-creds-grid">
+                <!-- Education Timeline -->
+                <div>
+                    <h3 class="creds-block-title">Education</h3>
+                    <div class="edu-timeline">
+                        <div class="edu-item">
+                            <div class="edu-year">2026 – Present</div>
+                            <div class="edu-body">
+                                <h4>Master of Computer Applications</h4>
+                                <div class="edu-inst">BPHE Society's IMS College, Ahmednagar</div>
+                                <div class="edu-detail">Specialization: AI &amp; Cybersecurity</div>
+                            </div>
+                        </div>
+                        <div class="edu-item">
+                            <div class="edu-year">2023 – 2026</div>
+                            <div class="edu-body">
+                                <h4>Bachelor of Computer Applications</h4>
+                                <div class="edu-inst">Savitribai Phule Pune University</div>
+                                <div class="edu-detail">CGPA 9.18/10 · First Class (86.08%)</div>
+                            </div>
+                        </div>
+                        <div class="edu-item">
+                            <div class="edu-year">2022</div>
+                            <div class="edu-body">
+                                <h4>HSC – Science</h4>
+                                <div class="edu-inst">Residential College</div>
+                                <div class="edu-detail">Score: 80%</div>
+                            </div>
+                        </div>
+                        <div class="edu-item">
+                            <div class="edu-year">2020</div>
+                            <div class="edu-body">
+                                <h4>SSC</h4>
+                                <div class="edu-inst">Sacred Heart Convent High School</div>
+                                <div class="edu-detail">Score: 90%</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Certs & Languages -->
+                <div class="creds-col">
+                    <div class="creds-block">
+                        <h3 class="creds-block-title">Certifications</h3>
+                        <div class="cert-item">
+                            <div>
+                                <div class="cert-name">Full Stack Java Development</div>
+                                <div class="cert-issuer">Capgemini x Symbiosis</div>
+                            </div>
+                            <div class="cert-date">Oct 2025</div>
+                        </div>
+                        <div class="cert-item">
+                            <div>
+                                <div class="cert-name">Python Full Stack Development</div>
+                                <div class="cert-issuer">EduSkillsAcademy</div>
+                            </div>
+                            <div class="cert-date">Sep 2025</div>
+                        </div>
+                        <div class="cert-item">
+                            <div>
+                                <div class="cert-name">Generative AI Mastermind</div>
+                                <div class="cert-issuer">Outskill x CRED</div>
+                            </div>
+                            <div class="cert-date">2025</div>
+                        </div>
+                        <div class="cert-item">
+                            <div>
+                                <div class="cert-name">Power BI &amp; Data Visualization</div>
+                                <div class="cert-issuer">AIS Solutions, Pune</div>
+                            </div>
+                            <div class="cert-date">Feb 2025</div>
+                        </div>
+                        <div class="cert-item">
+                            <div>
+                                <div class="cert-name">Diploma in Programming</div>
+                                <div class="cert-issuer">Disha Computer Institute</div>
+                            </div>
+                            <div class="cert-date">81.36%</div>
+                        </div>
+                    </div>
+
+                    <div class="creds-block">
+                        <h3 class="creds-block-title">Languages</h3>
+                        <div class="lang-row">
+                            <span class="lang-name">English</span>
+                            <span class="lang-level">Fluent</span>
+                        </div>
+                        <div class="lang-row">
+                            <span class="lang-name">Hindi</span>
+                            <span class="lang-level">Native</span>
+                        </div>
+                        <div class="lang-row">
+                            <span class="lang-name">Marathi</span>
+                            <span class="lang-level">Native</span>
+                        </div>
+                        <div class="lang-row">
+                            <span class="lang-name">German</span>
+                            <span class="lang-level">Beginner (A1)</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ══ TECHNICAL SKILLS ═══════════════════════════════ -->
+    <section class="skills-section">
+        <div class="skills-inner">
+            <h2 class="section-title" style="margin-bottom:0;">Technical Arsenal</h2>
+            <div class="skills-grid">
+                <div class="skill-card">
+                    <div class="skill-card-icon"><i class="fas fa-brain"></i></div>
+                    <h4>AI / ML / CV</h4>
+                    <div class="skill-tags">
+                        <span class="skill-tag">Federated Learning</span>
+                        <span class="skill-tag">Differential Privacy</span>
+                        <span class="skill-tag">XAI</span>
+                        <span class="skill-tag">YOLOv8</span>
+                        <span class="skill-tag">MediaPipe</span>
+                        <span class="skill-tag">OpenCV</span>
+                        <span class="skill-tag">Scikit-learn</span>
+                    </div>
+                </div>
+                <div class="skill-card">
+                    <div class="skill-card-icon"><i class="fas fa-code"></i></div>
+                    <h4>Programming</h4>
+                    <div class="skill-tags">
+                        <span class="skill-tag">Python</span>
+                        <span class="skill-tag">JavaScript</span>
+                        <span class="skill-tag">PHP</span>
+                        <span class="skill-tag">Java</span>
+                        <span class="skill-tag">SQL</span>
+                        <span class="skill-tag">C/C++</span>
+                    </div>
+                </div>
+                <div class="skill-card">
+                    <div class="skill-card-icon"><i class="fas fa-laptop-code"></i></div>
+                    <h4>Web &amp; Backend</h4>
+                    <div class="skill-tags">
+                        <span class="skill-tag">React</span>
+                        <span class="skill-tag">Flask</span>
+                        <span class="skill-tag">CodeIgniter</span>
+                        <span class="skill-tag">Streamlit</span>
+                        <span class="skill-tag">HTML5/CSS3</span>
+                    </div>
+                </div>
+                <div class="skill-card">
+                    <div class="skill-card-icon"><i class="fas fa-chart-pie"></i></div>
+                    <h4>Data &amp; Infra</h4>
+                    <div class="skill-tags">
+                        <span class="skill-tag">Power BI</span>
+                        <span class="skill-tag">MySQL</span>
+                        <span class="skill-tag">PostgreSQL</span>
+                        <span class="skill-tag">Excel</span>
+                        <span class="skill-tag">Git/GitHub</span>
+                        <span class="skill-tag">Render</span>
+                        <span class="skill-tag">Netlify</span>
+                        <span class="skill-tag">Blockchain</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <!-- ══ CONTACT / INQUIRIES ════════════════════════════ -->
     <section class="contact" id="contact">
         <div class="contact-grid">
@@ -3625,11 +4024,13 @@
                     <a href="https://www.linkedin.com/in/sanika-tribhuvan-b3a392348/" class="social-btn linkedin" title="LinkedIn" target="_blank" data-interactive="true"><i class="fab fa-linkedin-in"></i></a>
                     <a href="https://github.com/SanikaTribhuvan" class="social-btn github" title="GitHub" target="_blank" data-interactive="true"><i class="fab fa-github"></i></a>
                     <a href="https://dev.to/sanikatribhuvan" class="social-btn dev" title="Dev.to" target="_blank" data-interactive="true"><i class="fab fa-dev"></i></a>
+                    <a href="https://orcid.org/0009-0005-5522-556X" class="social-btn orcid" title="ORCID" target="_blank" data-interactive="true"><i class="fab fa-orcid"></i></a>
+                    <a href="https://sanikatribhuvan.netlify.app" class="social-btn website" title="Website" target="_blank" data-interactive="true"><i class="fas fa-globe"></i></a>
                 </div>
 
                 <div style="color:var(--secondary);font-size:0.9rem;margin-top:2rem;display:flex;flex-direction:column;gap:0.6rem;">
                     <p><i class="fas fa-envelope"></i> tribhuvansanika@gmail.com</p>
-                    <p><i class="fas fa-location-dot"></i> Ahilyanagar, Maharashtra, India</p>
+                    <p><i class="fas fa-location-dot"></i> Ahmednagar, Maharashtra, India</p>
                 </div>
             </div>
 
